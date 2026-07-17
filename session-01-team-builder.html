@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HWM AI Build Lab - Buổi 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES: HWM OPS SCOREBOARD
+           =========================================== */
+        :root {
+            --ink: #111111;
+            --paper: #fff2b8;
+            --paper-2: #fffdf2;
+            --muted: #5f5142;
+            --line: rgba(21, 21, 21, 0.16);
+            --red: #ff3d2e;
+            --teal: #38c7ee;
+            --green: #d8ff32;
+            --yellow: #ffe45f;
+            --blue: #2c6de9;
+            --pink: #ff8fbd;
+            --white: #fffdf2;
+            --shadow: #111111;
+            --font-display: 'Bangers', cursive;
+            --font-heading: 'Archivo', sans-serif;
+            --font-body: 'IBM Plex Sans', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --title-size: clamp(2rem, 6.6vw, 5.6rem);
+            --h2-size: clamp(1.55rem, 4.4vw, 3.7rem);
+            --h3-size: clamp(1.12rem, 2.75vw, 1.75rem);
+            --body-size: clamp(0.9rem, 1.62vw, 1.35rem);
+            --small-size: clamp(0.68rem, 1.12vw, 0.95rem);
+            --slide-padding: clamp(1rem, 4vw, 3.5rem);
+            --content-gap: clamp(0.85rem, 2.45vw, 2.1rem);
+            --element-gap: clamp(0.5rem, 1.45vw, 1.1rem);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.65s;
+        }
+
+        /* ===========================================
+           BASE RESET
+           =========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--ink);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: var(--body-size);
+        }
+
+        /* ===========================================
+           VIEWPORT FITTING: MANDATORY BASE STYLES
+           Include this ENTIRE file in every presentation.
+           These styles ensure slides fit exactly in the viewport.
+           =========================================== */
+
+        /* 1. Lock html/body to viewport */
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* 2. Each slide = exact viewport height */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            overflow: hidden; /* CRITICAL: Prevent ANY overflow */
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 3. Content container with flex for centering */
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden; /* Double-protection against overflow */
+            padding: var(--slide-padding);
+        }
+
+        /* 4. ALL typography uses clamp() for responsive scaling */
+        :root {
+            /* Titles scale from mobile to desktop */
+            --title-size: clamp(1.5rem, 5vw, 4rem);
+            --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+            --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+
+            /* Body text */
+            --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+            --small-size: clamp(0.65rem, 1vw, 0.875rem);
+
+            /* Spacing scales with viewport */
+            --slide-padding: clamp(1rem, 4vw, 4rem);
+            --content-gap: clamp(0.5rem, 2vw, 2rem);
+            --element-gap: clamp(0.25rem, 1vw, 1rem);
+        }
+
+        /* 5. Cards/containers use viewport-relative max sizes */
+        .card, .container, .content-box {
+            max-width: min(90vw, 1000px);
+            max-height: min(80vh, 700px);
+        }
+
+        /* 6. Lists auto-scale with viewport */
+        .feature-list, .bullet-list {
+            gap: clamp(0.4rem, 1vh, 1rem);
+        }
+
+        .feature-list li, .bullet-list li {
+            font-size: var(--body-size);
+            line-height: 1.4;
+        }
+
+        /* 7. Grids adapt to available space */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        /* 8. Images constrained to viewport */
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
+
+        /* ===========================================
+           RESPONSIVE BREAKPOINTS
+           Aggressive scaling for smaller viewports
+           =========================================== */
+
+        /* Short viewports (< 700px height) */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1rem, 3vw, 1.75rem);
+            }
+        }
+
+        /* Very short viewports (< 600px height) */
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.1rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+
+            /* Hide non-essential elements */
+            .nav-dots, .keyboard-hint, .decorative {
+                display: none;
+            }
+        }
+
+        /* Extremely short (landscape phones, < 500px height) */
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        /* Narrow viewports (< 600px width) */
+        @media (max-width: 600px) {
+            :root {
+                --title-size: clamp(1.25rem, 7vw, 2.5rem);
+            }
+
+            /* Stack grids vertically */
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===========================================
+           REDUCED MOTION
+           Respect user preferences
+           =========================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* ===========================================
+           THEME OVERRIDES AFTER VIEWPORT BASE
+           =========================================== */
+        :root {
+            --title-size: clamp(2rem, 6.6vw, 5.6rem);
+            --h2-size: clamp(1.55rem, 4.4vw, 3.7rem);
+            --h3-size: clamp(1.12rem, 2.75vw, 1.75rem);
+            --body-size: clamp(0.9rem, 1.62vw, 1.35rem);
+            --small-size: clamp(0.68rem, 1.12vw, 0.95rem);
+            --slide-padding: clamp(1rem, 4vw, 3.5rem);
+            --content-gap: clamp(0.85rem, 2.45vw, 2.1rem);
+            --element-gap: clamp(0.5rem, 1.45vw, 1.1rem);
+        }
+
+        /* ===========================================
+           GLOBAL SLIDE SURFACE
+           =========================================== */
+        .slide {
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 230, 93, 0.95) 0 12%, transparent 12.5%),
+                radial-gradient(circle at 86% 76%, rgba(56, 199, 238, 0.75) 0 10%, transparent 10.5%),
+                repeating-linear-gradient(-8deg, rgba(255, 255, 255, 0.45) 0 clamp(0.6rem, 1.3vw, 1rem), rgba(255, 234, 166, 0.72) clamp(0.6rem, 1.3vw, 1rem) clamp(1.2rem, 2.6vw, 2rem)),
+                var(--paper);
+        }
+
+        .slide::before {
+            content: "";
+            position: absolute;
+            inset: clamp(0.45rem, 1vw, 0.8rem);
+            border: clamp(0.11rem, 0.22vw, 0.18rem) solid var(--ink);
+            pointer-events: none;
+        }
+
+        .slide::after {
+            content: attr(data-section);
+            position: absolute;
+            top: clamp(0.75rem, 1.6vw, 1.2rem);
+            right: clamp(1rem, 2.5vw, 2.5rem);
+            padding: clamp(0.25rem, 0.6vw, 0.42rem) clamp(0.45rem, 1vw, 0.7rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-size: clamp(0.55rem, 0.9vw, 0.76rem);
+            box-shadow: clamp(0.16rem, 0.42vw, 0.32rem) clamp(0.16rem, 0.42vw, 0.32rem) 0 var(--shadow);
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        .slide-content {
+            width: min(100%, 1180px);
+            margin: 0 auto;
+            gap: var(--content-gap);
+            z-index: 1;
+        }
+
+        .title-only {
+            width: min(100%, 1040px);
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .title-only h1 {
+            max-width: 10ch;
+        }
+
+        .title-only p {
+            margin-top: clamp(0.75rem, 2vh, 1.25rem);
+        }
+
+        h1, h2, h3 {
+            line-height: 0.96;
+            letter-spacing: 0;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: var(--title-size);
+            font-weight: 400;
+            text-shadow: clamp(0.08rem, 0.24vw, 0.2rem) clamp(0.08rem, 0.24vw, 0.2rem) 0 var(--white), clamp(0.2rem, 0.5vw, 0.36rem) clamp(0.2rem, 0.5vw, 0.36rem) 0 var(--ink);
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: var(--h2-size);
+            font-weight: 400;
+            text-transform: uppercase;
+            text-shadow: clamp(0.05rem, 0.18vw, 0.14rem) clamp(0.05rem, 0.18vw, 0.14rem) 0 var(--white), clamp(0.16rem, 0.38vw, 0.28rem) clamp(0.16rem, 0.38vw, 0.28rem) 0 var(--ink);
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: var(--h3-size);
+            font-weight: 800;
+        }
+
+        p {
+            font-size: var(--body-size);
+            line-height: 1.42;
+        }
+
+        /* ===========================================
+           REUSABLE COMPONENTS
+           =========================================== */
+        .eyebrow {
+            display: inline-flex;
+            width: fit-content;
+            align-items: center;
+            gap: clamp(0.35rem, 0.8vw, 0.65rem);
+            padding: clamp(0.25rem, 0.7vw, 0.45rem) clamp(0.45rem, 1vw, 0.75rem);
+            border: clamp(0.1rem, 0.22vw, 0.16rem) solid var(--ink);
+            background: var(--yellow);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: clamp(0.18rem, 0.45vw, 0.34rem) clamp(0.18rem, 0.45vw, 0.34rem) 0 var(--shadow);
+            transform: rotate(-1deg);
+        }
+
+        .eyebrow + h1,
+        .eyebrow + h2 {
+            margin-top: clamp(0.8rem, 2vw, 1.4rem);
+        }
+
+        .kicker {
+            color: var(--muted);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .accent-red { color: var(--red); }
+        .accent-teal { color: var(--teal); }
+        .accent-blue { color: var(--blue); }
+        .accent-green { color: var(--green); }
+
+        .card {
+            border: clamp(0.12rem, 0.28vw, 0.22rem) solid var(--ink);
+            background: var(--paper-2);
+            padding: clamp(0.7rem, 1.55vw, 1.25rem);
+            box-shadow: clamp(0.24rem, 0.7vw, 0.5rem) clamp(0.24rem, 0.7vw, 0.5rem) 0 var(--shadow);
+        }
+
+        .card.blue { box-shadow: clamp(0.18rem, 0.6vw, 0.42rem) clamp(0.18rem, 0.6vw, 0.42rem) 0 var(--blue); }
+        .card.red { box-shadow: clamp(0.18rem, 0.6vw, 0.42rem) clamp(0.18rem, 0.6vw, 0.42rem) 0 var(--red); }
+        .card.green { box-shadow: clamp(0.18rem, 0.6vw, 0.42rem) clamp(0.18rem, 0.6vw, 0.42rem) 0 var(--green); }
+
+        .tag {
+            display: inline-block;
+            width: fit-content;
+            margin-bottom: clamp(0.25rem, 0.7vw, 0.5rem);
+            padding: clamp(0.16rem, 0.45vw, 0.3rem) clamp(0.32rem, 0.75vw, 0.55rem);
+            border: clamp(0.08rem, 0.18vw, 0.13rem) solid var(--ink);
+            background: var(--white);
+            font-family: var(--font-mono);
+            font-size: clamp(0.5rem, 0.78vw, 0.68rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .tag.red { background: var(--red); color: var(--white); }
+        .tag.teal { background: var(--teal); color: var(--white); }
+        .tag.yellow { background: var(--yellow); color: var(--ink); }
+        .tag.blue { background: var(--blue); color: var(--white); }
+        .tag.green { background: var(--green); color: var(--ink); }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.8rem, 3vw, 2.5rem);
+            align-items: center;
+            max-height: min(82vh, 720px);
+        }
+
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(0.45rem, 1.4vw, 1rem);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(0.55rem, 2vw, 1.35rem);
+        }
+
+        .bullet-list {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .bullet-list li::before {
+            content: "";
+            position: absolute;
+            top: clamp(0.35rem, 0.8vw, 0.52rem);
+            left: 0;
+            width: clamp(0.42rem, 0.8vw, 0.55rem);
+            height: clamp(0.42rem, 0.8vw, 0.55rem);
+            background: var(--red);
+            border: clamp(0.06rem, 0.14vw, 0.1rem) solid var(--ink);
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal,
+        .reveal-left,
+        .reveal-scale {
+            opacity: 0;
+            transition:
+                opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo),
+                filter var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal {
+            transform: translateY(clamp(1rem, 3vw, 2rem));
+        }
+
+        .reveal-left {
+            transform: translateX(calc(-1 * clamp(1rem, 3vw, 2rem)));
+        }
+
+        .reveal-scale {
+            transform: scale(0.92);
+            filter: blur(clamp(0.15rem, 0.4vw, 0.35rem));
+        }
+
+        .slide.visible .reveal,
+        .slide.visible .reveal-left,
+        .slide.visible .reveal-scale {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+            filter: blur(0);
+        }
+
+        .delay-1 { transition-delay: 0.08s; }
+        .delay-2 { transition-delay: 0.16s; }
+        .delay-3 { transition-delay: 0.24s; }
+        .delay-4 { transition-delay: 0.32s; }
+
+        /* ===========================================
+           NAVIGATION
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: clamp(0.18rem, 0.5vh, 0.32rem);
+            width: 0%;
+            background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--teal));
+            z-index: 1000;
+            transition: width 0.25s ease;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.7rem, 1.3vw, 1.2rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.35rem, 0.8vh, 0.55rem);
+            z-index: 1000;
+        }
+
+        .nav-dot {
+            width: clamp(0.42rem, 0.8vw, 0.62rem);
+            height: clamp(0.42rem, 0.8vw, 0.62rem);
+            border: clamp(0.08rem, 0.16vw, 0.12rem) solid var(--ink);
+            border-radius: 999px;
+            background: var(--paper);
+            cursor: pointer;
+        }
+
+        .nav-dot.active {
+            background: var(--red);
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: clamp(0.75rem, 1.8vw, 1.4rem);
+            right: clamp(1rem, 2.6vw, 2.4rem);
+            z-index: 2;
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--muted);
+        }
+
+        /* ===========================================
+           INTERACTIVE TEAM BUILDER
+           =========================================== */
+        .team-builder {
+            display: grid;
+            grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+            gap: clamp(0.65rem, 2vw, 1.5rem);
+            align-items: stretch;
+            max-height: min(76vh, 680px);
+        }
+
+        .input-panel,
+        .result-panel {
+            min-height: 0;
+        }
+
+        textarea,
+        input {
+            width: 100%;
+            border: clamp(0.09rem, 0.18vw, 0.14rem) solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: clamp(0.78rem, 1.25vw, 1.05rem);
+            line-height: 1.32;
+            outline: none;
+        }
+
+        textarea:focus,
+        input:focus {
+            box-shadow: 0 0 0 clamp(0.1rem, 0.25vw, 0.16rem) var(--yellow);
+        }
+
+        #nameInput {
+            min-height: clamp(7rem, 28vh, 15rem);
+            resize: none;
+            padding: clamp(0.45rem, 1vw, 0.75rem);
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.35rem, 0.9vw, 0.65rem);
+            margin-top: clamp(0.45rem, 1vw, 0.8rem);
+        }
+
+        button {
+            border: clamp(0.1rem, 0.22vw, 0.16rem) solid var(--ink);
+            background: var(--paper-2);
+            color: var(--ink);
+            padding: clamp(0.42rem, 0.95vw, 0.68rem) clamp(0.58rem, 1.18vw, 0.92rem);
+            font-family: var(--font-mono);
+            font-size: clamp(0.62rem, 0.95vw, 0.8rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: clamp(0.16rem, 0.42vw, 0.3rem) clamp(0.16rem, 0.42vw, 0.3rem) 0 var(--shadow);
+        }
+
+        button.primary {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        button.secondary {
+            background: var(--yellow);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        .status-line {
+            min-height: clamp(1rem, 2.5vh, 1.4rem);
+            margin-top: clamp(0.4rem, 0.9vw, 0.65rem);
+            color: var(--muted);
+            font-size: clamp(0.72rem, 1.12vw, 0.95rem);
+        }
+
+        .draw-window {
+            display: grid;
+            place-items: center;
+            min-height: clamp(3.6rem, 11vh, 5.4rem);
+            margin-bottom: clamp(0.45rem, 1vw, 0.8rem);
+            border: clamp(0.12rem, 0.28vw, 0.22rem) solid var(--ink);
+            background:
+                repeating-linear-gradient(-45deg, rgba(21,21,21,0.08) 0, rgba(21,21,21,0.08) clamp(0.35rem, 0.8vw, 0.6rem), transparent clamp(0.35rem, 0.8vw, 0.6rem), transparent clamp(0.75rem, 1.5vw, 1.2rem)),
+                var(--yellow);
+            box-shadow: clamp(0.2rem, 0.7vw, 0.45rem) clamp(0.2rem, 0.7vw, 0.45rem) 0 var(--ink);
+            text-align: center;
+        }
+
+        .draw-name {
+            font-family: var(--font-display);
+            font-size: clamp(1.25rem, 4vw, 3rem);
+            font-weight: 400;
+            line-height: 1;
+            word-break: break-word;
+            text-shadow: clamp(0.05rem, 0.18vw, 0.14rem) clamp(0.05rem, 0.18vw, 0.14rem) 0 var(--white);
+        }
+
+        .mini-meta {
+            margin-top: clamp(0.2rem, 0.5vw, 0.35rem);
+            font-family: var(--font-mono);
+            font-size: clamp(0.52rem, 0.8vw, 0.68rem);
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(0.4rem, 1vw, 0.75rem);
+        }
+
+        .sound-toggle.active {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .team-card {
+            display: flex;
+            min-height: clamp(8rem, 28vh, 15rem);
+            max-height: min(42vh, 330px);
+            flex-direction: column;
+            border: clamp(0.11rem, 0.24vw, 0.18rem) solid var(--ink);
+            background: var(--paper-2);
+            box-shadow: clamp(0.18rem, 0.6vw, 0.42rem) clamp(0.18rem, 0.6vw, 0.42rem) 0 var(--shadow);
+            overflow: hidden;
+        }
+
+        .team-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: clamp(0.25rem, 0.7vw, 0.55rem);
+            padding: clamp(0.35rem, 0.8vw, 0.6rem);
+            background: var(--ink);
+            color: var(--paper);
+            font-family: var(--font-mono);
+            font-size: clamp(0.52rem, 0.78vw, 0.68rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .team-members {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: clamp(0.28rem, 0.75vw, 0.5rem);
+            padding: clamp(0.45rem, 1vw, 0.72rem);
+            overflow: hidden;
+        }
+
+        .member-pill {
+            border: clamp(0.05rem, 0.12vw, 0.08rem) solid var(--ink);
+            background: var(--white);
+            padding: clamp(0.25rem, 0.65vw, 0.46rem);
+            font-family: var(--font-heading);
+            font-size: clamp(0.82rem, 1.35vw, 1.12rem);
+            font-weight: 800;
+            line-height: 1.05;
+        }
+
+        .member-pill.empty {
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-weight: 500;
+            opacity: 0.7;
+        }
+
+        .team-card.pulse {
+            animation: teamPulse 0.5s var(--ease-out-expo);
+        }
+
+        @keyframes teamPulse {
+            0% { transform: scale(1); }
+            45% { transform: scale(1.025); }
+            100% { transform: scale(1); }
+        }
+
+        .workspace-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            align-items: end;
+        }
+
+        .timer-box {
+            min-width: clamp(13rem, 24vw, 21rem);
+            border: clamp(0.12rem, 0.28vw, 0.22rem) solid var(--ink);
+            background: var(--yellow);
+            padding: clamp(0.55rem, 1.2vw, 0.9rem);
+            box-shadow: clamp(0.18rem, 0.6vw, 0.42rem) clamp(0.18rem, 0.6vw, 0.42rem) 0 var(--ink);
+            text-align: center;
+        }
+
+        .timer-display {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5.8vw, 4.4rem);
+            font-weight: 400;
+            line-height: 0.95;
+            text-shadow: clamp(0.05rem, 0.18vw, 0.14rem) clamp(0.05rem, 0.18vw, 0.14rem) 0 var(--white);
+        }
+
+        .timer-actions {
+            display: flex;
+            justify-content: center;
+            gap: clamp(0.3rem, 0.8vw, 0.55rem);
+            margin-top: clamp(0.35rem, 0.8vw, 0.55rem);
+        }
+
+        .timer-actions button {
+            padding: clamp(0.25rem, 0.62vw, 0.44rem) clamp(0.42rem, 0.9vw, 0.68rem);
+            font-size: clamp(0.5rem, 0.78vw, 0.66rem);
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(0.45rem, 1.4vw, 1rem);
+            max-height: min(70vh, 600px);
+        }
+
+        .canvas-card {
+            display: flex;
+            min-height: 0;
+            flex-direction: column;
+            gap: clamp(0.45rem, 1vw, 0.72rem);
+        }
+
+        .canvas-card input,
+        .canvas-card textarea {
+            padding: clamp(0.35rem, 0.8vw, 0.56rem);
+        }
+
+        .canvas-card textarea {
+            min-height: clamp(3rem, 12vh, 6.2rem);
+            resize: none;
+        }
+
+        .member-preview {
+            min-height: clamp(2.2rem, 6vh, 3.4rem);
+            padding: clamp(0.35rem, 0.8vw, 0.56rem);
+            border: clamp(0.08rem, 0.18vw, 0.13rem) solid var(--ink);
+            background: rgba(17, 17, 17, 0.06);
+            color: var(--muted);
+            font-size: clamp(0.68rem, 1vw, 0.88rem);
+            line-height: 1.25;
+        }
+
+        .agenda-card {
+            min-height: clamp(7rem, 24vh, 12rem);
+        }
+
+        .big-number {
+            display: block;
+            color: var(--red);
+            font-family: var(--font-display);
+            font-size: clamp(1.25rem, 3vw, 2.4rem);
+            font-weight: 400;
+            line-height: 0.9;
+            margin-bottom: clamp(0.25rem, 0.7vw, 0.45rem);
+        }
+
+        .reveal-board {
+            display: grid;
+            place-items: center;
+            min-height: min(46vh, 390px);
+            border: clamp(0.12rem, 0.25vw, 0.18rem) solid var(--ink);
+            background:
+                repeating-linear-gradient(-45deg, rgba(21,21,21,0.06) 0, rgba(21,21,21,0.06) clamp(0.35rem, 0.8vw, 0.6rem), transparent clamp(0.35rem, 0.8vw, 0.6rem), transparent clamp(0.75rem, 1.5vw, 1.2rem)),
+                var(--yellow);
+            box-shadow: clamp(0.35rem, 1vw, 0.75rem) clamp(0.35rem, 1vw, 0.75rem) 0 var(--ink);
+            text-align: center;
+            padding: clamp(1rem, 3vw, 2.4rem);
+        }
+
+        .reveal-board strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: clamp(1.7rem, 5.5vw, 4.8rem);
+            font-weight: 900;
+            line-height: 0.9;
+        }
+
+        .small-note {
+            color: var(--muted);
+            font-size: clamp(0.72rem, 1.12vw, 0.95rem);
+        }
+
+        .feedback-stack {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: clamp(0.8rem, 2.4vw, 2rem);
+            align-items: stretch;
+        }
+
+        .quote-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: clamp(7rem, 22vh, 12rem);
+        }
+
+        .quote-card strong {
+            display: block;
+            margin-top: clamp(0.45rem, 1vw, 0.7rem);
+            font-family: var(--font-heading);
+            font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+            line-height: 1.08;
+        }
+
+        .checkpoint-layout {
+            justify-content: center;
+            gap: clamp(1.3rem, 4vw, 3.6rem);
+        }
+
+        .checkpoint-title {
+            line-height: 1.08;
+            max-width: 14ch;
+        }
+
+        .checkpoint-card {
+            width: min(100%, 980px);
+        }
+
+        /* ===========================================
+           RESPONSIVE TUNING
+           =========================================== */
+        @media (max-width: 900px) {
+            .split,
+            .two-col,
+            .three-col,
+            .team-builder,
+            .feedback-stack,
+            .workspace-head,
+            .canvas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .agenda-card,
+            .team-card {
+                min-height: auto;
+            }
+
+            #nameInput {
+                min-height: clamp(4rem, 18vh, 8rem);
+            }
+
+            .canvas-card textarea {
+                min-height: clamp(3rem, 8vh, 4.3rem);
+            }
+
+            .timer-box {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .workspace-head {
+                gap: clamp(0.35rem, 1.2vw, 0.6rem);
+            }
+
+            .workspace-head h2 {
+                font-size: clamp(1.35rem, 6.4vw, 2rem);
+            }
+
+            .timer-box {
+                padding: clamp(0.3rem, 1vw, 0.48rem);
+            }
+
+            .timer-display {
+                font-size: clamp(1.75rem, 8vw, 2.5rem);
+            }
+
+            .timer-actions {
+                margin-top: clamp(0.18rem, 0.6vw, 0.32rem);
+            }
+
+            .timer-actions button {
+                padding: clamp(0.16rem, 0.45vw, 0.28rem) clamp(0.3rem, 0.75vw, 0.5rem);
+                font-size: clamp(0.45rem, 1.7vw, 0.58rem);
+            }
+
+            .canvas-grid {
+                gap: clamp(0.28rem, 1vw, 0.5rem);
+            }
+
+            .canvas-card {
+                gap: clamp(0.22rem, 0.8vw, 0.38rem);
+                padding: clamp(0.38rem, 1.2vw, 0.55rem);
+            }
+
+            .canvas-card input,
+            .canvas-card textarea {
+                font-size: clamp(0.66rem, 2.5vw, 0.82rem);
+                padding: clamp(0.22rem, 0.7vw, 0.36rem);
+            }
+
+            .canvas-card textarea {
+                min-height: clamp(2.2rem, 6vh, 3rem);
+            }
+
+            .member-preview {
+                min-height: clamp(1.7rem, 4.7vh, 2.4rem);
+                padding: clamp(0.22rem, 0.7vw, 0.36rem);
+                font-size: clamp(0.58rem, 2.2vw, 0.72rem);
+            }
+        }
+
+        @media (max-height: 700px) {
+            .team-builder {
+                max-height: min(78vh, 540px);
+            }
+
+            .team-card {
+                min-height: clamp(6.4rem, 24vh, 11rem);
+            }
+
+            .draw-window {
+                min-height: clamp(3rem, 9vh, 4.4rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+    <section class="slide title-slide" data-section="Buổi 1">
+        <div class="slide-content title-only">
+            <div>
+                <div class="eyebrow reveal">HWM AI Build Lab Q3/2026</div>
+                <h1 class="reveal delay-1">Buổi 1:<br>Chia đội</h1>
+                <p class="reveal delay-2">Mục tiêu hôm nay: có team + vấn đề muốn xúc.</p>
+            </div>
+        </div>
+        <div class="slide-number">01 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Feedback">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Cải tiến từ feedback</div>
+            <h2 class="reveal delay-1">Chỉnh xíu</h2>
+            <div class="feedback-stack">
+                <div class="card blue quote-card reveal delay-2">
+                    <div>
+                        <div class="tag blue">Feedback dấu tên</div>
+                        <p>2 feedback dấu tên, đều có chữ a.</p>
+                    </div>
+                </div>
+                <div class="two-col reveal delay-3">
+                    <div class="card">
+                        <div class="tag red">Team size</div>
+                        <h3>Từ 3-5 người</h3>
+                        <p>Đông quá, 10tr/5 ko bõ.</p>
+                    </div>
+                    <div class="card green">
+                        <div class="tag green">Đổi thành</div>
+                        <h3>2-3 người</h3>
+                        <p>Cùng lắm solo, 10tr/2 vẫn ngol.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">02 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Agenda">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Nội dung hôm nay</div>
+            <h2 class="reveal delay-1">Hai việc chính</h2>
+            <div class="two-col">
+                <div class="card agenda-card blue reveal delay-2">
+                    <span class="big-number">01</span>
+                    <h3>Chia đội</h3>
+                    <p>Bốc người vào 3 team.</p>
+                </div>
+                <div class="card agenda-card red reveal delay-3">
+                    <span class="big-number">02</span>
+                    <h3>Chọn vấn đề</h3>
+                    <p>Tự thảo luận và chọn vấn đề muốn xúc, ngấy lắm rồi.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">03 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Chia đội">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Xào xáo nội bộ</div>
+            <h2 class="reveal delay-1">Bốc người vào team</h2>
+            <div class="team-builder reveal delay-2">
+                <div class="card input-panel">
+                    <div class="tag yellow">Danh sách tên</div>
+                    <textarea id="nameInput" placeholder="Nhập mỗi người một dòng. Ví dụ:
+Hiếu
+Điệp
+Thảo
+Linh
+Nhung
+Mạnh"></textarea>
+                    <div class="button-row">
+                        <button class="primary" id="drawBtn" type="button">Bốc người tiếp theo</button>
+                        <button class="secondary" id="loadBtn" type="button">Nạp danh sách</button>
+                        <button class="sound-toggle active" id="soundBtn" type="button">Âm thanh: bật</button>
+                        <button id="undoBtn" type="button">Undo</button>
+                        <button id="resetBtn" type="button">Reset</button>
+                    </div>
+                    <div class="status-line" id="statusLine"></div>
+                </div>
+                <div class="result-panel">
+                    <div class="draw-window">
+                        <div>
+                            <div class="draw-name" id="drawName">Bảng đấu</div>
+                            <div class="mini-meta" id="drawMeta">Click để bốc từng người</div>
+                        </div>
+                    </div>
+                    <div class="team-grid" id="teamGrid"></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">04 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Chọn bài">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Vấn đề thật</div>
+            <h2 class="reveal delay-1">Phải xài được</h2>
+            <div class="three-col">
+                <div class="card reveal delay-2">
+                    <div class="tag red">01</div>
+                    <h3>Lặp lại nhiều lần</h3>
+                    <p>Có thao tác hoặc kiểm tra phải làm lại thường xuyên.</p>
+                </div>
+                <div class="card reveal delay-3">
+                    <div class="tag blue">02</div>
+                    <h3>Rõ ràng</h3>
+                    <p>Biết đưa gì vào, muốn nhận kết quả gì ra.</p>
+                </div>
+                <div class="card reveal delay-4">
+                    <div class="tag teal">03</div>
+                    <h3>Có thể xài thử</h3>
+                    <p>Có case thật để kiểm thử ngay trong 1-2 tuần.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">05 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Team workspace">
+        <div class="slide-content">
+            <div class="workspace-head reveal">
+                <div>
+                    <div class="eyebrow">15 phút thảo luận</div>
+                    <h2 class="reveal delay-1">Đặt tên team & chốt vấn đề</h2>
+                </div>
+                <div class="timer-box reveal delay-2">
+                    <div class="kicker">Countdown</div>
+                    <div class="timer-display" id="timerDisplay">15:00</div>
+                    <div class="timer-actions">
+                        <button class="primary" id="timerStartBtn" type="button">Start</button>
+                        <button id="timerPauseBtn" type="button">Pause</button>
+                        <button class="secondary" id="timerResetBtn" type="button">Reset</button>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas-grid reveal delay-3" id="teamWorkspace"></div>
+        </div>
+        <div class="slide-number">06 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Trước khi kết thúc">
+        <div class="slide-content checkpoint-layout">
+            <div>
+                <div class="eyebrow reveal">Checkpoint</div>
+                <h2 class="checkpoint-title reveal delay-1">3 team chém</h2>
+            </div>
+            <div class="card checkpoint-card reveal delay-2">
+                <ul class="bullet-list">
+                    <li>Team đã có người, tên team và 1 vấn đề.</li>
+                    <li>Mỗi team có 3 phút chia sẻ.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">07 / 08</div>
+    </section>
+
+    <section class="slide" data-section="Tuần sau">
+        <div class="slide-content split">
+            <div class="reveal-left">
+                <div class="eyebrow">Hé lộ tuần sau</div>
+                <h2>Chốt Ý Tưởng</h2>
+            </div>
+            <div class="card red reveal-scale delay-2">
+                <ul class="bullet-list">
+                    <li>Cách chọn ý tưởng đáng xúc.</li>
+                    <li>Phân tích ý tưởng của từng đội.</li>
+                    <li>Chọn lại nếu cần</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">08 / 08</div>
+    </section>
+
+    <script>
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = Array.from(document.querySelectorAll('.slide'));
+                this.currentSlide = 0;
+                this.navDots = document.getElementById('navDots');
+                this.progressBar = document.getElementById('progressBar');
+                this.wheelLock = false;
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.setupNavDots();
+                this.updateProgress();
+                this.goToInitialSlide();
+            }
+
+            goToInitialSlide() {
+                const match = window.location.hash.match(/slide-(\d+)/);
+                if (!match) return;
+                const index = Number(match[1]) - 1;
+                if (!Number.isFinite(index)) return;
+                window.setTimeout(() => this.goToSlide(index, false), 120);
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            this.currentSlide = this.slides.indexOf(entry.target);
+                            this.updateProgress();
+                            this.updateNavDots();
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                this.slides.forEach((slide) => observer.observe(slide));
+                this.slides[0].classList.add('visible');
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (event) => {
+                    const target = event.target;
+                    const isTyping = target && (
+                        target.tagName === 'INPUT' ||
+                        target.tagName === 'TEXTAREA' ||
+                        target.getAttribute('contenteditable') === 'true'
+                    );
+                    if (isTyping) return;
+
+                    if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(event.key)) {
+                        event.preventDefault();
+                        this.goToSlide(this.currentSlide + 1);
+                    }
+
+                    if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(event.key)) {
+                        event.preventDefault();
+                        this.goToSlide(this.currentSlide - 1);
+                    }
+                });
+            }
+
+            setupTouchNav() {
+                let startY = 0;
+                document.addEventListener('touchstart', (event) => {
+                    startY = event.touches[0].clientY;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (event) => {
+                    const endY = event.changedTouches[0].clientY;
+                    const diff = startY - endY;
+                    if (Math.abs(diff) < 50) return;
+                    this.goToSlide(this.currentSlide + (diff > 0 ? 1 : -1));
+                }, { passive: true });
+            }
+
+            setupWheelNav() {
+                document.addEventListener('wheel', (event) => {
+                    const target = event.target;
+                    if (target && (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT')) return;
+                    if (this.wheelLock) return;
+                    this.wheelLock = true;
+                    this.goToSlide(this.currentSlide + (event.deltaY > 0 ? 1 : -1));
+                    setTimeout(() => { this.wheelLock = false; }, 650);
+                }, { passive: true });
+            }
+
+            setupNavDots() {
+                this.navDots.innerHTML = '';
+                this.slides.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot';
+                    dot.type = 'button';
+                    dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                    this.navDots.appendChild(dot);
+                });
+                this.updateNavDots();
+            }
+
+            updateNavDots() {
+                Array.from(this.navDots.children).forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentSlide);
+                });
+            }
+
+            updateProgress() {
+                const percent = ((this.currentSlide + 1) / this.slides.length) * 100;
+                this.progressBar.style.width = `${percent}%`;
+            }
+
+            goToSlide(index, updateHash = true) {
+                const next = Math.max(0, Math.min(this.slides.length - 1, index));
+                if (updateHash) window.history.replaceState(null, '', `#slide-${next + 1}`);
+                this.slides[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        /* ===========================================
+           TEAM RANDOMIZER
+           =========================================== */
+        class TeamRandomizer {
+            constructor() {
+                this.storageKey = 'hwm-build-lab-session-01';
+                this.nameInput = document.getElementById('nameInput');
+                this.statusLine = document.getElementById('statusLine');
+                this.drawName = document.getElementById('drawName');
+                this.drawMeta = document.getElementById('drawMeta');
+                this.teamGrid = document.getElementById('teamGrid');
+                this.teamWorkspace = document.getElementById('teamWorkspace');
+                this.drawBtn = document.getElementById('drawBtn');
+                this.loadBtn = document.getElementById('loadBtn');
+                this.soundBtn = document.getElementById('soundBtn');
+                this.undoBtn = document.getElementById('undoBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.timerDisplay = document.getElementById('timerDisplay');
+                this.timerStartBtn = document.getElementById('timerStartBtn');
+                this.timerPauseBtn = document.getElementById('timerPauseBtn');
+                this.timerResetBtn = document.getElementById('timerResetBtn');
+                this.audioContext = null;
+                this.timerInterval = null;
+                this.defaultState = {
+                    rawNames: '',
+                    remaining: [],
+                    teams: [[], [], []],
+                    history: [],
+                    teamNames: ['', '', ''],
+                    problems: ['', '', ''],
+                    artifacts: ['', '', ''],
+                    soundEnabled: true,
+                    timerSeconds: 15 * 60
+                };
+                this.state = this.loadState();
+                this.bindEvents();
+                this.renderAll();
+                this.renderTimer();
+            }
+
+            bindEvents() {
+                this.nameInput.addEventListener('input', () => {
+                    this.state.rawNames = this.nameInput.value;
+                    this.saveState();
+                    this.updateStatusFromNames();
+                });
+                this.loadBtn.addEventListener('click', () => this.loadNames());
+                this.drawBtn.addEventListener('click', () => this.drawNext());
+                this.soundBtn.addEventListener('click', () => this.toggleSound());
+                this.undoBtn.addEventListener('click', () => this.undo());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                this.timerStartBtn.addEventListener('click', () => this.startTimer());
+                this.timerPauseBtn.addEventListener('click', () => this.pauseTimer());
+                this.timerResetBtn.addEventListener('click', () => this.resetTimer());
+            }
+
+            parseNames(raw) {
+                const seen = new Set();
+                return raw
+                    .split(/\n|,/)
+                    .map((name) => name.trim())
+                    .filter(Boolean)
+                    .filter((name) => {
+                        const key = name.toLowerCase();
+                        if (seen.has(key)) return false;
+                        seen.add(key);
+                        return true;
+                    });
+            }
+
+            loadNames() {
+                const names = this.parseNames(this.nameInput.value);
+                if (names.length === 0) {
+                    this.setStatus('Nhập danh sách tên trước khi bốc.', true);
+                    return;
+                }
+                if (names.length > 9) {
+                    this.setStatus(`Đang có ${names.length} tên. Giới hạn là 9 người cho 3 team.`, true);
+                    return;
+                }
+
+                this.state.rawNames = this.nameInput.value;
+                this.state.remaining = names;
+                this.state.teams = [[], [], []];
+                this.state.history = [];
+                this.drawName.textContent = 'Đã nạp danh sách';
+                this.drawMeta.textContent = `${names.length} người đang chờ bốc`;
+                this.setStatus('Danh sách đã sẵn sàng. Click “Bốc người tiếp theo”.');
+                this.playChime();
+                this.saveState();
+                this.renderAll();
+            }
+
+            drawNext() {
+                if (this.drawBtn.disabled) return;
+                if (this.state.remaining.length === 0 && this.state.teams.flat().length === 0) {
+                    this.loadNames();
+                    if (this.state.remaining.length === 0) return;
+                }
+
+                const totalMembers = this.state.teams.flat().length;
+                if (totalMembers >= 9 || this.state.teams.every((team) => team.length >= 3)) {
+                    this.setStatus('Ba team đã đủ người.', false);
+                    return;
+                }
+
+                if (this.state.remaining.length === 0) {
+                    this.setStatus('Đã bốc hết danh sách.', false);
+                    return;
+                }
+
+                this.spinAndAssign();
+            }
+
+            spinAndAssign() {
+                this.drawBtn.disabled = true;
+                this.loadBtn.disabled = true;
+                this.undoBtn.disabled = true;
+                this.playGoofyIntro();
+                const pool = this.state.remaining.slice();
+                let ticks = 0;
+                const maxTicks = 42 + Math.floor(Math.random() * 14);
+                const metaLines = [
+                    'Đang quay số định mệnh...',
+                    'Ai sẽ lên sóng?',
+                    'Vũ trụ đang cân kèo...',
+                    'Không hồi hộp không lấy tiền...',
+                    'Sắp có người phải gánh...'
+                ];
+                const spin = setInterval(() => {
+                    ticks += 1;
+                    const preview = pool[Math.floor(Math.random() * pool.length)];
+                    this.drawName.textContent = preview;
+                    this.drawMeta.textContent = metaLines[ticks % metaLines.length];
+                    this.playTick(ticks);
+                    if (ticks % 9 === 0) this.playBoing();
+                    if (ticks >= maxTicks) {
+                        clearInterval(spin);
+                        this.assignRandomPerson();
+                    }
+                }, 80);
+            }
+
+            assignRandomPerson() {
+                const personIndex = Math.floor(Math.random() * this.state.remaining.length);
+                const [person] = this.state.remaining.splice(personIndex, 1);
+                const sizes = this.state.teams.map((team) => team.length);
+                const minSize = Math.min(...sizes);
+                const candidateTeams = this.state.teams
+                    .map((team, index) => ({ team, index }))
+                    .filter(({ team }) => team.length === minSize && team.length < 3);
+                const target = candidateTeams[Math.floor(Math.random() * candidateTeams.length)].index;
+
+                this.state.teams[target].push(person);
+                this.state.history.push({ person, teamIndex: target });
+                this.drawName.textContent = person;
+                this.drawMeta.textContent = `Team ${target + 1} nhận hàng`;
+                this.setStatus(`Đã đưa ${person} vào Team ${target + 1}. Còn ${this.state.remaining.length} người.`);
+                this.playGoofyWin();
+                this.speakSelection(person, target);
+                this.saveState();
+                this.renderAll(target);
+                this.drawBtn.disabled = false;
+                this.loadBtn.disabled = false;
+                this.undoBtn.disabled = false;
+            }
+
+            undo() {
+                const last = this.state.history.pop();
+                if (!last) {
+                    this.setStatus('Chưa có lượt bốc để undo.', true);
+                    return;
+                }
+
+                const team = this.state.teams[last.teamIndex];
+                const index = team.lastIndexOf(last.person);
+                if (index >= 0) team.splice(index, 1);
+                this.state.remaining.push(last.person);
+                this.drawName.textContent = last.person;
+                this.drawMeta.textContent = 'đã undo';
+                this.setStatus(`Đã đưa ${last.person} về danh sách chờ.`);
+                this.saveState();
+                this.renderAll();
+            }
+
+            reset() {
+                if (!window.confirm('Reset toàn bộ chia team và nội dung đã nhập?')) return;
+                this.pauseTimer();
+                this.state = { ...this.defaultState, teams: [[], [], []], teamNames: ['', '', ''], problems: ['', '', ''], artifacts: ['', '', ''] };
+                this.nameInput.value = '';
+                this.drawName.textContent = 'Bảng đấu';
+                this.drawMeta.textContent = 'Click để bốc từng người';
+                this.setStatus('Đã reset. Nhập danh sách mới để bắt đầu.');
+                this.saveState();
+                this.renderAll();
+                this.renderTimer();
+            }
+
+            updateStatusFromNames() {
+                const count = this.parseNames(this.nameInput.value).length;
+                if (count > 9) {
+                    this.setStatus(`Đang có ${count} tên. Giới hạn là 9 người.`, true);
+                } else {
+                    this.setStatus(`${count} tên trong danh sách nhập. Bấm “Nạp danh sách” để bắt đầu.`);
+                }
+            }
+
+            setStatus(message, isError = false) {
+                this.statusLine.textContent = message;
+                this.statusLine.style.color = isError ? 'var(--red)' : 'var(--muted)';
+            }
+
+            renderAll(pulseTeamIndex = null) {
+                this.nameInput.value = this.state.rawNames || '';
+                this.renderTeams(pulseTeamIndex);
+                this.renderTeamWorkspace();
+                this.renderSoundButton();
+                this.renderTimer();
+                this.undoBtn.disabled = this.state.history.length === 0;
+            }
+
+            renderTeams(pulseTeamIndex = null) {
+                this.teamGrid.innerHTML = '';
+                this.state.teams.forEach((members, index) => {
+                    const card = document.createElement('div');
+                    card.className = `team-card${pulseTeamIndex === index ? ' pulse' : ''}`;
+                    const teamName = this.state.teamNames[index] ? ` · ${this.state.teamNames[index]}` : '';
+                    card.innerHTML = `
+                        <div class="team-head">
+                            <span>Team ${index + 1}${teamName}</span>
+                            <span>${members.length}/3</span>
+                        </div>
+                        <div class="team-members">
+                            ${[0, 1, 2].map((slot) => {
+                                const member = members[slot];
+                                return `<div class="member-pill ${member ? '' : 'empty'}">${member || 'Chờ bốc...'}</div>`;
+                            }).join('')}
+                        </div>
+                    `;
+                    this.teamGrid.appendChild(card);
+                });
+            }
+
+            renderTeamWorkspace() {
+                this.teamWorkspace.innerHTML = '';
+                this.state.teams.forEach((members, index) => {
+                    const displayName = this.state.teamNames[index] || `Team ${index + 1}`;
+                    const card = document.createElement('div');
+                    card.className = 'card canvas-card';
+                    card.innerHTML = `
+                        <div class="tag ${['blue', 'red', 'green'][index]}">${this.escapeHtml(displayName)}</div>
+                        <input data-team-name="${index}" value="${this.escapeAttr(this.state.teamNames[index])}" placeholder="Tên team">
+                        <div class="member-preview">${members.length ? members.join(' · ') : 'Chưa có thành viên'}</div>
+                        <textarea data-problem="${index}" placeholder="Vấn đề muốn giải quyết">${this.escapeHtml(this.state.problems[index])}</textarea>
+                    `;
+                    this.teamWorkspace.appendChild(card);
+                });
+
+                this.teamWorkspace.querySelectorAll('[data-team-name]').forEach((input) => {
+                    input.addEventListener('input', (event) => {
+                        const index = Number(event.target.dataset.teamName);
+                        this.state.teamNames[index] = event.target.value;
+                        this.saveState();
+                        this.renderTeams();
+                        const tag = event.target.closest('.canvas-card').querySelector('.tag');
+                        tag.textContent = event.target.value || `Team ${index + 1}`;
+                    });
+                });
+
+                this.teamWorkspace.querySelectorAll('[data-problem]').forEach((textarea) => {
+                    textarea.addEventListener('input', (event) => {
+                        const index = Number(event.target.dataset.problem);
+                        this.state.problems[index] = event.target.value;
+                        this.saveState();
+                    });
+                });
+
+            }
+
+            toggleSound() {
+                this.state.soundEnabled = !this.state.soundEnabled;
+                this.saveState();
+                this.renderSoundButton();
+                if (this.state.soundEnabled) this.playChime();
+            }
+
+            renderSoundButton() {
+                this.soundBtn.classList.toggle('active', this.state.soundEnabled);
+                this.soundBtn.textContent = `Âm thanh: ${this.state.soundEnabled ? 'bật' : 'tắt'}`;
+            }
+
+            ensureAudioContext() {
+                if (!this.state.soundEnabled) return null;
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return null;
+                if (!this.audioContext) this.audioContext = new AudioCtx();
+                if (this.audioContext.state === 'suspended') this.audioContext.resume();
+                return this.audioContext;
+            }
+
+            playTone(frequency, duration = 0.08, type = 'square', gainValue = 0.05) {
+                const context = this.ensureAudioContext();
+                if (!context) return;
+                const oscillator = context.createOscillator();
+                const gain = context.createGain();
+                oscillator.type = type;
+                oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+                gain.gain.setValueAtTime(gainValue, context.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
+                oscillator.connect(gain);
+                gain.connect(context.destination);
+                oscillator.start();
+                oscillator.stop(context.currentTime + duration);
+            }
+
+            playTick(tick = 0) {
+                const pattern = [392, 523, 659, 784, 330, 880];
+                const frequency = pattern[tick % pattern.length] + Math.random() * 18;
+                this.playTone(frequency, 0.055, tick % 3 === 0 ? 'sawtooth' : 'square', 0.032);
+            }
+
+            playBoing() {
+                const context = this.ensureAudioContext();
+                if (!context) return;
+                const oscillator = context.createOscillator();
+                const gain = context.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(180, context.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(720, context.currentTime + 0.12);
+                oscillator.frequency.exponentialRampToValueAtTime(260, context.currentTime + 0.28);
+                gain.gain.setValueAtTime(0.06, context.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.3);
+                oscillator.connect(gain);
+                gain.connect(context.destination);
+                oscillator.start();
+                oscillator.stop(context.currentTime + 0.3);
+            }
+
+            playGoofyIntro() {
+                [262, 330, 392, 523].forEach((frequency, index) => {
+                    setTimeout(() => this.playTone(frequency, 0.08, 'square', 0.05), index * 85);
+                });
+            }
+
+            playChime() {
+                this.playTone(660, 0.08, 'triangle', 0.07);
+                setTimeout(() => this.playTone(880, 0.12, 'triangle', 0.06), 90);
+            }
+
+            playGoofyWin() {
+                this.playTone(196, 0.08, 'sawtooth', 0.06);
+                setTimeout(() => this.playTone(262, 0.08, 'square', 0.06), 85);
+                setTimeout(() => this.playTone(330, 0.08, 'square', 0.06), 170);
+                setTimeout(() => this.playTone(523, 0.16, 'triangle', 0.08), 260);
+                setTimeout(() => this.playBoing(), 430);
+            }
+
+            speakSelection(person, target) {
+                if (!this.state.soundEnabled || !('speechSynthesis' in window)) return;
+                window.speechSynthesis.cancel();
+                const lines = [
+                    `Vũ trụ gọi tên ${person}. Mời vào Team ${target + 1}, gánh nhẹ thôi nha.`,
+                    `Xin chúc mừng ${person}. Team ${target + 1} vừa nhận hàng nóng.`,
+                    `Không trượt phát nào, ${person} vào Team ${target + 1}. Lên kèo.`,
+                    `${person} đã được chọn. Team ${target + 1}, chuẩn bị tinh thần.`,
+                    `A ha, chính là ${person}. Vào Team ${target + 1}, xúc luôn.`
+                ];
+                const utterance = new SpeechSynthesisUtterance(lines[Math.floor(Math.random() * lines.length)]);
+                utterance.lang = 'vi-VN';
+                utterance.rate = 0.88;
+                utterance.pitch = 1.28;
+                utterance.volume = 1;
+                const voices = window.speechSynthesis.getVoices();
+                const vietnameseVoice = voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith('vi'));
+                if (vietnameseVoice) utterance.voice = vietnameseVoice;
+                window.speechSynthesis.speak(utterance);
+            }
+
+            startTimer() {
+                if (this.timerInterval) return;
+                if (this.state.timerSeconds <= 0) this.state.timerSeconds = 15 * 60;
+                this.renderTimer();
+                this.timerInterval = setInterval(() => {
+                    this.state.timerSeconds = Math.max(0, this.state.timerSeconds - 1);
+                    this.renderTimer();
+                    if (this.state.timerSeconds === 0) {
+                        this.pauseTimer();
+                        this.playChime();
+                        this.speakText('Hết 15 phút. Mỗi team chốt tên và vấn đề.');
+                    }
+                    if (this.state.timerSeconds % 30 === 0 || this.state.timerSeconds <= 10) {
+                        this.saveState();
+                    }
+                }, 1000);
+            }
+
+            pauseTimer() {
+                if (!this.timerInterval) return;
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+                this.saveState();
+            }
+
+            resetTimer() {
+                this.pauseTimer();
+                this.state.timerSeconds = 15 * 60;
+                this.saveState();
+                this.renderTimer();
+            }
+
+            renderTimer() {
+                const seconds = Math.max(0, this.state.timerSeconds ?? 15 * 60);
+                const minutes = Math.floor(seconds / 60);
+                const rest = seconds % 60;
+                this.timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(rest).padStart(2, '0')}`;
+                this.timerDisplay.style.color = seconds <= 60 ? 'var(--red)' : 'var(--ink)';
+                this.timerStartBtn.disabled = Boolean(this.timerInterval);
+                this.timerPauseBtn.disabled = !this.timerInterval;
+            }
+
+            speakText(text) {
+                if (!this.state.soundEnabled || !('speechSynthesis' in window)) return;
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'vi-VN';
+                utterance.rate = 0.94;
+                utterance.pitch = 1;
+                window.speechSynthesis.speak(utterance);
+            }
+
+            loadState() {
+                try {
+                    const raw = localStorage.getItem(this.storageKey);
+                    if (!raw) return JSON.parse(JSON.stringify(this.defaultState));
+                    return { ...JSON.parse(JSON.stringify(this.defaultState)), ...JSON.parse(raw) };
+                } catch (error) {
+                    return JSON.parse(JSON.stringify(this.defaultState));
+                }
+            }
+
+            saveState() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+            }
+
+            escapeHtml(value) {
+                return String(value || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            escapeAttr(value) {
+                return this.escapeHtml(value).replace(/"/g, '&quot;');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+            new TeamRandomizer();
+        });
+    </script>
+</body>
+</html>

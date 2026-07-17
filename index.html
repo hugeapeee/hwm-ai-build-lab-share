@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HWM AI Build Lab</title>
+  <meta name="description" content="Slide tương tác cho các buổi HWM AI Build Lab Q3/2026.">
+  <meta property="og:title" content="HWM AI Build Lab">
+  <meta property="og:description" content="Build từ việc thật. Không nghe nữa, làm luôn.">
+  <meta property="og:image" content="https://hugeapeee.github.io/hwm-ai-build-lab-share/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --ink: #111318;
+      --paper: #fffaf0;
+      --yellow: #ffd84d;
+      --red: #f23f35;
+      --blue: #2f6fd5;
+      --teal: #27b9bd;
+      --muted: #6c675f;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--paper); }
+    body {
+      margin: 0;
+      background:
+        repeating-linear-gradient(-8deg, transparent 0, transparent 18px, rgba(255,216,77,.32) 18px, rgba(255,216,77,.32) 27px),
+        var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+    main { min-height: 100vh; padding: clamp(18px, 3vw, 42px); }
+    .shell {
+      width: min(1180px, 100%);
+      min-height: calc(100vh - clamp(36px, 6vw, 84px));
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 52px);
+      border: 3px solid var(--ink);
+      background: rgba(255,250,240,.92);
+      box-shadow: 10px 10px 0 var(--ink);
+    }
+    .topbar, footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand, .quarter, .eyebrow, .tool-kicker {
+      width: fit-content;
+      border: 2px solid var(--ink);
+      padding: 8px 12px;
+      background: var(--yellow);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-family: "Courier New", monospace;
+      font-size: clamp(11px, 1.3vw, 15px);
+      font-weight: 800;
+    }
+    .quarter { background: var(--paper); }
+    .intro { max-width: 900px; padding: clamp(64px, 11vh, 112px) 0 clamp(34px, 6vh, 64px); }
+    .eyebrow { margin: 0 0 24px; }
+    h1, h2, p { margin-top: 0; }
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 22px;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: clamp(52px, 9vw, 112px);
+      line-height: .92;
+      text-transform: uppercase;
+    }
+    .lede {
+      max-width: 58ch;
+      margin-bottom: 0;
+      font-size: clamp(18px, 2.2vw, 26px);
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .sessions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 32px); }
+    .session {
+      display: flex;
+      min-height: 430px;
+      flex-direction: column;
+      padding: clamp(22px, 3vw, 34px);
+      border: 3px solid var(--ink);
+      background: var(--paper);
+    }
+    .session.red { box-shadow: 9px 9px 0 var(--red); }
+    .session.blue { box-shadow: 9px 9px 0 var(--blue); }
+    .session-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; font-family: "Courier New", monospace; font-weight: 800; text-transform: uppercase; }
+    .number { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: clamp(42px, 6vw, 72px); line-height: .8; }
+    .label { border: 2px solid var(--ink); padding: 7px 10px; color: white; }
+    .red .label { background: var(--red); }
+    .blue .label { background: var(--blue); }
+    .session h2, .tool h2 { margin-bottom: 12px; font-size: clamp(30px, 4vw, 48px); line-height: 1; }
+    .session > p, .tool p { color: var(--muted); font-size: clamp(16px, 1.8vw, 21px); line-height: 1.4; }
+    ul { display: grid; gap: 10px; margin: 10px 0 30px; padding: 0; list-style: none; font-size: clamp(15px, 1.5vw, 18px); font-weight: 700; }
+    li::before { content: "■"; margin-right: 10px; color: var(--teal); }
+    .action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: auto;
+      padding: 15px 17px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      box-shadow: 5px 5px 0 var(--ink);
+      color: inherit;
+      font-family: "Courier New", monospace;
+      font-size: clamp(13px, 1.4vw, 16px);
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+    .action:hover, .action:focus-visible { transform: translate(3px,3px); box-shadow: 2px 2px 0 var(--ink); }
+    .tool {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: clamp(24px,4vw,54px);
+      align-items: end;
+      margin-top: clamp(28px,5vw,54px);
+      padding: clamp(22px,3vw,34px);
+      border: 3px solid var(--ink);
+      background: #d9f4f2;
+      box-shadow: 9px 9px 0 var(--teal);
+    }
+    .tool-kicker { margin: 0 0 18px; background: var(--teal); box-shadow: none; }
+    .tool p { max-width: 60ch; margin-bottom: 0; }
+    .tool .action { min-width: 220px; margin: 0; background: var(--paper); }
+    footer { margin-top: clamp(34px,5vw,58px); font-family: "Courier New", monospace; font-size: 12px; line-height: 1.5; text-transform: uppercase; }
+    footer strong { color: var(--red); }
+    @media (max-width: 760px) {
+      main { padding: 12px; }
+      .shell { padding: 18px; box-shadow: 6px 6px 0 var(--ink); }
+      .intro { padding-top: 60px; }
+      h1 { font-size: clamp(48px,16vw,72px); }
+      .sessions, .tool { grid-template-columns: 1fr; }
+      .session { min-height: 0; }
+      .tool .action { min-width: 0; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">HWM AI BUILD LAB</div>
+        <div class="quarter">Q3/2026</div>
+      </header>
+      <section class="intro">
+        <p class="eyebrow">KHÔNG NGHE NỮA, LÀM LUÔN</p>
+        <h1>Chọn buổi để vào việc</h1>
+        <p class="lede">Slide tương tác dùng trực tiếp trên laptop hoặc TV. Không cần tải file, không cần cài thêm gì.</p>
+      </section>
+      <section class="sessions" aria-label="Danh sách các buổi">
+        <article class="session red">
+          <div class="session-head"><span class="number">01</span><span class="label">Buổi 1</span></div>
+          <h2>Chia đội</h2>
+          <p>Bốc người, chia 3 team và chốt vấn đề muốn xử.</p>
+          <ul><li>Randomizer có âm thanh</li><li>Timer thảo luận</li><li>Lưu team trên máy</li></ul>
+          <a class="action" href="session-01-team-builder.html">Vào chia đội <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="session blue">
+          <div class="session-head"><span class="number">02–03</span><span class="label">Buổi 2 &amp; 3</span></div>
+          <h2>Chốt vai &amp; hồ sơ build</h2>
+          <p>Phân vai, kể workflow và chuẩn bị đủ context để vibecode.</p>
+          <ul><li>Tự lấy team buổi 1</li><li>Timer workshop</li><li>Bộ hồ sơ build</li></ul>
+          <a class="action" href="session-02-build-dossier.html">Vào chuẩn bị build <span aria-hidden="true">→</span></a>
+        </article>
+      </section>
+      <section class="tool">
+        <div>
+          <p class="tool-kicker">TÀI LIỆU LÀM VIỆC</p>
+          <h2>Mẫu Bộ hồ sơ build</h2>
+          <p>Điền workflow hiện tại, dữ liệu để build và điều kiện để biết sản phẩm đã xài được.</p>
+        </div>
+        <a class="action" href="templates/build-dossier.md" target="_blank" rel="noreferrer">Mở mẫu hồ sơ <span aria-hidden="true">↗</span></a>
+      </section>
+      <footer><span>Dữ liệu tương tác được lưu trên trình duyệt đang dùng.</span><strong>BUILD TỪ VIỆC THẬT</strong></footer>
+    </div>
+  </main>
+</body>
+</html>
