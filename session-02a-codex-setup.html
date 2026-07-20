@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HWM AI Build Lab - Buổi 2A: Setup Codex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===========================================
+           THEME TOKENS: MATCH SESSION 01
+           =========================================== */
+        :root {
+            --ink: #111111;
+            --paper: #fff2b8;
+            --paper-2: #fffdf2;
+            --muted: #5f5142;
+            --red: #ff3d2e;
+            --teal: #38c7ee;
+            --green: #d8ff32;
+            --yellow: #ffe45f;
+            --blue: #2c6de9;
+            --pink: #ff8fbd;
+            --white: #fffdf2;
+            --shadow: #111111;
+            --font-display: 'Bangers', cursive;
+            --font-heading: 'Archivo', sans-serif;
+            --font-body: 'IBM Plex Sans', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --title-size: clamp(2rem, 6.6vw, 5.6rem);
+            --h2-size: clamp(1.55rem, 4.4vw, 3.7rem);
+            --h3-size: clamp(1.05rem, 2.4vw, 1.7rem);
+            --body-size: clamp(0.82rem, 1.48vw, 1.24rem);
+            --small-size: clamp(0.64rem, 1vw, 0.9rem);
+            --slide-padding: clamp(1rem, 4vw, 3.5rem);
+            --content-gap: clamp(0.7rem, 2vw, 1.7rem);
+            --element-gap: clamp(0.4rem, 1.2vw, 1rem);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.65s;
+        }
+
+        /* ===========================================
+           BASE RESET
+           =========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--ink);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: var(--body-size);
+        }
+
+        /* ===========================================
+           VIEWPORT FITTING: MANDATORY BASE STYLES
+           Include this ENTIRE file in every presentation.
+           These styles ensure slides fit exactly in the viewport.
+           =========================================== */
+
+        /* 1. Lock html/body to viewport */
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* 2. Each slide = exact viewport height */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 3. Content container with flex for centering */
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+        }
+
+        /* 4. ALL typography uses clamp() for responsive scaling */
+        :root {
+            --title-size: clamp(1.5rem, 5vw, 4rem);
+            --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+            --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+            --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+            --small-size: clamp(0.65rem, 1vw, 0.875rem);
+            --slide-padding: clamp(1rem, 4vw, 4rem);
+            --content-gap: clamp(0.5rem, 2vw, 2rem);
+            --element-gap: clamp(0.25rem, 1vw, 1rem);
+        }
+
+        /* 5. Cards/containers use viewport-relative max sizes */
+        .card, .container, .content-box {
+            max-width: min(90vw, 1000px);
+            max-height: min(80vh, 700px);
+        }
+
+        /* 6. Lists auto-scale with viewport */
+        .feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+        .feature-list li, .bullet-list li {
+            font-size: var(--body-size);
+            line-height: 1.4;
+        }
+
+        /* 7. Grids adapt to available space */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        /* 8. Images constrained to viewport */
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
+
+        /* ===========================================
+           RESPONSIVE BREAKPOINTS
+           =========================================== */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1rem, 3vw, 1.75rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.1rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint, .decorative { display: none; }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ===========================================
+           SESSION 02 THEME OVERRIDES
+           =========================================== */
+        :root {
+            --title-size: clamp(2rem, 6.6vw, 5.6rem);
+            --h2-size: clamp(1.55rem, 4.4vw, 3.7rem);
+            --h3-size: clamp(1.05rem, 2.4vw, 1.7rem);
+            --body-size: clamp(0.82rem, 1.48vw, 1.24rem);
+            --small-size: clamp(0.64rem, 1vw, 0.9rem);
+            --slide-padding: clamp(1rem, 4vw, 3.5rem);
+            --content-gap: clamp(0.7rem, 2vw, 1.7rem);
+            --element-gap: clamp(0.4rem, 1.2vw, 1rem);
+        }
+
+        /* ===========================================
+           GLOBAL SLIDE SURFACE
+           =========================================== */
+        .slide {
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 230, 93, 0.95) 0 12%, transparent 12.5%),
+                radial-gradient(circle at 86% 76%, rgba(56, 199, 238, 0.75) 0 10%, transparent 10.5%),
+                repeating-linear-gradient(-8deg, rgba(255, 255, 255, 0.45) 0 clamp(0.6rem, 1.3vw, 1rem), rgba(255, 234, 166, 0.72) clamp(0.6rem, 1.3vw, 1rem) clamp(1.2rem, 2.6vw, 2rem)),
+                var(--paper);
+        }
+
+        .slide::before {
+            content: "";
+            position: absolute;
+            inset: clamp(0.45rem, 1vw, 0.8rem);
+            border: clamp(0.11rem, 0.22vw, 0.18rem) solid var(--ink);
+            pointer-events: none;
+        }
+
+        .slide::after {
+            content: attr(data-section);
+            position: absolute;
+            top: clamp(0.75rem, 1.6vw, 1.2rem);
+            right: clamp(1rem, 2.5vw, 2.5rem);
+            padding: clamp(0.25rem, 0.6vw, 0.42rem) clamp(0.45rem, 1vw, 0.7rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+            font-family: var(--font-mono);
+            font-size: clamp(0.55rem, 0.9vw, 0.76rem);
+            box-shadow: clamp(0.16rem, 0.42vw, 0.32rem) clamp(0.16rem, 0.42vw, 0.32rem) 0 var(--shadow);
+            text-transform: uppercase;
+        }
+
+        .slide-content {
+            width: min(100%, 1180px);
+            margin: 0 auto;
+            gap: var(--content-gap);
+            z-index: 1;
+        }
+
+        h1, h2, h3 { line-height: 0.96; letter-spacing: 0; }
+        h1, h2 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            text-transform: uppercase;
+            text-shadow: clamp(0.06rem, 0.2vw, 0.16rem) clamp(0.06rem, 0.2vw, 0.16rem) 0 var(--white), clamp(0.18rem, 0.45vw, 0.34rem) clamp(0.18rem, 0.45vw, 0.34rem) 0 var(--ink);
+        }
+        h1 { font-size: var(--title-size); max-width: 11ch; }
+        h2 { font-size: var(--h2-size); }
+        h3 { font-family: var(--font-heading); font-size: var(--h3-size); font-weight: 900; }
+        p { line-height: 1.35; }
+
+        .eyebrow, .tag {
+            display: inline-flex;
+            align-self: flex-start;
+            width: fit-content;
+            padding: clamp(0.28rem, 0.72vw, 0.5rem) clamp(0.5rem, 1.1vw, 0.82rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--yellow);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: clamp(0.14rem, 0.32vw, 0.26rem) clamp(0.14rem, 0.32vw, 0.26rem) 0 var(--ink);
+        }
+
+        .tag { box-shadow: none; }
+        .tag.red { background: var(--red); color: var(--white); }
+        .tag.blue { background: var(--blue); color: var(--white); }
+        .tag.green { background: var(--green); }
+        .tag.teal { background: var(--teal); }
+        .tag.pink { background: var(--pink); }
+
+        .card {
+            max-width: none;
+            max-height: none;
+            padding: clamp(0.8rem, 1.8vw, 1.35rem);
+            border: clamp(0.1rem, 0.2vw, 0.16rem) solid var(--ink);
+            background: var(--paper-2);
+            box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--ink);
+        }
+
+        .card h3 { margin-top: clamp(0.5rem, 1vw, 0.8rem); }
+        .card p { margin-top: clamp(0.35rem, 0.8vw, 0.62rem); }
+        .card.red-edge { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--red); }
+        .card.blue-edge { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--blue); }
+        .card.green-edge { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 #32975f; }
+
+        .two-col, .three-col, .five-col {
+            display: grid;
+            gap: clamp(0.7rem, 1.6vw, 1.3rem);
+        }
+        .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .five-col { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+        .title-only { align-items: flex-start; }
+        .title-only p {
+            max-width: 34ch;
+            margin-top: clamp(0.7rem, 2vh, 1.3rem);
+            font-size: clamp(1rem, 2vw, 1.55rem);
+            font-weight: 600;
+        }
+
+        .mega-line {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 7.3vw, 6rem);
+            line-height: 0.92;
+            text-transform: uppercase;
+        }
+
+        .fortune-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 7.3vw, 6rem);
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        .fortune-title span {
+            display: block;
+            padding-block: clamp(0.04rem, 0.2vw, 0.14rem);
+        }
+
+        .highlight { background: var(--yellow); padding: 0 clamp(0.18rem, 0.35vw, 0.32rem); }
+        .red-text { color: var(--red); }
+        .muted { color: var(--muted); }
+
+        .role-card { min-height: clamp(11rem, 34vh, 18rem); display: flex; flex-direction: column; }
+        .role-card .role-number {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 0.8;
+            color: var(--red);
+        }
+        .role-card p { font-size: clamp(0.84rem, 1.4vw, 1.16rem); }
+        .role-card .meme-note { margin-top: auto; font-family: var(--font-mono); font-size: var(--small-size); font-weight: 700; }
+
+        /* ===========================================
+           LIVE ROLE BOARD
+           =========================================== */
+        .workshop-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(clamp(13rem, 27vw, 20rem), 0.55fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            align-items: stretch;
+        }
+
+        .team-tabs { display: flex; gap: clamp(0.35rem, 0.8vw, 0.6rem); flex-wrap: wrap; }
+        button, .button-link {
+            appearance: none;
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            padding: clamp(0.4rem, 0.9vw, 0.65rem) clamp(0.58rem, 1.2vw, 0.9rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: clamp(0.12rem, 0.28vw, 0.22rem) clamp(0.12rem, 0.28vw, 0.22rem) 0 var(--ink);
+        }
+        button:hover, button:focus-visible, .button-link:hover, .button-link:focus-visible { transform: translate(-1px, -1px); }
+        button.active { background: var(--blue); color: var(--white); }
+        button.primary { background: var(--red); color: var(--white); }
+        button.secondary { background: var(--yellow); }
+        .button-link { display: inline-flex; text-decoration: none; width: fit-content; }
+
+        .role-team-grid { display: grid; gap: clamp(0.5rem, 1vw, 0.75rem); }
+        .role-team {
+            display: grid;
+            grid-template-columns: minmax(7.5rem, 0.65fr) minmax(0, 1.8fr);
+            gap: clamp(0.45rem, 1vw, 0.8rem);
+            padding: clamp(0.48rem, 0.9vw, 0.72rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+        }
+        .role-team-meta { min-width: 0; }
+        .role-team-name { font-family: var(--font-heading); font-size: clamp(0.88rem, 1.5vw, 1.2rem); font-weight: 900; line-height: 1.05; }
+        .role-members { display: flex; flex-wrap: wrap; gap: clamp(0.18rem, 0.45vw, 0.32rem); margin-top: clamp(0.25rem, 0.5vw, 0.4rem); }
+        .member-chip { padding: clamp(0.12rem, 0.3vw, 0.2rem) clamp(0.25rem, 0.55vw, 0.4rem); background: var(--yellow); border: 1px solid var(--ink); font-family: var(--font-mono); font-size: clamp(0.58rem, 0.92vw, 0.74rem); font-weight: 700; }
+        .role-picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.35rem, 0.75vw, 0.55rem); }
+        .role-pick { display: grid; gap: clamp(0.16rem, 0.35vw, 0.28rem); min-width: 0; }
+        .role-pick label { overflow: hidden; font-family: var(--font-mono); font-size: clamp(0.54rem, 0.9vw, 0.72rem); font-weight: 700; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+        .role-import-status { margin-bottom: clamp(0.45rem, 0.9vw, 0.65rem); font-family: var(--font-mono); font-size: var(--small-size); font-weight: 700; color: var(--muted); }
+        .field { display: grid; gap: clamp(0.24rem, 0.5vw, 0.4rem); }
+        .field label { font-family: var(--font-mono); font-size: var(--small-size); font-weight: 700; text-transform: uppercase; }
+        input, textarea, select {
+            width: 100%;
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            padding: clamp(0.48rem, 1vw, 0.75rem);
+            font-family: var(--font-body);
+            font-size: clamp(0.78rem, 1.35vw, 1.05rem);
+        }
+        input:focus, textarea:focus, select:focus { outline: clamp(0.12rem, 0.25vw, 0.2rem) solid var(--teal); outline-offset: clamp(0.08rem, 0.18vw, 0.12rem); }
+
+        .timer-card { background: var(--yellow); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .timer-display { font-family: var(--font-heading); font-size: clamp(2.4rem, 7vw, 5.8rem); font-weight: 900; line-height: 1; }
+        .timer-actions { display: flex; gap: clamp(0.35rem, 0.8vw, 0.6rem); justify-content: center; flex-wrap: wrap; margin-top: clamp(0.5rem, 1vw, 0.8rem); }
+
+        /* ===========================================
+           WORKFLOW VISUALS
+           =========================================== */
+        .flow-step { position: relative; min-height: clamp(8rem, 24vh, 13rem); }
+        .flow-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            top: 50%;
+            right: calc(-1 * clamp(0.9rem, 1.7vw, 1.5rem));
+            transform: translate(50%, -50%);
+            z-index: 2;
+            font-family: var(--font-heading);
+            font-size: clamp(1.4rem, 3vw, 2.4rem);
+            font-weight: 900;
+        }
+        .flow-step .step-num { font-family: var(--font-mono); font-size: var(--small-size); color: var(--red); font-weight: 700; }
+        .flow-step h3 { margin-top: clamp(0.35rem, 0.7vw, 0.55rem); }
+        .flow-step p { font-size: clamp(0.72rem, 1.18vw, 0.98rem); }
+
+        .example-flow { display: grid; gap: clamp(0.45rem, 1vw, 0.75rem); }
+        .example-row {
+            display: grid;
+            grid-template-columns: clamp(3.5rem, 8vw, 6rem) minmax(0, 1.3fr) minmax(0, 0.75fr) minmax(0, 1fr);
+            gap: clamp(0.45rem, 1vw, 0.8rem);
+            align-items: center;
+            padding: clamp(0.45rem, 0.9vw, 0.7rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+            box-shadow: clamp(0.14rem, 0.32vw, 0.26rem) clamp(0.14rem, 0.32vw, 0.26rem) 0 var(--ink);
+        }
+        .example-row strong { font-family: var(--font-heading); font-size: clamp(0.72rem, 1.25vw, 1.02rem); }
+        .example-row span { font-size: clamp(0.68rem, 1.1vw, 0.94rem); line-height: 1.2; }
+
+        .dossier-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.55rem, 1.2vw, 0.95rem); }
+        .dossier-card { min-height: clamp(8.5rem, 22vh, 12rem); }
+        .dossier-card.main { background: var(--yellow); }
+        .dossier-card p { font-size: clamp(0.74rem, 1.22vw, 1rem); }
+
+        .workshop-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.7rem, 1.5vw, 1.2rem); }
+        .check-card { cursor: pointer; user-select: none; transition: transform 0.2s ease, background 0.2s ease; }
+        .check-card.done { background: var(--green); transform: rotate(-1deg); }
+        .check-card .box { font-family: var(--font-mono); font-size: clamp(0.76rem, 1.25vw, 1rem); font-weight: 700; }
+
+        .review-list { list-style: none; display: grid; gap: clamp(0.6rem, 1.2vw, 0.95rem); }
+        .review-list li { display: flex; gap: clamp(0.5rem, 1vw, 0.8rem); align-items: flex-start; font-weight: 600; }
+        .review-list li::before { content: "?"; flex: 0 0 auto; display: grid; place-items: center; width: clamp(1.4rem, 2.5vw, 2rem); aspect-ratio: 1; border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink); background: var(--red); color: var(--white); font-family: var(--font-heading); font-weight: 900; }
+
+        .prompt-box {
+            white-space: pre-wrap;
+            font-family: var(--font-mono);
+            font-size: clamp(0.68rem, 1.16vw, 0.98rem);
+            line-height: 1.45;
+            max-height: min(60vh, 560px);
+            overflow: hidden;
+        }
+
+        .checkpoint-list { list-style: none; display: grid; gap: clamp(0.7rem, 1.4vw, 1rem); }
+        .checkpoint-list li { display: flex; gap: clamp(0.55rem, 1vw, 0.85rem); font-size: clamp(0.92rem, 1.7vw, 1.34rem); font-weight: 600; }
+        .checkpoint-list li::before { content: "✓"; color: var(--red); font-family: var(--font-heading); font-weight: 900; }
+
+        /* ===========================================
+           NAVIGATION AND ANIMATION
+           =========================================== */
+        .progress-bar { position: fixed; top: 0; left: 0; height: clamp(0.22rem, 0.45vw, 0.38rem); width: 0; z-index: 100; background: linear-gradient(90deg, var(--red), var(--yellow), var(--teal)); transition: width 0.25s ease; }
+        .nav-dots { position: fixed; right: clamp(0.7rem, 1.5vw, 1.2rem); top: 50%; transform: translateY(-50%); z-index: 100; display: grid; gap: clamp(0.22rem, 0.5vw, 0.4rem); }
+        .nav-dot { width: clamp(0.72rem, 1.4vw, 1rem); aspect-ratio: 1; padding: 0; border-radius: 50%; background: var(--white); box-shadow: none; }
+        .nav-dot.active { background: var(--red); }
+        .slide-count { position: absolute; right: clamp(1rem, 2.5vw, 2.5rem); bottom: clamp(0.75rem, 1.6vw, 1.2rem); z-index: 3; font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); }
+
+        .reveal, .reveal-left, .reveal-scale { opacity: 0; transition: opacity var(--duration-normal) var(--ease-out-expo), transform var(--duration-normal) var(--ease-out-expo); }
+        .reveal { transform: translateY(clamp(0.8rem, 2vw, 1.8rem)); }
+        .reveal-left { transform: translateX(calc(-1 * clamp(1rem, 3vw, 2.5rem))); }
+        .reveal-scale { transform: scale(0.9) rotate(-1deg); }
+        .slide.visible .reveal, .slide.visible .reveal-left, .slide.visible .reveal-scale { opacity: 1; transform: translate(0) scale(1) rotate(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        /* ===========================================
+           RESPONSIVE COMPOSITION
+           =========================================== */
+        @media (max-width: 900px) {
+            .slide-content { padding-right: clamp(2.4rem, 7vw, 3.6rem); }
+            .five-col { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+            .workshop-shell { grid-template-columns: minmax(0, 1.15fr) minmax(10rem, 0.65fr); }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --h2-size: clamp(1.45rem, 7.4vw, 2.3rem);
+                --h3-size: clamp(0.94rem, 4vw, 1.2rem);
+                --body-size: clamp(0.74rem, 3.1vw, 0.96rem);
+            }
+            .slide-content { padding-left: clamp(1.4rem, 6vw, 2rem); padding-right: clamp(2.7rem, 10vw, 3.4rem); }
+            .two-col, .three-col { grid-template-columns: 1fr; }
+            .three-col.compact-mobile { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .role-card { min-height: auto; padding: clamp(0.56rem, 2vw, 0.8rem); }
+            .role-card .role-number { font-size: clamp(1.2rem, 6vw, 1.7rem); }
+            .role-card p { font-size: clamp(0.64rem, 2.5vw, 0.78rem); }
+            .role-card .meme-note { display: none; }
+            .workshop-shell { grid-template-columns: 1fr; }
+            .timer-card { padding: clamp(0.5rem, 2vw, 0.75rem); }
+            .timer-display { font-size: clamp(2rem, 11vw, 3rem); }
+            .role-team { grid-template-columns: minmax(5.4rem, 0.52fr) minmax(0, 1.8fr); padding: clamp(0.38rem, 1.4vw, 0.55rem); }
+            .role-team-name { font-size: clamp(0.72rem, 3vw, 0.92rem); }
+            .member-chip { font-size: clamp(0.5rem, 2vw, 0.64rem); }
+            .role-pick label { font-size: clamp(0.46rem, 1.8vw, 0.58rem); }
+            .role-pick select { padding: clamp(0.3rem, 1vw, 0.42rem); font-size: clamp(0.6rem, 2.4vw, 0.76rem); }
+            .five-col { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(0.3rem, 1vw, 0.45rem); }
+            .flow-step { min-height: clamp(7rem, 21vh, 9rem); padding: clamp(0.42rem, 1.5vw, 0.6rem); }
+            .flow-step h3 { font-size: clamp(0.7rem, 2.7vw, 0.88rem); }
+            .flow-step p { font-size: clamp(0.56rem, 2.1vw, 0.7rem); }
+            .flow-step:not(:last-child)::after { right: calc(-1 * clamp(0.35rem, 1vw, 0.5rem)); font-size: clamp(0.8rem, 4vw, 1.1rem); }
+            .example-row { grid-template-columns: clamp(2.3rem, 11vw, 3.3rem) minmax(0, 1.3fr) minmax(0, 0.72fr) minmax(0, 0.9fr); }
+            .example-row strong, .example-row span { font-size: clamp(0.54rem, 2.1vw, 0.68rem); }
+            .dossier-grid { gap: clamp(0.35rem, 1.2vw, 0.55rem); }
+            .dossier-card { padding: clamp(0.5rem, 1.8vw, 0.7rem); min-height: clamp(6.2rem, 17vh, 8rem); }
+            .dossier-card h3 { font-size: clamp(0.72rem, 2.8vw, 0.94rem); }
+            .dossier-card p { font-size: clamp(0.58rem, 2.2vw, 0.72rem); }
+            .workshop-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .check-card { padding: clamp(0.52rem, 1.7vw, 0.72rem); }
+            .check-card h3 { font-size: clamp(0.7rem, 2.8vw, 0.9rem); }
+            .check-card p { font-size: clamp(0.58rem, 2.1vw, 0.7rem); }
+            .prompt-box { font-size: clamp(0.58rem, 2.25vw, 0.72rem); }
+        }
+
+        /* ===========================================
+           SESSION 02A: CODEX SETUP
+           =========================================== */
+        .slide:not([data-deck="session-02a-v2"]) { display: none; }
+
+        .outcome-strip,
+        .layer-grid,
+        .route-grid,
+        .tool-map,
+        .setup-grid,
+        .ready-grid {
+            display: grid;
+            gap: clamp(0.55rem, 1.25vw, 1rem);
+        }
+
+        .outcome-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .layer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .route-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        .tool-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .setup-grid { grid-template-columns: minmax(0, 1.7fr) minmax(15rem, 0.72fr); align-items: stretch; }
+        .ready-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+        .stat-card,
+        .layer-card,
+        .route-card,
+        .tool-card,
+        .ready-card {
+            min-width: 0;
+        }
+
+        .stat-card {
+            display: flex;
+            min-height: clamp(8.2rem, 23vh, 12rem);
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stat-card .big-num,
+        .layer-card .big-num {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 5.5vw, 4.6rem);
+            line-height: 0.8;
+            color: var(--red);
+        }
+
+        .agent-loop {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: clamp(0.38rem, 0.85vw, 0.7rem);
+        }
+
+        .loop-step {
+            position: relative;
+            min-height: clamp(9.5rem, 28vh, 15rem);
+            padding: clamp(0.65rem, 1.4vw, 1rem);
+        }
+
+        .loop-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            top: 50%;
+            right: calc(-1 * clamp(0.55rem, 1vw, 0.82rem));
+            z-index: 2;
+            transform: translate(50%, -50%);
+            font-family: var(--font-heading);
+            font-size: clamp(1.1rem, 2.5vw, 2rem);
+            font-weight: 900;
+        }
+
+        .loop-step .step-num,
+        .route-card .route-num {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .loop-step h3,
+        .route-card h3,
+        .tool-card h3 {
+            margin-top: clamp(0.35rem, 0.8vw, 0.58rem);
+        }
+
+        .loop-step p,
+        .route-card p,
+        .tool-card p,
+        .layer-card p {
+            font-size: clamp(0.72rem, 1.18vw, 0.98rem);
+        }
+
+        .layer-card { min-height: clamp(12rem, 34vh, 19rem); }
+        .layer-card.brain { background: var(--yellow); }
+        .layer-card.rules { background: #dce8ff; }
+        .layer-card.hands { background: #d9f4f2; }
+
+        .not-equal {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: clamp(0.75rem, 2vw, 1.6rem);
+            align-items: stretch;
+        }
+
+        .not-equal .symbol {
+            align-self: center;
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--red);
+        }
+
+        .definition-card {
+            display: flex;
+            min-height: clamp(15rem, 44vh, 24rem);
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .definition-card .definition {
+            max-width: 22ch;
+            font-family: var(--font-heading);
+            font-size: clamp(1.15rem, 2.5vw, 2rem);
+            font-weight: 900;
+            line-height: 1.08;
+        }
+
+        .definition-card .nope {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .route-card {
+            min-height: clamp(10rem, 30vh, 16rem);
+            padding: clamp(0.6rem, 1.25vw, 0.9rem);
+        }
+
+        .route-card:nth-child(1) { background: var(--yellow); }
+        .route-card:nth-child(2) { background: #dce8ff; }
+        .route-card:nth-child(3) { background: #d9f4f2; }
+        .route-card:nth-child(4) { background: #ffddec; }
+        .route-card:nth-child(5) { background: #eaffb2; }
+
+        .tool-card {
+            display: flex;
+            min-height: clamp(8.5rem, 23vh, 12.5rem);
+            flex-direction: column;
+        }
+
+        .tool-card .status {
+            width: fit-content;
+            margin-top: auto;
+            padding: clamp(0.18rem, 0.4vw, 0.28rem) clamp(0.34rem, 0.7vw, 0.5rem);
+            border: 1px solid var(--ink);
+            font-family: var(--font-mono);
+            font-size: clamp(0.54rem, 0.88vw, 0.72rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status.ready { background: var(--green); }
+        .status.bridge { background: var(--yellow); }
+        .status.later { background: var(--pink); }
+
+        .install-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(0.45rem, 1vw, 0.72rem);
+        }
+
+        .install-item {
+            display: flex;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+            align-items: flex-start;
+            min-height: clamp(5.4rem, 14vh, 7.2rem);
+            padding: clamp(0.55rem, 1.1vw, 0.78rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+        }
+
+        .install-item .icon {
+            display: grid;
+            flex: 0 0 auto;
+            width: clamp(1.8rem, 3vw, 2.4rem);
+            aspect-ratio: 1;
+            place-items: center;
+            border: 1px solid var(--ink);
+            background: var(--yellow);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        .install-item strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.82rem, 1.4vw, 1.08rem);
+        }
+
+        .install-item span {
+            display: block;
+            margin-top: clamp(0.18rem, 0.4vw, 0.3rem);
+            color: var(--muted);
+            font-size: clamp(0.65rem, 1.05vw, 0.84rem);
+            line-height: 1.25;
+        }
+
+        .setup-checks {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(0.45rem, 1vw, 0.72rem);
+        }
+
+        .setup-checks .check-card {
+            min-height: clamp(6rem, 16vh, 8rem);
+            padding: clamp(0.55rem, 1.1vw, 0.8rem);
+        }
+
+        .setup-checks .check-card h3 { margin-top: clamp(0.28rem, 0.55vw, 0.4rem); }
+
+        .prompt-box.setup-prompt {
+            max-height: min(54vh, 500px);
+            background: #10131a;
+            color: #f7f2df;
+            box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--teal);
+        }
+
+        .guardrail {
+            display: flex;
+            gap: clamp(0.55rem, 1vw, 0.8rem);
+            align-items: flex-start;
+            font-weight: 600;
+        }
+
+        .guardrail::before {
+            content: "!";
+            display: grid;
+            flex: 0 0 auto;
+            width: clamp(1.5rem, 2.5vw, 2rem);
+            aspect-ratio: 1;
+            place-items: center;
+            border: 1px solid var(--ink);
+            background: var(--red);
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-weight: 900;
+        }
+
+        @media (max-width: 900px) {
+            .route-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+            .tool-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 600px) {
+            .outcome-strip,
+            .layer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .agent-loop { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .loop-step { min-height: clamp(7rem, 18vh, 9rem); }
+            .loop-step:nth-child(3)::after { display: none; }
+            .route-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(0.22rem, 0.8vw, 0.4rem); }
+            .route-card { min-height: clamp(8rem, 20vh, 10rem); padding: clamp(0.35rem, 1.1vw, 0.55rem); }
+            .route-card h3 { font-size: clamp(0.58rem, 2.4vw, 0.72rem); }
+            .route-card p { font-size: clamp(0.48rem, 1.8vw, 0.6rem); }
+            .tool-map { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.3rem, 1vw, 0.5rem); }
+            .tool-card { min-height: clamp(6rem, 15vh, 8rem); padding: clamp(0.42rem, 1.4vw, 0.62rem); }
+            .tool-card h3 { font-size: clamp(0.65rem, 2.5vw, 0.82rem); }
+            .tool-card p { font-size: clamp(0.5rem, 1.9vw, 0.62rem); }
+            .setup-grid { grid-template-columns: minmax(0, 1.45fr) minmax(7.8rem, 0.55fr); }
+            .setup-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .setup-checks .check-card { min-height: clamp(4.5rem, 12vh, 6rem); }
+            .setup-checks .check-card h3 { font-size: clamp(0.64rem, 2.6vw, 0.8rem); }
+            .setup-checks .check-card p { font-size: clamp(0.5rem, 1.9vw, 0.62rem); }
+            .not-equal { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+            .definition-card { min-height: clamp(12rem, 34vh, 17rem); }
+            .ready-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        /* ===========================================
+           SESSION 02A V2: OVERVIEW TO DETAIL
+           =========================================== */
+        .new-hire-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: clamp(0.9rem, 2.5vw, 2rem);
+            align-items: stretch;
+        }
+
+        .new-hire-hero {
+            display: flex;
+            min-height: clamp(17rem, 48vh, 27rem);
+            flex-direction: column;
+            justify-content: space-between;
+            background: var(--yellow);
+        }
+
+        .new-hire-hero .mega-line { font-size: clamp(2.6rem, 5vw, 5rem); }
+
+        .blind-list {
+            display: grid;
+            align-content: center;
+            gap: clamp(0.6rem, 1.4vw, 1rem);
+        }
+
+        .blind-item {
+            display: flex;
+            gap: clamp(0.55rem, 1vw, 0.8rem);
+            align-items: center;
+            padding: clamp(0.65rem, 1.3vw, 0.95rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.7vw, 1.3rem);
+            font-weight: 900;
+        }
+
+        .blind-item span {
+            display: grid;
+            flex: 0 0 auto;
+            width: clamp(1.8rem, 3.2vw, 2.5rem);
+            aspect-ratio: 1;
+            place-items: center;
+            border: 1px solid var(--ink);
+            background: var(--red);
+            color: var(--white);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+        }
+
+        .diagram-shell {
+            width: 100%;
+            border: clamp(0.1rem, 0.2vw, 0.16rem) solid var(--ink);
+            background: rgba(255, 253, 242, 0.92);
+        }
+
+        .diagram-shell svg {
+            display: block;
+            width: 100%;
+            height: min(54vh, 520px);
+            max-height: none;
+        }
+
+        .mobile-overview { display: none; }
+
+        .mobile-overview-node {
+            padding: clamp(0.55rem, 1.8vw, 0.75rem);
+            border: 2px solid var(--ink);
+            background: var(--white);
+            text-align: center;
+        }
+
+        .mobile-overview-node strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.78rem, 3vw, 0.96rem);
+        }
+
+        .mobile-overview-node span {
+            display: block;
+            margin-top: 0.2rem;
+            color: var(--muted);
+            font-size: clamp(0.58rem, 2.1vw, 0.7rem);
+        }
+
+        .mobile-overview-node.codex {
+            border-color: var(--red);
+            background: #fff2ee;
+        }
+
+        .mobile-overview-node.output { background: #eaffb2; }
+        .mobile-overview-arrow { text-align: center; font-family: var(--font-heading); font-weight: 900; line-height: 0.7; }
+
+        .diagram-node-name {
+            font-family: var(--font-heading);
+            font-size: 19px;
+            font-weight: 900;
+            fill: var(--ink);
+        }
+
+        .diagram-node-note {
+            font-family: var(--font-body);
+            font-size: 13px;
+            fill: var(--muted);
+        }
+
+        .diagram-tag {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            fill: var(--ink);
+            text-transform: uppercase;
+        }
+
+        .diagram-arrow-label {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            fill: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .story-flow {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: clamp(0.45rem, 1.1vw, 0.85rem);
+        }
+
+        .story-step {
+            position: relative;
+            min-height: clamp(11rem, 31vh, 17rem);
+            padding: clamp(0.65rem, 1.35vw, 1rem);
+        }
+
+        .story-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            top: 50%;
+            right: calc(-1 * clamp(0.62rem, 1.2vw, 0.95rem));
+            z-index: 2;
+            transform: translate(50%, -50%);
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 2.8vw, 2.2rem);
+            font-weight: 900;
+        }
+
+        .story-step .story-num {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4.5vw, 3.7rem);
+            line-height: 0.8;
+            color: var(--red);
+        }
+
+        .story-step h3 { margin-top: clamp(0.45rem, 0.9vw, 0.65rem); }
+        .story-step p { font-size: clamp(0.72rem, 1.22vw, 1rem); }
+
+        .compare-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            align-items: stretch;
+        }
+
+        .compare-card {
+            display: flex;
+            min-height: clamp(16rem, 46vh, 25rem);
+            flex-direction: column;
+        }
+
+        .compare-card.with-skill { background: #eaffb2; }
+        .compare-card .compare-result {
+            margin-top: auto;
+            padding-top: clamp(0.6rem, 1.2vw, 0.9rem);
+            border-top: 2px solid var(--ink);
+            font-family: var(--font-heading);
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 900;
+        }
+
+        .plain-list {
+            display: grid;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+            margin-top: clamp(0.7rem, 1.3vw, 1rem);
+            list-style: none;
+        }
+
+        .plain-list li {
+            display: flex;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+            align-items: flex-start;
+            line-height: 1.3;
+        }
+
+        .plain-list li::before {
+            content: "■";
+            color: var(--red);
+            font-size: 0.7em;
+            line-height: 1.8;
+        }
+
+        .access-lanes {
+            display: grid;
+            gap: clamp(0.5rem, 1.15vw, 0.85rem);
+        }
+
+        .access-lane {
+            display: grid;
+            grid-template-columns: minmax(8.5rem, 0.7fr) minmax(0, 1.45fr) minmax(8rem, 0.7fr);
+            gap: clamp(0.5rem, 1.2vw, 0.9rem);
+            align-items: center;
+            padding: clamp(0.58rem, 1.2vw, 0.85rem);
+            border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink);
+            background: var(--white);
+        }
+
+        .access-lane:nth-child(1) { border-left: clamp(0.45rem, 0.8vw, 0.7rem) solid var(--yellow); }
+        .access-lane:nth-child(2) { border-left: clamp(0.45rem, 0.8vw, 0.7rem) solid var(--teal); }
+        .access-lane:nth-child(3) { border-left: clamp(0.45rem, 0.8vw, 0.7rem) solid var(--blue); }
+
+        .access-lane h3 { margin: 0; }
+        .access-lane p { margin: 0; font-size: clamp(0.7rem, 1.15vw, 0.95rem); }
+        .access-lane .access-example {
+            font-family: var(--font-mono);
+            font-size: clamp(0.58rem, 0.9vw, 0.74rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .hwm-now-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            align-items: stretch;
+        }
+
+        .ready-lane {
+            display: grid;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+        }
+
+        .ready-row {
+            display: grid;
+            grid-template-columns: minmax(7rem, 0.75fr) minmax(0, 1.25fr);
+            gap: clamp(0.55rem, 1.2vw, 0.9rem);
+            align-items: center;
+            padding: clamp(0.55rem, 1.1vw, 0.8rem);
+            border: 2px solid var(--ink);
+            background: var(--white);
+        }
+
+        .ready-row strong { font-family: var(--font-heading); font-size: clamp(0.85rem, 1.5vw, 1.15rem); }
+        .ready-row span { font-size: clamp(0.68rem, 1.1vw, 0.9rem); line-height: 1.25; }
+
+        .not-live-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--yellow);
+        }
+
+        .not-live-card .mega-line { font-size: clamp(2.4rem, 5.5vw, 4.8rem); }
+
+        .install-layers {
+            display: grid;
+            gap: clamp(0.6rem, 1.3vw, 1rem);
+        }
+
+        .install-layer {
+            display: grid;
+            grid-template-columns: minmax(8rem, 0.6fr) minmax(0, 1.4fr);
+            gap: clamp(0.7rem, 1.6vw, 1.2rem);
+            align-items: center;
+            padding: clamp(0.75rem, 1.6vw, 1.1rem);
+            border: 2px solid var(--ink);
+            background: var(--white);
+        }
+
+        .install-layer.core {
+            border-color: var(--red);
+            background: rgba(255, 61, 46, 0.08);
+        }
+
+        .install-layer-label {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 3.2rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+
+        .install-layer-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.35rem, 0.8vw, 0.6rem);
+        }
+
+        .install-chip {
+            padding: clamp(0.32rem, 0.65vw, 0.48rem) clamp(0.5rem, 0.9vw, 0.7rem);
+            border: 1px solid var(--ink);
+            background: var(--paper-2);
+            font-family: var(--font-mono);
+            font-size: clamp(0.58rem, 0.92vw, 0.76rem);
+            font-weight: 700;
+        }
+
+        .settings-layout {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(0.6rem, 1.35vw, 1rem);
+        }
+
+        .setting-card {
+            display: grid;
+            grid-template-columns: clamp(2.8rem, 5vw, 4rem) minmax(0, 1fr);
+            gap: clamp(0.6rem, 1.2vw, 0.9rem);
+            align-items: start;
+            min-height: clamp(8rem, 21vh, 11rem);
+            padding: clamp(0.7rem, 1.45vw, 1rem);
+        }
+
+        .setting-card:nth-child(1) { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--blue); }
+        .setting-card:nth-child(2) { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--red); }
+        .setting-card:nth-child(3) { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--teal); }
+        .setting-card:nth-child(4) { box-shadow: clamp(0.28rem, 0.62vw, 0.52rem) clamp(0.28rem, 0.62vw, 0.52rem) 0 var(--yellow); }
+
+        .setting-number {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4.4vw, 3.5rem);
+            line-height: 0.82;
+            color: var(--red);
+        }
+
+        .setting-card h3 { margin: 0; }
+        .setting-card p {
+            margin-top: clamp(0.32rem, 0.7vw, 0.5rem);
+            font-size: clamp(0.74rem, 1.25vw, 1rem);
+            line-height: 1.3;
+        }
+
+        .settings-rule {
+            width: fit-content;
+            max-width: 100%;
+            padding: clamp(0.35rem, 0.72vw, 0.52rem) clamp(0.55rem, 1vw, 0.75rem);
+            border: 2px solid var(--ink);
+            background: var(--green);
+            font-family: var(--font-mono);
+            font-size: clamp(0.62rem, 1vw, 0.82rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .smoke-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            align-items: stretch;
+        }
+
+        .smoke-success {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--green);
+        }
+
+        @media (max-width: 600px) {
+            .new-hire-layout { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+            .new-hire-hero { min-height: clamp(12rem, 34vh, 17rem); padding: clamp(0.65rem, 2vw, 0.9rem); }
+            .blind-item { padding: clamp(0.4rem, 1.4vw, 0.55rem); font-size: clamp(0.62rem, 2.5vw, 0.78rem); }
+            .diagram-shell { display: none; }
+            .mobile-overview { display: grid; gap: clamp(0.25rem, 0.8vw, 0.4rem); }
+            .story-flow { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(0.22rem, 0.7vw, 0.38rem); }
+            .story-step { min-height: clamp(8rem, 22vh, 11rem); padding: clamp(0.4rem, 1.2vw, 0.58rem); }
+            .story-step .story-num { font-size: clamp(1.3rem, 5vw, 1.8rem); }
+            .story-step h3 { font-size: clamp(0.58rem, 2.2vw, 0.72rem); }
+            .story-step p { font-size: clamp(0.48rem, 1.75vw, 0.58rem); }
+            .story-step:not(:last-child)::after { right: calc(-1 * clamp(0.26rem, 0.7vw, 0.38rem)); font-size: clamp(0.7rem, 3vw, 0.95rem); }
+            .compare-layout { grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); }
+            .compare-card { min-height: clamp(12rem, 34vh, 17rem); padding: clamp(0.6rem, 1.8vw, 0.8rem); }
+            .compare-card p, .plain-list li { font-size: clamp(0.58rem, 2.15vw, 0.72rem); }
+            .access-lane { grid-template-columns: minmax(5.7rem, 0.7fr) minmax(0, 1.45fr) minmax(5rem, 0.7fr); }
+            .access-lane h3 { font-size: clamp(0.65rem, 2.5vw, 0.82rem); }
+            .access-lane p { font-size: clamp(0.52rem, 1.9vw, 0.64rem); }
+            .access-lane .access-example { font-size: clamp(0.46rem, 1.7vw, 0.56rem); }
+            .hwm-now-layout { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); }
+            .ready-row { grid-template-columns: minmax(4.5rem, 0.7fr) minmax(0, 1.3fr); }
+            .ready-row strong { font-size: clamp(0.62rem, 2.4vw, 0.78rem); }
+            .ready-row span { font-size: clamp(0.5rem, 1.85vw, 0.62rem); }
+            .install-layer { grid-template-columns: minmax(5rem, 0.6fr) minmax(0, 1.4fr); }
+            .install-chip { font-size: clamp(0.48rem, 1.8vw, 0.6rem); }
+            .settings-layout { gap: clamp(0.38rem, 1.2vw, 0.58rem); }
+            .setting-card {
+                grid-template-columns: clamp(2rem, 8vw, 2.8rem) minmax(0, 1fr);
+                min-height: clamp(6.2rem, 16vh, 8rem);
+                padding: clamp(0.5rem, 1.7vw, 0.68rem);
+            }
+            .setting-card h3 { font-size: clamp(0.68rem, 2.7vw, 0.88rem); }
+            .setting-card p { font-size: clamp(0.52rem, 1.95vw, 0.64rem); }
+            .smoke-layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); }
+        }
+
+        @media (max-height: 760px) and (min-width: 601px) {
+            .new-hire-slide .slide-content { gap: clamp(0.42rem, 1.2vw, 0.8rem); }
+            .new-hire-slide h2 { font-size: clamp(1.7rem, 3.5vw, 2.8rem); }
+            .new-hire-hero { min-height: clamp(13rem, 39vh, 18rem); }
+            .new-hire-hero .mega-line { font-size: clamp(2.2rem, 4.2vw, 3.8rem); }
+            .blind-list { gap: clamp(0.38rem, 0.8vw, 0.6rem); }
+            .blind-item { padding: clamp(0.45rem, 0.9vw, 0.65rem); }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" aria-hidden="true"></div>
+    <nav class="nav-dots" aria-label="Điều hướng slide"></nav>
+
+    <!-- Session 02A V2: overview to detail -->
+    <section class="slide" data-deck="session-02a-v2" data-section="Buổi 2A">
+        <div class="slide-content title-only">
+            <div class="eyebrow reveal">HWM AI Build Lab Q3/2026</div>
+            <h1 class="reveal delay-1">Buổi 2A:<br>Cho Codex vào việc</h1>
+            <p class="reveal delay-2">Hiểu nó cần gì, rồi setup máy để vibecode HWM ngon nghẻ.</p>
+        </div>
+    </section>
+
+    <section class="slide new-hire-slide" data-deck="session-02a-v2" data-section="Bắt đầu từ đây">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Hãy tưởng tượng</div>
+            <h2 class="reveal delay-1">Codex là một nhân sự mới rất nhanh</h2>
+            <div class="new-hire-layout">
+                <article class="card new-hire-hero reveal delay-2">
+                    <div class="tag red">Điểm mạnh</div>
+                    <div class="mega-line">Đọc nhanh<br>làm nhanh<br>không ngại sửa</div>
+                    <p class="meme-note">giao đúng bài thì chạy như điện</p>
+                </article>
+                <div class="blind-list reveal delay-3">
+                    <div class="blind-item"><span>?</span>Nhưng chưa biết HWM làm việc ra sao.</div>
+                    <div class="blind-item"><span>?</span>Chưa biết tài liệu nằm ở đâu.</div>
+                    <div class="blind-item"><span>?</span>Chưa biết được phép làm tới đâu.</div>
+                    <div class="tag red">Chỉ nói “làm tool cho tao” = bắt người mới tự đoán cả công ty</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Bức tranh lớn">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Chỉ cần nhớ một hình này</div>
+            <h2 class="reveal delay-1">Muốn Codex làm việc, phải đủ ba thứ</h2>
+            <div class="diagram-shell reveal delay-2">
+                <svg viewBox="0 0 1120 420" role="img" aria-labelledby="overview-title overview-desc">
+                    <title id="overview-title">Mô hình Codex làm việc tại HWM</title>
+                    <desc id="overview-desc">Codex nhận bài và context, dùng Skill HWM làm luật chơi, dùng tool làm tay chân, rồi tạo đầu ra để con người kiểm tra.</desc>
+                    <defs>
+                        <marker id="v2-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#5f5142"/>
+                        </marker>
+                        <marker id="v2-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#ff3d2e"/>
+                        </marker>
+                        <marker id="v2-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#2c6de9"/>
+                        </marker>
+                    </defs>
+
+                    <!-- Connections first -->
+                    <line x1="280" y1="212" x2="440" y2="212" stroke="#5f5142" stroke-width="3" marker-end="url(#v2-arrow)"/>
+                    <line x1="680" y1="212" x2="840" y2="212" stroke="#ff3d2e" stroke-width="3" marker-end="url(#v2-arrow-accent)"/>
+                    <line x1="560" y1="92" x2="560" y2="124" stroke="#5f5142" stroke-width="3" marker-end="url(#v2-arrow)"/>
+                    <line x1="560" y1="336" x2="560" y2="300" stroke="#2c6de9" stroke-width="3" marker-end="url(#v2-arrow-link)"/>
+
+                    <!-- Nodes -->
+                    <rect x="40" y="156" width="240" height="112" fill="#fffdf2" stroke="#111111" stroke-width="2"/>
+                    <rect x="56" y="172" width="72" height="20" fill="#ffe45f" stroke="#111111" stroke-width="1"/>
+                    <text x="92" y="186" class="diagram-tag" text-anchor="middle">THỨ 1</text>
+                    <text x="160" y="220" class="diagram-node-name" text-anchor="middle">Bài cần làm + context</text>
+                    <text x="160" y="244" class="diagram-node-note" text-anchor="middle">Bộ hồ sơ build, dữ liệu thật</text>
+
+                    <rect x="440" y="124" width="240" height="176" fill="#fff2ee" stroke="#ff3d2e" stroke-width="3"/>
+                    <rect x="456" y="140" width="64" height="20" fill="#ff3d2e" stroke="#111111" stroke-width="1"/>
+                    <text x="488" y="154" class="diagram-tag" text-anchor="middle" fill="#fffdf2">BỘ NÃO</text>
+                    <text x="560" y="216" class="diagram-node-name" text-anchor="middle" font-size="28">CODEX</text>
+                    <text x="560" y="244" class="diagram-node-note" text-anchor="middle">đọc → nghĩ → làm → kiểm → lặp</text>
+
+                    <rect x="840" y="156" width="240" height="112" fill="#eaffb2" stroke="#111111" stroke-width="2"/>
+                    <rect x="856" y="172" width="72" height="20" fill="#d8ff32" stroke="#111111" stroke-width="1"/>
+                    <text x="892" y="186" class="diagram-tag" text-anchor="middle">ĐẦU RA</text>
+                    <text x="960" y="220" class="diagram-node-name" text-anchor="middle">Kết quả để dùng thật</text>
+                    <text x="960" y="244" class="diagram-node-note" text-anchor="middle">Con người test và duyệt</text>
+
+                    <rect x="440" y="20" width="240" height="72" fill="#fffdf2" stroke="#111111" stroke-width="2"/>
+                    <text x="560" y="52" class="diagram-node-name" text-anchor="middle">Thứ 2 · Cách làm / Skill</text>
+                    <text x="560" y="76" class="diagram-node-note" text-anchor="middle">Prompt + checklist hôm nay; đóng gói sau</text>
+
+                    <rect x="360" y="336" width="400" height="64" fill="#dce8ff" stroke="#2c6de9" stroke-width="2"/>
+                    <text x="560" y="364" class="diagram-node-name" text-anchor="middle">Thứ 3 · Tay chân</text>
+                    <text x="560" y="388" class="diagram-node-note" text-anchor="middle">File · connector/MCP · browser</text>
+                </svg>
+            </div>
+            <div class="mobile-overview reveal delay-2" aria-label="Mô hình Codex làm việc tại HWM">
+                <div class="mobile-overview-node"><strong>Thứ 1 · Bài + context</strong><span>Bộ hồ sơ build và dữ liệu thật</span></div>
+                <div class="mobile-overview-arrow">+</div>
+                <div class="mobile-overview-node"><strong>Thứ 2 · Cách làm / Skill</strong><span>Prompt + checklist hôm nay; đóng gói sau</span></div>
+                <div class="mobile-overview-arrow">+</div>
+                <div class="mobile-overview-node"><strong>Thứ 3 · Tay chân</strong><span>File · connector/MCP · browser</span></div>
+                <div class="mobile-overview-arrow">↓</div>
+                <div class="mobile-overview-node codex"><strong>CODEX</strong><span>đọc → nghĩ → làm → kiểm → lặp</span></div>
+                <div class="mobile-overview-arrow">↓</div>
+                <div class="mobile-overview-node output"><strong>Kết quả để dùng thật</strong><span>Con người test và duyệt</span></div>
+            </div>
+            <div class="tag red reveal delay-3">Thiếu một thứ: Codex vẫn trả lời được, nhưng chưa chắc làm đúng việc</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Một task thật">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Một task đúng context HWM</div>
+            <h2 class="reveal delay-1">Cross-check email trên Klaviyo trước khi gửi</h2>
+            <div class="story-flow reveal delay-2">
+                <article class="card story-step"><div class="story-num">01</div><h3>Team chỉ campaign</h3><p>Đưa tên campaign/email cần kiểm tra.</p></article>
+                <article class="card story-step"><div class="story-num">02</div><h3>Codex vào Klaviyo</h3><p>Dùng MCP, API hoặc CLI để đọc setup thật.</p></article>
+                <article class="card story-step"><div class="story-num">03</div><h3>Lấy bản gốc</h3><p>Mở brief/copy/design trên Figma hoặc Google Docs.</p></article>
+                <article class="card story-step"><div class="story-num">04</div><h3>Cross-check</h3><p>So offer, copy, design, link, setting và dynamic tag.</p></article>
+                <article class="card story-step"><div class="story-num">05</div><h3>Người HWM chốt</h3><p>Xem điểm lệch, quyết định sửa gì trước khi gửi.</p></article>
+            </div>
+            <div class="tag green reveal delay-3">Klaviyo là bản đang chạy; Figma/Docs là nguồn gốc để đối chiếu</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Zoom 1 · Skill">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Skill = cách làm đã thử và thấy ngon</div>
+            <h2 class="reveal delay-1">Prompt trước. Kết quả ưng rồi mới làm Skill.</h2>
+            <div class="compare-layout">
+                <article class="card compare-card reveal delay-2">
+                    <div class="tag">1 · Thử bằng prompt</div>
+                    <h3>Chạy trên một case thật</h3>
+                    <ul class="plain-list">
+                        <li>Viết prompt cơ bản, nói rõ input và output.</li>
+                        <li>Xem kết quả, góp ý rồi sửa prompt.</li>
+                        <li>Lặp tới khi team thấy dùng được.</li>
+                    </ul>
+                    <div class="compare-result">Chưa ưng thì chưa cần đóng gói.</div>
+                </article>
+                <article class="card compare-card with-skill reveal delay-3">
+                    <div class="tag green">2 · Khi đã chạy ngon</div>
+                    <h3>Đóng thành Skill để dùng lại</h3>
+                    <ul class="plain-list">
+                        <li>Lưu prompt và checklist đã chạy ổn.</li>
+                        <li>Thêm ví dụ thật, lỗi hay gặp và giới hạn.</li>
+                        <li>Lần sau gọi lại, không phải dạy từ đầu.</li>
+                    </ul>
+                    <div class="compare-result">Skill là cách làm đã được test, không phải thứ cần có từ đầu.</div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Zoom 2 · Tay chân">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Muốn chạm dữ liệu có ba cách</div>
+            <h2 class="reveal delay-1">Đưa tận tay, mở cửa, hoặc cho dùng chuột</h2>
+            <div class="access-lanes reveal delay-2">
+                <div class="access-lane">
+                    <div><div class="tag">Dễ nhất</div><h3>File / export</h3></div>
+                    <p>Team đưa CSV, ảnh, brief hoặc snapshot vào task. Codex chỉ thấy đúng thứ được đưa.</p>
+                    <div class="access-example">Ví dụ: export Trello, Klaviyo screenshot</div>
+                </div>
+                <div class="access-lane">
+                    <div><div class="tag teal">Có cấu trúc</div><h3>Connector / MCP / API</h3></div>
+                    <p>Codex được xem một “menu hành động” rõ ràng: tìm file, đọc dữ liệu, gọi một chức năng.</p>
+                    <div class="access-example">Ví dụ: Drive, Slack, MCP riêng</div>
+                </div>
+                <div class="access-lane">
+                    <div><div class="tag blue">Đường vòng</div><h3>Browser</h3></div>
+                    <p>Codex nhìn và click giao diện như người dùng khi chưa có cách nối tốt hơn.</p>
+                    <div class="access-example">Ví dụ: web app chỉ có giao diện</div>
+                </div>
+            </div>
+            <div class="tag red reveal delay-3">MCP không phải “AI khác”: nó là chuẩn để đóng gói menu tool cho Codex dùng</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Áp vào HWM">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Bản đồ kết nối tool HWM</div>
+            <h2 class="reveal delay-1">Các tool HWM đi vào Codex bằng cách nào?</h2>
+            <div class="hwm-now-layout">
+                <div class="ready-lane reveal delay-2">
+                    <div class="ready-row"><strong>Drive / Docs / Sheets</strong><span>Google Drive connector.</span></div>
+                    <div class="ready-row"><strong>Slack</strong><span>Slack connector.</span></div>
+                    <div class="ready-row"><strong>Trello</strong><span>API/MCP · export/script · browser.</span></div>
+                    <div class="ready-row"><strong>Klaviyo</strong><span>MCP read-only · API/CLI · browser khi bí.</span></div>
+                    <div class="ready-row"><strong>Figma</strong><span>Figma MCP remote/desktop · REST API · browser/export.</span></div>
+                </div>
+                <article class="card not-live-card reveal delay-3">
+                    <div class="tag red">Nguyên tắc</div>
+                    <div class="mega-line">Cần cái gì mới kết nối cái đó</div>
+                    <p>Chọn đường đơn giản nhất đủ dùng. Ưu tiên connector/MCP/API; browser hoặc export khi chưa có đường tốt hơn.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Cài gì?">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Cài theo hai lớp</div>
+            <h2 class="reveal delay-1">Ai cũng có bộ lõi, phần còn lại theo bài</h2>
+            <div class="install-layers reveal delay-2">
+                <div class="install-layer core">
+                    <div class="install-layer-label">Lớp 1<br>Bắt buộc</div>
+                    <div class="install-layer-items">
+                        <span class="install-chip">Codex Desktop</span>
+                        <span class="install-chip">Browser / Chrome</span>
+                        <span class="install-chip">Klaviyo MCP</span>
+                        <span class="install-chip">Google Drive</span>
+                    </div>
+                </div>
+                <div class="install-layer">
+                    <div class="install-layer-label">Lớp 2<br>Khi cần</div>
+                    <div class="install-layer-items">
+                        <span class="install-chip">Git + Node</span>
+                        <span class="install-chip">Figma connector / browser</span>
+                        <span class="install-chip">Slack</span>
+                        <span class="install-chip">Gmail / Calendar</span>
+                        <span class="install-chip">API / MCP riêng</span>
+                        <span class="install-chip">Trello API / MCP</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tag red reveal delay-3">Không lắp full option. Team cần gì để làm bài đã chọn thì lắp đúng cái đó.</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Codex settings">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Trước khi bấm chạy</div>
+            <h2 class="reveal delay-1">Chỉnh 4 setting cho Codex</h2>
+            <div class="settings-layout reveal delay-2">
+                <article class="card setting-card">
+                    <div class="setting-number">01</div>
+                    <div>
+                        <h3>Model &amp; Reasoning</h3>
+                        <p>Giữ model mặc định. Để Medium cho bài thường; chuyển High khi lên plan hoặc debug khó.</p>
+                    </div>
+                </article>
+                <article class="card setting-card">
+                    <div class="setting-number">02</div>
+                    <div>
+                        <h3>Quyền thay đổi</h3>
+                        <p>Bật hỏi trước khi sửa, gửi, schedule hoặc publish. Bài test hôm nay chỉ đọc.</p>
+                    </div>
+                </article>
+                <article class="card setting-card">
+                    <div class="setting-number">03</div>
+                    <div>
+                        <h3>Thư mục bài build</h3>
+                        <p>Chỉ mở thư mục chứa bài của team. Không cần cấp quyền đọc cả máy.</p>
+                    </div>
+                </article>
+                <article class="card setting-card">
+                    <div class="setting-number">04</div>
+                    <div>
+                        <h3>Kết nối dữ liệu</h3>
+                        <p>Bật Klaviyo MCP hoặc Google Drive đủ cho bài test. Tool khác cần rồi mới nối.</p>
+                    </div>
+                </article>
+            </div>
+            <div class="settings-rule reveal delay-3">Đủ quyền để làm, không thừa quyền để phá.</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Workshop setup">
+        <div class="slide-content">
+            <div class="eyebrow reveal">25 phút cài thật</div>
+            <h2 class="reveal delay-1">Cài tới đâu, test tới đó</h2>
+            <div class="setup-grid reveal delay-2">
+                <div class="setup-checks">
+                    <article class="card check-card" tabindex="0"><div class="box">□ 01</div><h3>Mở được Codex</h3><p>Đăng nhập và tạo một task thử.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 02</div><h3>Setting đã chốt</h3><p>Medium, hỏi trước khi sửa và đúng thư mục bài build.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 03</div><h3>Một nguồn đã nối</h3><p>Klaviyo MCP hoặc Google Drive connector.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 04</div><h3>Tìm và đọc được</h3><p>Trả đúng dữ liệu cơ bản theo tên.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 05</div><h3>Quyền đã rõ</h3><p>Mặc định read-only; chưa sửa, schedule hay send.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 06</div><h3>Smoke test đã qua</h3><p>Có kết quả kèm nguồn kiểm được.</p></article>
+                </div>
+                <aside class="card timer-card" data-timer="setup-v2" data-seconds="1500">
+                    <div class="tag">Cài tới khi chạy</div>
+                    <div class="timer-display">25:00</div>
+                    <div class="timer-actions">
+                        <button class="primary" data-action="start">Chạy</button>
+                        <button data-action="pause">Dừng</button>
+                        <button class="secondary" data-action="reset">Lại từ đầu</button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a-v2" data-section="Smoke test">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Bài test đầu tiên</div>
+            <h2 class="reveal delay-1">Đọc và tìm thông tin trong Klaviyo / Google Drive</h2>
+            <div class="smoke-layout">
+                <div class="reveal delay-2">
+                    <pre class="card prompt-box setup-prompt">Chọn một nguồn để test:
+
+KLAVIYO
+Tìm campaign/email [TÊN]. Cho biết status,
+subject, audience và link mở lại.
+
+GOOGLE DRIVE
+Tìm file [TÊN]. Cho biết loại file,
+ngày cập nhật, nội dung chính và link mở lại.
+
+Chỉ đọc. Không sửa hay chia sẻ.</pre>
+                </div>
+                <article class="card smoke-success reveal delay-3">
+                    <div class="tag green">Qua bài khi</div>
+                    <ul class="checkpoint-list" style="margin-top:clamp(.75rem,1.4vw,1rem);">
+                        <li>Tìm đúng campaign/email hoặc file.</li>
+                        <li>Trả đúng các thông tin được hỏi.</li>
+                        <li>Có link hoặc nguồn mở lại.</li>
+                        <li>Không thay đổi dữ liệu.</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Session 02A deck -->
+    <section class="slide" data-deck="session-02a" data-section="Buổi 2A">
+        <div class="slide-content title-only">
+            <div class="eyebrow reveal">HWM AI Build Lab Q3/2026</div>
+            <h1 class="reveal delay-1">Buổi 2A:<br>Gắn tay chân cho Codex</h1>
+            <p class="reveal delay-2">Hiểu cách nó chạy và setup máy để vibecode HWM ngon nghẻ.</p>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Đầu ra">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Không học cho vui</div>
+            <h2 class="reveal delay-1">Hôm nay máy phải chạy</h2>
+            <div class="outcome-strip">
+                <article class="card stat-card blue-edge reveal delay-2">
+                    <div class="big-num">01</div>
+                    <div><h3>Biết nó đang làm gì</h3><p>Nhìn được vòng lặp của Codex, không ngồi cầu may.</p></div>
+                </article>
+                <article class="card stat-card green-edge reveal delay-3">
+                    <div class="big-num">02</div>
+                    <div><h3>Lắp đúng đồ cần dùng</h3><p>Skill, connector và browser vừa đủ cho bài của team.</p></div>
+                </article>
+                <article class="card stat-card red-edge reveal delay-4">
+                    <div class="big-num">03</div>
+                    <div><h3>Chạy một bài test thật</h3><p>Codex đọc đúng context HWM và trả ra kết quả kiểm được.</p></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Codex chạy sao?">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Nó không phán một cục rồi xong</div>
+            <h2 class="reveal delay-1">Codex chạy theo vòng lặp</h2>
+            <div class="agent-loop reveal delay-2">
+                <article class="card loop-step"><div class="step-num">01</div><h3>Nhận bài</h3><p>Mục tiêu, giới hạn, đầu ra.</p></article>
+                <article class="card loop-step"><div class="step-num">02</div><h3>Đọc context</h3><p>File, SOP, ví dụ, dữ liệu thật.</p></article>
+                <article class="card loop-step"><div class="step-num">03</div><h3>Lên plan</h3><p>Chia bước và chọn cách làm.</p></article>
+                <article class="card loop-step"><div class="step-num">04</div><h3>Dùng tool</h3><p>Đọc, chạy, sửa, gọi hệ thống.</p></article>
+                <article class="card loop-step"><div class="step-num">05</div><h3>Kiểm hàng</h3><p>Test output và nhìn lỗi thật.</p></article>
+                <article class="card loop-step"><div class="step-num">06</div><h3>Lặp tiếp</h3><p>Thiếu gì thì bổ sung rồi chạy lại.</p></article>
+            </div>
+            <div class="tag red reveal delay-3">Context dở → plan dở → chạy rất chăm nhưng sai đường</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Ba lớp">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Hiểu một lần cho đỡ lú</div>
+            <h2 class="reveal delay-1">Não, luật chơi, tay chân</h2>
+            <div class="layer-grid">
+                <article class="card layer-card brain reveal delay-2">
+                    <div class="big-num">Não</div>
+                    <h3>Model + context hiện tại</h3>
+                    <p>Hiểu bài, suy luận và quyết định bước kế tiếp.</p>
+                    <div class="meme-note">thông minh nhưng không tự biết chuyện nhà mình</div>
+                </article>
+                <article class="card layer-card rules reveal delay-3">
+                    <div class="big-num">Luật</div>
+                    <h3>Instruction + Skill</h3>
+                    <p>HWM làm việc kiểu gì, tiêu chuẩn nào phải giữ.</p>
+                    <div class="meme-note">đỡ phải dạy nghề lại mỗi lần</div>
+                </article>
+                <article class="card layer-card hands reveal delay-4">
+                    <div class="big-num">Tay</div>
+                    <h3>Tool + MCP + connector</h3>
+                    <p>Đọc file, chạy lệnh, mở browser và chạm vào hệ thống.</p>
+                    <div class="meme-note">không có tay thì chỉ ngồi tư vấn</div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Skill">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Skill = file chỉ cách làm nghề</div>
+            <div class="not-equal">
+                <article class="card definition-card blue-edge reveal delay-1">
+                    <div>
+                        <div class="tag blue">Nó có gì?</div>
+                        <p class="definition">Quy trình, tiêu chuẩn, checklist, ví dụ và ranh giới được phép làm.</p>
+                    </div>
+                    <p class="nope">Ví dụ: HWM Email QA biết phải soi gì và chỗ nào bắt buộc người duyệt.</p>
+                </article>
+                <div class="symbol reveal delay-2">≠</div>
+                <article class="card definition-card red-edge reveal delay-3">
+                    <div>
+                        <div class="tag red">Nó không phải gì?</div>
+                        <p class="definition">Không phải app, không phải mật khẩu và không tự kết nối Klaviyo.</p>
+                    </div>
+                    <p class="nope">Skill nói cách làm. Muốn chạm dữ liệu vẫn cần một cái tay.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="MCP">
+        <div class="slide-content">
+            <div class="eyebrow reveal">MCP = ổ cắm tiêu chuẩn</div>
+            <div class="not-equal">
+                <article class="card definition-card green-edge reveal delay-1">
+                    <div>
+                        <div class="tag green">Nó cho Codex thấy</div>
+                        <p class="definition">Tool nào được dùng, cần truyền gì vào và sẽ nhận dữ liệu gì về.</p>
+                    </div>
+                    <p class="nope">Ví dụ: tìm file Drive, đọc card, gọi một workflow hoặc lấy dữ liệu hệ thống.</p>
+                </article>
+                <div class="symbol reveal delay-2">≠</div>
+                <article class="card definition-card red-edge reveal delay-3">
+                    <div>
+                        <div class="tag red">Nó không tự làm</div>
+                        <p class="definition">Không tự hiểu SOP HWM, không tự biết cái gì nên duyệt hay nên chặn.</p>
+                    </div>
+                    <p class="nope">MCP là dây điện. Codex vẫn cần context và luật chơi.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Đường giao tiếp">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Codex nói chuyện với tool kiểu gì?</div>
+            <h2 class="reveal delay-1">Có 5 đường phổ biến</h2>
+            <div class="route-grid reveal delay-2">
+                <article class="card route-card"><div class="route-num">01</div><h3>File</h3><p>Đọc folder, CSV, ảnh, SOP, export.</p></article>
+                <article class="card route-card"><div class="route-num">02</div><h3>CLI / script</h3><p>Chạy lệnh và tool nội bộ trên máy.</p></article>
+                <article class="card route-card"><div class="route-num">03</div><h3>API / MCP</h3><p>Gọi dữ liệu và thao tác có cấu trúc.</p></article>
+                <article class="card route-card"><div class="route-num">04</div><h3>Connector</h3><p>Drive, Slack và app đã đăng nhập.</p></article>
+                <article class="card route-card"><div class="route-num">05</div><h3>Browser</h3><p>Click giao diện khi chưa có cửa đẹp hơn.</p></article>
+            </div>
+            <div class="tag reveal delay-3">Ưu tiên: dữ liệu có cấu trúc trước, browser là đường vòng khi cần</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="HWM map">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Nói đúng hiện trạng, không nổ</div>
+            <h2 class="reveal delay-1">HWM đang nối kiểu nào?</h2>
+            <div class="tool-map reveal delay-2">
+                <article class="card tool-card"><div class="tag green">Drive / Sheets</div><h3>Connector</h3><p>Tìm, đọc và làm việc với tài liệu đã cấp quyền.</p><span class="status ready">Nối được ngay</span></article>
+                <article class="card tool-card"><div class="tag green">Slack</div><h3>Connector</h3><p>Tìm context hội thoại khi team cho phép.</p><span class="status ready">Nối được ngay</span></article>
+                <article class="card tool-card"><div class="tag blue">Browser / Chrome</div><h3>Đi qua giao diện</h3><p>Dùng cho web app chưa có connector phù hợp.</p><span class="status bridge">Dùng có kiểm soát</span></article>
+                <article class="card tool-card"><div class="tag red">Trello</div><h3>Export / script trước</h3><p>Vẫn là system of record; ưu tiên đọc và đề xuất.</p><span class="status bridge">Chưa ghi live mặc định</span></article>
+                <article class="card tool-card"><div class="tag red">Klaviyo</div><h3>Snapshot / export trước</h3><p>QA trên dữ liệu đưa vào; chưa giả vờ đọc live account.</p><span class="status bridge">Cần bridge riêng</span></article>
+                <article class="card tool-card"><div class="tag pink">Figma / tool khác</div><h3>Cài theo bài build</h3><p>Team cần thật mới nối, không lắp full option.</p><span class="status later">Tuỳ từng team</span></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Bộ tối thiểu">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Đứa cầm máy cần gì?</div>
+            <h2 class="reveal delay-1">Lắp vừa đủ để chạy bài HWM</h2>
+            <div class="install-list reveal delay-2">
+                <div class="install-item"><span class="icon">01</span><div><strong>Codex Desktop</strong><span>Đăng nhập, mở đúng folder team đang làm.</span></div></div>
+                <div class="install-item"><span class="icon">02</span><div><strong>Browser hoặc Chrome</strong><span>Cho các workflow phải đi qua giao diện web.</span></div></div>
+                <div class="install-item"><span class="icon">03</span><div><strong>Google Drive + Slack</strong><span>Chỉ cấp quyền đúng dữ liệu team cần.</span></div></div>
+                <div class="install-item"><span class="icon">04</span><div><strong>HWM Starter Skills</strong><span>Email copy, QA, setup QC, report, audit, pipeline.</span></div></div>
+                <div class="install-item"><span class="icon">05</span><div><strong>Git + Node khi cần</strong><span>Chỉ team build code mới cần bật combo này.</span></div></div>
+                <div class="install-item"><span class="icon">06</span><div><strong>Tool riêng của bài</strong><span>Figma, Gmail hoặc API chỉ cài khi có lý do rõ.</span></div></div>
+            </div>
+            <div class="tag red reveal delay-3">Không cài 20 món để rồi quên 19 món dùng làm gì</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Workshop setup">
+        <div class="slide-content">
+            <div class="eyebrow reveal">25 phút cài thật</div>
+            <h2 class="reveal delay-1">Cài tới đâu, tick tới đó</h2>
+            <div class="setup-grid reveal delay-2">
+                <div class="setup-checks">
+                    <article class="card check-card" tabindex="0"><div class="box">□ 01</div><h3>Mở được Codex</h3><p>Đăng nhập và mở folder của team.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 02</div><h3>Browser chạy được</h3><p>Codex nhìn và điều khiển đúng tab.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 03</div><h3>Drive + Slack đã nối</h3><p>Đọc đúng tài liệu thử, không xin quyền lan man.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 04</div><h3>Starter Skills đã có</h3><p>Codex gọi đúng skill HWM cần test.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 05</div><h3>Tool riêng đã rõ</h3><p>Cài hoặc ghi lại bridge team còn thiếu.</p></article>
+                    <article class="card check-card" tabindex="0"><div class="box">□ 06</div><h3>Smoke test đã qua</h3><p>Có output thật và kiểm được nguồn vào.</p></article>
+                </div>
+                <aside class="card timer-card" data-timer="setup" data-seconds="1500">
+                    <div class="tag">Cài tới khi chạy</div>
+                    <div class="timer-display">25:00</div>
+                    <div class="timer-actions">
+                        <button class="primary" data-action="start">Chạy</button>
+                        <button data-action="pause">Dừng</button>
+                        <button class="secondary" data-action="reset">Lại từ đầu</button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Smoke test">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Đừng hỏi “cài xong chưa?”</div>
+            <h2 class="reveal delay-1">Cho nó làm bài kiểm tra</h2>
+            <pre class="card prompt-box setup-prompt reveal delay-2">Tôi đang chuẩn bị build một tool cho HWM.
+
+1. Liệt kê các Skill và tool bạn đang có thể dùng cho bài này.
+2. Đọc Bộ hồ sơ build của team, rồi kể lại workflow hiện tại:
+   ai làm, từng bước, tool, input, output và điểm bàn giao.
+3. Chỉ ra context còn thiếu. Chưa được tự đoán.
+4. Đề xuất cách tiếp cận chỉ đọc trước; chưa ghi, gửi hay publish.
+5. Nêu một bài test nhỏ có thể chạy ngay để chứng minh setup đang hoạt động.</pre>
+            <div class="tag green reveal delay-3">Qua bài = biết dùng gì + đọc đúng context + hỏi đúng chỗ thiếu + chưa tự ý hành động</div>
+        </div>
+    </section>
+
+    <section class="slide" data-deck="session-02a" data-section="Rào chắn">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Có tay rồi đừng quơ lung tung</div>
+            <h2 class="reveal delay-1">Mặc định đọc trước, viết sau</h2>
+            <div class="ready-grid">
+                <article class="card reveal delay-2">
+                    <div class="tag red">Luật HWM</div>
+                    <div style="display:grid; gap:clamp(.65rem,1.4vw,1rem); margin-top:clamp(.75rem,1.4vw,1rem);">
+                        <div class="guardrail">Đọc và đề xuất trước khi sửa dữ liệu thật.</div>
+                        <div class="guardrail">Gửi, publish, schedule và go-live phải có người duyệt.</div>
+                        <div class="guardrail">Test trên một case nhỏ trước khi mở rộng.</div>
+                    </div>
+                </article>
+                <article class="card green-edge reveal delay-3">
+                    <div class="tag green">Máy được xem là sẵn sàng khi</div>
+                    <ul class="checkpoint-list" style="margin-top:clamp(.75rem,1.4vw,1rem);">
+                        <li>Codex mở đúng workspace.</li>
+                        <li>Skill HWM được nhận diện đúng.</li>
+                        <li>Ít nhất một nguồn context đọc được.</li>
+                        <li>Smoke test có output kiểm được.</li>
+                    </ul>
+                </article>
+            </div>
+            <div class="tag blue reveal delay-4">Buổi kế tiếp: đứa cầm máy mở Codex, cả team bắt đầu build</div>
+        </div>
+    </section>
+
+    <!-- Slide 1: Title -->
+    <section class="slide" data-section="Buổi 2 &amp; 3">
+        <div class="slide-content title-only">
+            <div class="eyebrow reveal">HWM AI Build Lab Q3/2026</div>
+            <h1 class="reveal delay-1">Buổi 2 &amp; 3</h1>
+            <p class="reveal delay-2">Phân vai trong team và chuẩn bị hồ sơ để vibecode.</p>
+        </div>
+    </section>
+
+    <!-- Slide 2: Agenda -->
+    <section class="slide" data-section="Nội dung">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Nội dung hôm nay</div>
+            <h2 class="reveal delay-1">Nhắc 2 thứ rồi về</h2>
+            <div class="two-col">
+                <article class="card blue-edge reveal delay-2">
+                    <div class="tag blue">01 · Chốt vai</div>
+                    <h3>Ai gánh khúc nào?</h3>
+                    <p>Không để một đứa vừa gõ, vừa kể, vừa tự khen là tool chạy ngon.</p>
+                </article>
+                <article class="card red-edge reveal delay-3">
+                    <div class="tag red">02 · Chốt hồ sơ</div>
+                    <h3>Codex cần biết gì?</h3>
+                    <p>Mô tả workflow thật, nguyên liệu thật và test thật trước khi build.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Roles -->
+    <section class="slide" data-section="Vai trò">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Team 3 đứa, mỗi đứa một việc</div>
+            <h2 class="reveal delay-1">Không ai làm cảnh</h2>
+            <div class="three-col compact-mobile">
+                <article class="card role-card blue-edge reveal delay-2">
+                    <div class="role-number">01</div>
+                    <h3>Đứa cầm máy</h3>
+                    <p>Trực tiếp chat với Codex, ráp prompt và build.</p>
+                    <div class="meme-note">tay đặt lên bàn phím</div>
+                </article>
+                <article class="card role-card green-edge reveal delay-3">
+                    <div class="role-number">02</div>
+                    <h3>Đứa biết chuyện</h3>
+                    <p>Hiểu workflow, kể đầu đuôi, bơm case thật và luật ngầm.</p>
+                    <div class="meme-note">biết nhiều nên phải nói</div>
+                </article>
+                <article class="card role-card red-edge reveal delay-4">
+                    <div class="role-number">03</div>
+                    <h3>Đứa kiếm chuyện</h3>
+                    <p>Test, bắt bẻ và cố tình làm tool banh để tìm lỗi.</p>
+                    <div class="meme-note">anti có ích cho xã hội</div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: Interactive role assignment -->
+    <section class="slide" data-section="Chốt vai">
+        <div class="slide-content">
+            <div class="eyebrow reveal">8 phút tự xử</div>
+            <h2 class="reveal delay-1">Team nào, đứa nào?</h2>
+            <div class="workshop-shell reveal delay-2">
+                <article class="card">
+                    <div class="role-import-status" id="roleImportStatus"></div>
+                    <div class="role-team-grid" id="roleTeams" aria-label="Phân vai cho ba team"></div>
+                </article>
+                <aside class="card timer-card" data-timer="roles" data-seconds="480">
+                    <div class="tag">Chốt vai</div>
+                    <div class="timer-display">08:00</div>
+                    <div class="timer-actions">
+                        <button class="primary" data-action="start">Chạy</button>
+                        <button data-action="pause">Dừng</button>
+                        <button class="secondary" data-action="reset">Lại từ đầu</button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Why workflow matters -->
+    <section class="slide" data-section="Context">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Nhắc nhẹ</div>
+            <div class="fortune-title reveal delay-1"><span>Codex</span><span class="red-text">không phải</span><span>thầy bói</span></div>
+            <p class="reveal delay-2" style="max-width: 48ch; font-size: clamp(1rem, 2vw, 1.5rem); font-weight: 600;">Chỉ nói “muốn làm tool gì” thì Codex sẽ tự đoán workflow. Đoán sai từ đầu thì plan càng chi tiết càng đi xa.</p>
+        </div>
+    </section>
+
+    <!-- Slide 6: Workflow formula -->
+    <section class="slide" data-section="Workflow hiện tại">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Phần quan trọng nhất</div>
+            <h2 class="reveal delay-1">Kể workflow như kể drama</h2>
+            <div class="five-col reveal delay-2">
+                <article class="card flow-step"><div class="step-num">01</div><h3>Ai làm?</h3><p>Người nào đang cầm việc?</p></article>
+                <article class="card flow-step"><div class="step-num">02</div><h3>Làm gì?</h3><p>Các bước đúng thứ tự.</p></article>
+                <article class="card flow-step"><div class="step-num">03</div><h3>Tool nào?</h3><p>Trello, Figma, Klaviyo...</p></article>
+                <article class="card flow-step"><div class="step-num">04</div><h3>Ra cái gì?</h3><p>Input và output mỗi bước.</p></article>
+                <article class="card flow-step"><div class="step-num">05</div><h3>Đưa cho ai?</h3><p>Ai nhận tiếp? Có phải chờ duyệt không?</p></article>
+            </div>
+            <div class="tag red reveal delay-3">Ai → làm gì → tool nào → tạo ra gì → chuyển cho ai</div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Everyday workflow example -->
+    <section class="slide" data-section="Ví dụ dễ hiểu">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Ví dụ ngoài HWM</div>
+            <h2 class="reveal delay-1">Đặt cơm cũng có workflow</h2>
+            <div class="example-flow reveal delay-2">
+                <div class="example-row"><strong>01 · Người chốt kèo</strong><span>Gửi menu và hạn chốt món</span><span>Slack</span><span>Mọi người bắt đầu chọn</span></div>
+                <div class="example-row"><strong>02 · Mỗi người</strong><span>Chọn món và ghi chú riêng</span><span>Slack</span><span>Danh sách lựa chọn</span></div>
+                <div class="example-row"><strong>03 · Người chốt kèo</strong><span>Rà người chưa chọn, tính tổng</span><span>Google Sheets</span><span>Đơn cuối cùng</span></div>
+                <div class="example-row"><strong>04 · Người đặt</strong><span>Đặt món và thanh toán</span><span>GrabFood</span><span>Mã đơn và giờ giao</span></div>
+                <div class="example-row"><strong>05 · Người nhận</strong><span>Kiểm món, phát đúng người</span><span>Slack</span><span>Báo thiếu hoặc sai nếu có</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Build dossier -->
+    <section class="slide" data-section="Hồ sơ build">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Đầu ra của buổi 2</div>
+            <h2 class="reveal delay-1">Bộ hồ sơ build</h2>
+            <div class="dossier-grid reveal delay-2">
+                <article class="card dossier-card main"><div class="tag red">01 · Xương sống</div><h3>Workflow hiện tại</h3><p>Ai làm, từng bước, tool, input, output, bàn giao và chỗ đau.</p></article>
+                <article class="card dossier-card"><div class="tag blue">02</div><h3>Vấn đề muốn xử</h3><p>Đoạn nào chậm, lặp lại, thiếu thông tin hoặc dễ sai?</p></article>
+                <article class="card dossier-card"><div class="tag teal">03 · Đưa cho Codex</div><h3>Dữ liệu để build</h3><p>Input thật, output đúng mẫu, checklist và luật đang dùng.</p></article>
+                <article class="card dossier-card"><div class="tag pink">04 · Dùng để chấm</div><h3>Thế nào là xài được?</h3><p>Chạy 3 case đã chốt; đạt khi output đúng và người thật dùng được.</p></article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: Workshop -->
+    <section class="slide" data-section="Workshop">
+        <div class="slide-content">
+            <div class="eyebrow reveal">30 phút làm thật</div>
+            <h2 class="reveal delay-1">Đào context cho đủ</h2>
+            <div class="workshop-shell reveal delay-2">
+                <div>
+                    <div class="workshop-steps">
+                        <article class="card check-card" tabindex="0"><div class="box">□ BƯỚC 1</div><h3>Vẽ workflow</h3><p>Đi từ người đầu tiên tới điểm bàn giao cuối.</p></article>
+                        <article class="card check-card" tabindex="0"><div class="box">□ BƯỚC 2</div><h3>Chốt vấn đề</h3><p>Đánh dấu bước đang chậm, lặp lại hoặc dễ sai.</p></article>
+                        <article class="card check-card" tabindex="0"><div class="box">□ BƯỚC 3</div><h3>Gom đồ nghề</h3><p>Input thật, output mẫu và 3 test case.</p></article>
+                    </div>
+                    <a class="button-link" href="templates/build-dossier.md" target="_blank" rel="noopener">Mở mẫu hồ sơ build</a>
+                </div>
+                <aside class="card timer-card" data-timer="dossier" data-seconds="1800">
+                    <div class="tag">Đào context</div>
+                    <div class="timer-display">30:00</div>
+                    <div class="timer-actions">
+                        <button class="primary" data-action="start">Chạy</button>
+                        <button data-action="pause">Dừng</button>
+                        <button class="secondary" data-action="reset">Lại từ đầu</button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 10: Peer review -->
+    <section class="slide" data-section="Đổi bài">
+        <div class="slide-content">
+            <div class="eyebrow reveal">15 phút kiếm chuyện</div>
+            <h2 class="reveal delay-1">Đổi hồ sơ cho team khác phá</h2>
+            <div class="two-col">
+                <article class="card reveal delay-2">
+                    <div class="tag red">Team đọc hộ</div>
+                    <ul class="review-list">
+                        <li>Đọc xong có hiểu workflow chạy thế nào không?</li>
+                        <li>Có biết chính xác AI chui vào bước nào không?</li>
+                        <li>Có input thật để bắt đầu build chưa?</li>
+                        <li>Có biết test thế nào là xài được không?</li>
+                    </ul>
+                </article>
+                <article class="card blue-edge reveal delay-3" style="display:flex; flex-direction:column; justify-content:center;">
+                    <div class="tag blue">Luật chơi</div>
+                    <div class="mega-line" style="font-size: clamp(2rem, 5vw, 4.2rem);">Không hiểu<br>thì hỏi.<br>Đừng tự đoán.</div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 11: Planning prompt -->
+    <section class="slide" data-section="Đưa vào Codex">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Chưa code vội</div>
+            <h2 class="reveal delay-1">Bắt Codex kể lại trước</h2>
+            <pre class="card prompt-box reveal delay-2">Đọc Bộ hồ sơ build dưới đây. Chưa bắt đầu code.
+
+1. Mô tả lại workflow hiện tại: ai làm, từng bước, tool, input, output và điểm bàn giao.
+2. Chỉ ra các giả định và context còn thiếu.
+3. Xác định bước phù hợp nhất để AI can thiệp và human review gate cần giữ.
+4. Đề xuất phiên bản đầu tiên đơn giản nhất và những thứ chưa cần làm.
+5. Đề xuất kế hoạch build cùng 3 test case.
+
+Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
+        </div>
+    </section>
+
+    <!-- Slide 12: Final checkpoint -->
+    <section class="slide" data-section="Chốt buổi">
+        <div class="slide-content">
+            <div class="eyebrow reveal">Checkpoint</div>
+            <h2 class="reveal delay-1">Cuối buổi phải có hàng</h2>
+            <div class="two-col">
+                <article class="card reveal delay-2">
+                    <ul class="checkpoint-list">
+                        <li>Ba vai đã có người gánh.</li>
+                        <li>Workflow hiện tại đã kể đủ đầu đuôi.</li>
+                        <li>Bộ hồ sơ build có nguyên liệu và test case.</li>
+                        <li>Codex đã phản hồi plan cùng context còn thiếu.</li>
+                    </ul>
+                </article>
+                <article class="card red-edge reveal delay-3" style="display:flex; flex-direction:column; justify-content:center;">
+                    <div class="tag red">Mỗi team 3 phút</div>
+                    <h3>Chém hồ sơ, chưa cần demo tool.</h3>
+                    <p class="muted">Buổi 3: mở máy và build bản đầu tiên.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = [...document.querySelectorAll('.slide[data-deck="session-02a-v2"]')];
+                this.currentSlide = 0;
+                this.wheelLocked = false;
+                this.touchStartY = 0;
+                this.setupSlideCounts();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.setupNavDots();
+                this.restoreHash();
+                this.updateUI();
+            }
+
+            setupSlideCounts() {
+                this.slides.forEach((slide, index) => {
+                    const count = document.createElement('div');
+                    count.className = 'slide-count';
+                    count.textContent = `${String(index + 1).padStart(2, '0')} / ${String(this.slides.length).padStart(2, '0')}`;
+                    slide.appendChild(count);
+                });
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        entry.target.classList.add('visible');
+                        this.currentSlide = this.slides.indexOf(entry.target);
+                        this.updateUI();
+                    });
+                }, { threshold: 0.62 });
+                this.slides.forEach((slide) => observer.observe(slide));
+                this.slides[0].classList.add('visible');
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (event) => {
+                    const target = event.target;
+                    const typing = target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+                    if (typing) return;
+                    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) {
+                        event.preventDefault();
+                        this.goTo(this.currentSlide + 1);
+                    }
+                    if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) {
+                        event.preventDefault();
+                        this.goTo(this.currentSlide - 1);
+                    }
+                    if (event.key === 'Home') this.goTo(0);
+                    if (event.key === 'End') this.goTo(this.slides.length - 1);
+                });
+            }
+
+            setupTouchNav() {
+                document.addEventListener('touchstart', (event) => { this.touchStartY = event.changedTouches[0].clientY; }, { passive: true });
+                document.addEventListener('touchend', (event) => {
+                    const diff = this.touchStartY - event.changedTouches[0].clientY;
+                    if (Math.abs(diff) > 55) this.goTo(this.currentSlide + (diff > 0 ? 1 : -1));
+                }, { passive: true });
+            }
+
+            setupWheelNav() {
+                document.addEventListener('wheel', (event) => {
+                    if (this.wheelLocked || Math.abs(event.deltaY) < 18) return;
+                    this.wheelLocked = true;
+                    this.goTo(this.currentSlide + (event.deltaY > 0 ? 1 : -1));
+                    window.setTimeout(() => { this.wheelLocked = false; }, 650);
+                }, { passive: true });
+            }
+
+            setupNavDots() {
+                const nav = document.querySelector('.nav-dots');
+                this.slides.forEach((slide, index) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot';
+                    dot.type = 'button';
+                    dot.setAttribute('aria-label', `Đi tới slide ${index + 1}`);
+                    dot.addEventListener('click', () => this.goTo(index));
+                    nav.appendChild(dot);
+                });
+                this.dots = [...nav.children];
+            }
+
+            restoreHash() {
+                const match = window.location.hash.match(/slide-(\d+)/);
+                if (match) this.currentSlide = Math.max(0, Math.min(this.slides.length - 1, Number(match[1]) - 1));
+                window.setTimeout(() => this.goTo(this.currentSlide, false), 0);
+            }
+
+            goTo(index, smooth = true) {
+                const next = Math.max(0, Math.min(this.slides.length - 1, index));
+                this.currentSlide = next;
+                this.slides[next].scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+                window.history.replaceState(null, '', `#slide-${next + 1}`);
+                this.updateUI();
+            }
+
+            updateUI() {
+                const percent = ((this.currentSlide + 1) / this.slides.length) * 100;
+                document.querySelector('.progress-bar').style.width = `${percent}%`;
+                if (this.dots) this.dots.forEach((dot, index) => dot.classList.toggle('active', index === this.currentSlide));
+            }
+        }
+
+        /* ===========================================
+           ROLE ASSIGNMENT BOARD
+           =========================================== */
+        class RoleBoard {
+            constructor() {
+                this.storageKey = 'hwm-build-lab-session-02-roles';
+                this.sessionOneKey = 'hwm-build-lab-session-01';
+                this.container = document.getElementById('roleTeams');
+                this.status = document.getElementById('roleImportStatus');
+                this.state = this.load();
+                this.render();
+            }
+
+            defaultState() {
+                return {
+                    imported: false,
+                    teams: [0, 1, 2].map((index) => ({
+                        name: `Team ${index + 1}`,
+                        members: [],
+                        driver: '',
+                        context: '',
+                        tester: ''
+                    }))
+                };
+            }
+
+            load() {
+                const previous = this.loadPreviousRoles();
+                const sessionOne = this.loadSessionOneTeams();
+
+                if (sessionOne) {
+                    return {
+                        imported: true,
+                        teams: sessionOne.map((team, index) => {
+                            const saved = previous.teams[index] || {};
+                            return {
+                                ...team,
+                                driver: team.members.includes(saved.driver) ? saved.driver : '',
+                                context: team.members.includes(saved.context) ? saved.context : '',
+                                tester: team.members.includes(saved.tester) ? saved.tester : ''
+                            };
+                        })
+                    };
+                }
+
+                return previous;
+            }
+
+            loadPreviousRoles() {
+                try {
+                    const saved = JSON.parse(localStorage.getItem(this.storageKey));
+                    if (saved && Array.isArray(saved.teams) && saved.teams.length === 3) {
+                        return {
+                            imported: Boolean(saved.imported),
+                            teams: saved.teams.map((team, index) => this.normalizeTeam(team, index))
+                        };
+                    }
+
+                    if (Array.isArray(saved) && saved.length === 3) {
+                        return {
+                            imported: false,
+                            teams: saved.map((team, index) => this.migrateOldTeam(team, index))
+                        };
+                    }
+                } catch (error) {
+                    // Ignore malformed workshop state and use the clean fallback.
+                }
+                return this.defaultState();
+            }
+
+            loadSessionOneTeams() {
+                try {
+                    const source = JSON.parse(localStorage.getItem(this.sessionOneKey));
+                    if (!source || !Array.isArray(source.teams) || source.teams.length !== 3) return null;
+                    const teams = source.teams.map((members, index) => ({
+                        name: String(source.teamNames?.[index] || `Team ${index + 1}`).trim(),
+                        members: Array.isArray(members) ? members.map((name) => String(name).trim()).filter(Boolean) : []
+                    }));
+                    return teams.some((team) => team.members.length > 0) ? teams : null;
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            migrateOldTeam(team, index) {
+                if (typeof team === 'string') {
+                    const [name, driver, context, tester] = team.split('/').map((value) => value.trim());
+                    const members = [...new Set([driver, context, tester].filter(Boolean))];
+                    return this.normalizeTeam({ name, members, driver, context, tester }, index);
+                }
+                return this.normalizeTeam({
+                    name: team?.team,
+                    members: [team?.driver, team?.context, team?.tester].filter(Boolean),
+                    driver: team?.driver,
+                    context: team?.context,
+                    tester: team?.tester
+                }, index);
+            }
+
+            normalizeTeam(team, index) {
+                const members = Array.isArray(team?.members)
+                    ? [...new Set(team.members.map((name) => String(name).trim()).filter(Boolean))]
+                    : [];
+                return {
+                    name: String(team?.name || `Team ${index + 1}`).trim(),
+                    members,
+                    driver: String(team?.driver || '').trim(),
+                    context: String(team?.context || '').trim(),
+                    tester: String(team?.tester || '').trim()
+                };
+            }
+
+            save() { localStorage.setItem(this.storageKey, JSON.stringify(this.state)); }
+
+            escape(value) {
+                return String(value).replace(/[&<>"']/g, (char) => ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+                })[char]);
+            }
+
+            options(team, selected) {
+                const emptyLabel = team.members.length ? 'Chọn người' : 'Chưa có dữ liệu';
+                return [
+                    `<option value="">${emptyLabel}</option>`,
+                    ...team.members.map((name) => `<option value="${this.escape(name)}"${name === selected ? ' selected' : ''}>${this.escape(name)}</option>`)
+                ].join('');
+            }
+
+            bind() {
+                this.container.querySelectorAll('[data-role-pick]').forEach((select) => {
+                    select.addEventListener('change', () => {
+                        const team = this.state.teams[Number(select.dataset.teamIndex)];
+                        team[select.dataset.rolePick] = select.value;
+                        this.save();
+                    });
+                });
+            }
+
+            render() {
+                this.status.textContent = this.state.imported
+                    ? 'Đã kéo team từ buổi 1. Giờ chỉ chốt vai.'
+                    : 'Chưa thấy dữ liệu buổi 1 trên trình duyệt này.';
+                this.container.innerHTML = this.state.teams.map((team, index) => `
+                    <section class="role-team">
+                        <div class="role-team-meta">
+                            <div class="role-team-name">${this.escape(team.name)}</div>
+                            <div class="role-members">
+                                ${team.members.length
+                                    ? team.members.map((name) => `<span class="member-chip">${this.escape(name)}</span>`).join('')
+                                    : '<span class="member-chip">Chưa có thành viên</span>'}
+                            </div>
+                        </div>
+                        <div class="role-picks">
+                            <div class="role-pick"><label for="driver-${index}">Cầm máy</label><select id="driver-${index}" data-team-index="${index}" data-role-pick="driver">${this.options(team, team.driver)}</select></div>
+                            <div class="role-pick"><label for="context-${index}">Biết chuyện</label><select id="context-${index}" data-team-index="${index}" data-role-pick="context">${this.options(team, team.context)}</select></div>
+                            <div class="role-pick"><label for="tester-${index}">Kiếm chuyện</label><select id="tester-${index}" data-team-index="${index}" data-role-pick="tester">${this.options(team, team.tester)}</select></div>
+                        </div>
+                    </section>
+                `).join('');
+                this.bind();
+                this.save();
+            }
+        }
+
+        /* ===========================================
+           MULTI-TIMER CONTROLLER
+           =========================================== */
+        class WorkshopTimers {
+            constructor() {
+                this.timers = new Map();
+                document.querySelectorAll('[data-timer]').forEach((element) => this.setupTimer(element));
+            }
+
+            setupTimer(element) {
+                const id = element.dataset.timer;
+                const initial = Number(element.dataset.seconds);
+                const savedRaw = localStorage.getItem(`hwm-session-02-timer-${id}`);
+                const saved = savedRaw === null ? NaN : Number(savedRaw);
+                const timer = { element, initial, seconds: Number.isFinite(saved) && saved >= 0 ? saved : initial, interval: null };
+                this.timers.set(id, timer);
+                element.querySelector('[data-action="start"]').addEventListener('click', () => this.start(id));
+                element.querySelector('[data-action="pause"]').addEventListener('click', () => this.pause(id));
+                element.querySelector('[data-action="reset"]').addEventListener('click', () => this.reset(id));
+                this.render(timer);
+            }
+
+            start(id) {
+                const timer = this.timers.get(id);
+                if (timer.interval) return;
+                if (timer.seconds <= 0) timer.seconds = timer.initial;
+                timer.interval = window.setInterval(() => {
+                    timer.seconds = Math.max(0, timer.seconds - 1);
+                    this.render(timer);
+                    if (timer.seconds % 10 === 0) localStorage.setItem(`hwm-session-02-timer-${id}`, String(timer.seconds));
+                    if (timer.seconds === 0) {
+                        this.pause(id);
+                        this.playFinish();
+                    }
+                }, 1000);
+                this.render(timer);
+            }
+
+            pause(id) {
+                const timer = this.timers.get(id);
+                if (timer.interval) window.clearInterval(timer.interval);
+                timer.interval = null;
+                localStorage.setItem(`hwm-session-02-timer-${id}`, String(timer.seconds));
+                this.render(timer);
+            }
+
+            reset(id) {
+                const timer = this.timers.get(id);
+                this.pause(id);
+                timer.seconds = timer.initial;
+                localStorage.setItem(`hwm-session-02-timer-${id}`, String(timer.seconds));
+                this.render(timer);
+            }
+
+            render(timer) {
+                const minutes = Math.floor(timer.seconds / 60);
+                const seconds = timer.seconds % 60;
+                const display = timer.element.querySelector('.timer-display');
+                display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                display.style.color = timer.seconds <= 60 ? 'var(--red)' : 'var(--ink)';
+                timer.element.querySelector('[data-action="start"]').disabled = Boolean(timer.interval);
+                timer.element.querySelector('[data-action="pause"]').disabled = !timer.interval;
+            }
+
+            playFinish() {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const context = new AudioCtx();
+                [392, 523, 659, 784].forEach((frequency, index) => {
+                    const oscillator = context.createOscillator();
+                    const gain = context.createGain();
+                    oscillator.type = index % 2 ? 'square' : 'triangle';
+                    oscillator.frequency.value = frequency;
+                    gain.gain.setValueAtTime(0.05, context.currentTime + index * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + index * 0.12 + 0.18);
+                    oscillator.connect(gain);
+                    gain.connect(context.destination);
+                    oscillator.start(context.currentTime + index * 0.12);
+                    oscillator.stop(context.currentTime + index * 0.12 + 0.2);
+                });
+            }
+        }
+
+        /* ===========================================
+           WORKSHOP CHECKLIST
+           =========================================== */
+        function setupChecklist() {
+            document.querySelectorAll('.check-card').forEach((card) => {
+                const toggle = () => {
+                    card.classList.toggle('done');
+                    const box = card.querySelector('.box');
+                    box.textContent = box.textContent.replace(card.classList.contains('done') ? '□' : '✓', card.classList.contains('done') ? '✓' : '□');
+                };
+                card.addEventListener('click', toggle);
+                card.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
+                });
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+            new RoleBoard();
+            new WorkshopTimers();
+            setupChecklist();
+        });
+    </script>
+</body>
+</html>

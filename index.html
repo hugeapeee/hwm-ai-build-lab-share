@@ -70,7 +70,7 @@
       font-weight: 650;
       line-height: 1.35;
     }
-    .sessions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 32px); }
+    .sessions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 28px); }
     .session {
       display: flex;
       min-height: 430px;
@@ -81,11 +81,13 @@
     }
     .session.red { box-shadow: 9px 9px 0 var(--red); }
     .session.blue { box-shadow: 9px 9px 0 var(--blue); }
+    .session.teal { box-shadow: 9px 9px 0 var(--teal); }
     .session-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; font-family: "Courier New", monospace; font-weight: 800; text-transform: uppercase; }
     .number { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: clamp(42px, 6vw, 72px); line-height: .8; }
     .label { border: 2px solid var(--ink); padding: 7px 10px; color: white; }
     .red .label { background: var(--red); }
     .blue .label { background: var(--blue); }
+    .teal .label { background: var(--teal); }
     .session h2, .tool h2 { margin-bottom: 12px; font-size: clamp(30px, 4vw, 48px); line-height: 1; }
     .session > p, .tool p { color: var(--muted); font-size: clamp(16px, 1.8vw, 21px); line-height: 1.4; }
     ul { display: grid; gap: 10px; margin: 10px 0 30px; padding: 0; list-style: none; font-size: clamp(15px, 1.5vw, 18px); font-weight: 700; }
@@ -158,6 +160,13 @@
           <ul><li>Randomizer có âm thanh</li><li>Timer thảo luận</li><li>Lưu team trên máy</li></ul>
           <a class="action" href="session-01-team-builder.html">Vào chia đội <span aria-hidden="true">→</span></a>
         </article>
+        <article class="session teal">
+          <div class="session-head"><span class="number">02A</span><span class="label">Buổi 2A</span></div>
+          <h2>Setup Codex</h2>
+          <p>Hiểu Skill, MCP, các đường kết nối và cài máy để vibecode HWM.</p>
+          <ul><li>Bản đồ tool HWM</li><li>Checklist setup 25 phút</li><li>Smoke test tại chỗ</li></ul>
+          <a class="action" href="session-02a-codex-setup.html">Vào lắp tay chân <span aria-hidden="true">→</span></a>
+        </article>
         <article class="session blue">
           <div class="session-head"><span class="number">02–03</span><span class="label">Buổi 2 &amp; 3</span></div>
           <h2>Chốt vai &amp; hồ sơ build</h2>
@@ -165,6 +174,14 @@
           <ul><li>Tự lấy team buổi 1</li><li>Timer workshop</li><li>Bộ hồ sơ build</li></ul>
           <a class="action" href="session-02-build-dossier.html">Vào chuẩn bị build <span aria-hidden="true">→</span></a>
         </article>
+      </section>
+      <section class="tool">
+        <div>
+          <p class="tool-kicker">CHECKLIST BUỔI 2A</p>
+          <h2>Setup tới khi chạy</h2>
+          <p>Cài Codex, connector, HWM Starter Skills và chạy smoke test trước khi bắt đầu build.</p>
+        </div>
+        <a class="action" href="session-02a-codex-setup.html#slide-10">Mở checklist setup <span aria-hidden="true">→</span></a>
       </section>
       <section class="tool">
         <div>
