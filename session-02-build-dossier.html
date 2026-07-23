@@ -389,6 +389,16 @@
         .timer-card { background: var(--yellow); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .timer-display { font-family: var(--font-heading); font-size: clamp(2.4rem, 7vw, 5.8rem); font-weight: 900; line-height: 1; }
         .timer-actions { display: flex; gap: clamp(0.35rem, 0.8vw, 0.6rem); justify-content: center; flex-wrap: wrap; margin-top: clamp(0.5rem, 1vw, 0.8rem); }
+        .compact-timer {
+            min-height: clamp(5.4rem, 14vh, 7.2rem);
+            flex-direction: row;
+            gap: clamp(0.7rem, 1.6vw, 1.2rem);
+            justify-content: space-between;
+            padding: clamp(0.65rem, 1.3vw, 0.95rem);
+            text-align: left;
+        }
+        .compact-timer .timer-display { font-size: clamp(2.2rem, 5vw, 4rem); }
+        .compact-timer .timer-actions { margin-top: 0; }
 
         /* ===========================================
            WORKFLOW VISUALS
@@ -494,6 +504,14 @@
             .workshop-shell { grid-template-columns: 1fr; }
             .timer-card { padding: clamp(0.5rem, 2vw, 0.75rem); }
             .timer-display { font-size: clamp(2rem, 11vw, 3rem); }
+            .compact-timer {
+                min-height: clamp(4.6rem, 12vh, 6rem);
+                flex-direction: row;
+                gap: clamp(0.4rem, 1.5vw, 0.65rem);
+            }
+            .compact-timer .timer-display { font-size: clamp(1.8rem, 8vw, 2.5rem); }
+            .compact-timer .timer-actions { flex-wrap: nowrap; }
+            .compact-timer button { padding: clamp(0.3rem, 1.1vw, 0.42rem) clamp(0.42rem, 1.5vw, 0.6rem); }
             .role-team { grid-template-columns: minmax(5.4rem, 0.52fr) minmax(0, 1.8fr); padding: clamp(0.38rem, 1.4vw, 0.55rem); }
             .role-team-name { font-size: clamp(0.72rem, 3vw, 0.92rem); }
             .member-chip { font-size: clamp(0.5rem, 2vw, 0.64rem); }
@@ -659,7 +677,7 @@
     <!-- Slide 9: Workshop -->
     <section class="slide" data-section="Workshop">
         <div class="slide-content">
-            <div class="eyebrow reveal">30 phút làm thật</div>
+            <div class="eyebrow reveal">10 phút làm thật</div>
             <h2 class="reveal delay-1">Đào context cho đủ</h2>
             <div class="workshop-shell reveal delay-2">
                 <div>
@@ -670,9 +688,9 @@
                     </div>
                     <a class="button-link" href="templates/build-dossier.md" target="_blank" rel="noopener">Mở mẫu hồ sơ build</a>
                 </div>
-                <aside class="card timer-card" data-timer="dossier" data-seconds="1800">
+                <aside class="card timer-card" data-timer="dossier-10m" data-seconds="600">
                     <div class="tag">Đào context</div>
-                    <div class="timer-display">30:00</div>
+                    <div class="timer-display">10:00</div>
                     <div class="timer-actions">
                         <button class="primary" data-action="start">Chạy</button>
                         <button data-action="pause">Dừng</button>
@@ -686,7 +704,7 @@
     <!-- Slide 10: Peer review -->
     <section class="slide" data-section="Đổi bài">
         <div class="slide-content">
-            <div class="eyebrow reveal">15 phút kiếm chuyện</div>
+            <div class="eyebrow reveal">5 phút kiếm chuyện</div>
             <h2 class="reveal delay-1">Đổi hồ sơ cho team khác phá</h2>
             <div class="two-col">
                 <article class="card reveal delay-2">
@@ -698,10 +716,15 @@
                         <li>Có biết test thế nào là xài được không?</li>
                     </ul>
                 </article>
-                <article class="card blue-edge reveal delay-3" style="display:flex; flex-direction:column; justify-content:center;">
-                    <div class="tag blue">Luật chơi</div>
-                    <div class="mega-line" style="font-size: clamp(2rem, 5vw, 4.2rem);">Không hiểu<br>thì hỏi.<br>Đừng tự đoán.</div>
-                </article>
+                <aside class="card timer-card reveal delay-3" data-timer="peer-review-5m" data-seconds="300">
+                    <div class="tag blue">Team đọc hộ</div>
+                    <div class="timer-display">05:00</div>
+                    <div class="timer-actions">
+                        <button class="primary" data-action="start">Chạy</button>
+                        <button data-action="pause">Dừng</button>
+                        <button class="secondary" data-action="reset">Lại từ đầu</button>
+                    </div>
+                </aside>
             </div>
         </div>
     </section>
@@ -720,6 +743,15 @@
 5. Đề xuất kế hoạch build cùng 3 test case.
 
 Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
+            <aside class="card timer-card compact-timer reveal delay-3" data-timer="codex-recap-10m" data-seconds="600">
+                <div class="tag">Codex kể lại</div>
+                <div class="timer-display">10:00</div>
+                <div class="timer-actions">
+                    <button class="primary" data-action="start">Chạy</button>
+                    <button data-action="pause">Dừng</button>
+                    <button class="secondary" data-action="reset">Lại từ đầu</button>
+                </div>
+            </aside>
         </div>
     </section>
 
@@ -740,7 +772,7 @@ Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
                 <article class="card red-edge reveal delay-3" style="display:flex; flex-direction:column; justify-content:center;">
                     <div class="tag red">Mỗi team 3 phút</div>
                     <h3>Chém hồ sơ, chưa cần demo tool.</h3>
-                    <p class="muted">Buổi 3: mở máy và build bản đầu tiên.</p>
+                    <p class="muted">Buổi 4: mở máy và build bản đầu tiên.</p>
                 </article>
             </div>
         </div>
