@@ -4,204 +4,131 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HWM AI Build Lab</title>
-  <meta name="description" content="Slide tương tác cho các buổi HWM AI Build Lab Q3/2026.">
+  <meta name="description" content="Slide tương tác cho HWM AI Build Lab Q3/2026: chia đội, setup Codex, chuẩn bị hồ sơ và vibecode bản v0.">
   <meta property="og:title" content="HWM AI Build Lab">
-  <meta property="og:description" content="Build từ việc thật. Không nghe nữa, làm luôn.">
+  <meta property="og:description" content="Không nghe nữa, làm luôn.">
   <meta property="og:image" content="https://hugeapeee.github.io/hwm-ai-build-lab-share/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <style>
-    :root {
-      --ink: #111318;
-      --paper: #fffaf0;
-      --yellow: #ffd84d;
-      --red: #f23f35;
-      --blue: #2f6fd5;
-      --teal: #27b9bd;
-      --muted: #6c675f;
-    }
-    * { box-sizing: border-box; }
-    html { background: var(--paper); }
-    body {
-      margin: 0;
-      background:
-        repeating-linear-gradient(-8deg, transparent 0, transparent 18px, rgba(255,216,77,.32) 18px, rgba(255,216,77,.32) 27px),
-        var(--paper);
-      color: var(--ink);
-      font-family: Arial, Helvetica, sans-serif;
-      letter-spacing: 0;
-    }
-    main { min-height: 100vh; padding: clamp(18px, 3vw, 42px); }
-    .shell {
-      width: min(1180px, 100%);
-      min-height: calc(100vh - clamp(36px, 6vw, 84px));
-      margin: 0 auto;
-      padding: clamp(20px, 4vw, 52px);
-      border: 3px solid var(--ink);
-      background: rgba(255,250,240,.92);
-      box-shadow: 10px 10px 0 var(--ink);
-    }
-    .topbar, footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .brand, .quarter, .eyebrow, .tool-kicker {
-      width: fit-content;
-      border: 2px solid var(--ink);
-      padding: 8px 12px;
-      background: var(--yellow);
-      box-shadow: 4px 4px 0 var(--ink);
-      font-family: "Courier New", monospace;
-      font-size: clamp(11px, 1.3vw, 15px);
-      font-weight: 800;
-    }
-    .quarter { background: var(--paper); }
-    .intro { max-width: 900px; padding: clamp(64px, 11vh, 112px) 0 clamp(34px, 6vh, 64px); }
-    .eyebrow { margin: 0 0 24px; }
-    h1, h2, p { margin-top: 0; }
-    h1 {
-      max-width: 13ch;
-      margin-bottom: 22px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-      font-size: clamp(52px, 9vw, 112px);
-      line-height: .92;
-      text-transform: uppercase;
-    }
-    .lede {
-      max-width: 58ch;
-      margin-bottom: 0;
-      font-size: clamp(18px, 2.2vw, 26px);
-      font-weight: 650;
-      line-height: 1.35;
-    }
-    .sessions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 28px); }
-    .session {
-      display: flex;
-      min-height: 430px;
-      flex-direction: column;
-      padding: clamp(22px, 3vw, 34px);
-      border: 3px solid var(--ink);
-      background: var(--paper);
-    }
-    .session.red { box-shadow: 9px 9px 0 var(--red); }
-    .session.blue { box-shadow: 9px 9px 0 var(--blue); }
-    .session.teal { box-shadow: 9px 9px 0 var(--teal); }
-    .session.yellow { box-shadow: 9px 9px 0 var(--yellow); }
-    .session-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; font-family: "Courier New", monospace; font-weight: 800; text-transform: uppercase; }
-    .number { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: clamp(42px, 6vw, 72px); line-height: .8; }
-    .label { border: 2px solid var(--ink); padding: 7px 10px; color: white; }
-    .red .label { background: var(--red); }
-    .blue .label { background: var(--blue); }
-    .teal .label { background: var(--teal); }
-    .yellow .label { background: var(--yellow); color: var(--ink); }
-    .session h2, .tool h2 { margin-bottom: 12px; font-size: clamp(30px, 4vw, 48px); line-height: 1; }
-    .session > p, .tool p { color: var(--muted); font-size: clamp(16px, 1.8vw, 21px); line-height: 1.4; }
-    ul { display: grid; gap: 10px; margin: 10px 0 30px; padding: 0; list-style: none; font-size: clamp(15px, 1.5vw, 18px); font-weight: 700; }
-    li::before { content: "■"; margin-right: 10px; color: var(--teal); }
-    .action {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-top: auto;
-      padding: 15px 17px;
-      border: 3px solid var(--ink);
-      background: var(--yellow);
-      box-shadow: 5px 5px 0 var(--ink);
-      color: inherit;
-      font-family: "Courier New", monospace;
-      font-size: clamp(13px, 1.4vw, 16px);
-      font-weight: 800;
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: transform 150ms ease, box-shadow 150ms ease;
-    }
-    .action:hover, .action:focus-visible { transform: translate(3px,3px); box-shadow: 2px 2px 0 var(--ink); }
-    .tool {
-      display: grid;
-      grid-template-columns: minmax(0,1fr) auto;
-      gap: clamp(24px,4vw,54px);
-      align-items: end;
-      margin-top: clamp(28px,5vw,54px);
-      padding: clamp(22px,3vw,34px);
-      border: 3px solid var(--ink);
-      background: #d9f4f2;
-      box-shadow: 9px 9px 0 var(--teal);
-    }
-    .tool-kicker { margin: 0 0 18px; background: var(--teal); box-shadow: none; }
-    .tool p { max-width: 60ch; margin-bottom: 0; }
-    .tool .action { min-width: 220px; margin: 0; background: var(--paper); }
-    footer { margin-top: clamp(34px,5vw,58px); font-family: "Courier New", monospace; font-size: 12px; line-height: 1.5; text-transform: uppercase; }
-    footer strong { color: var(--red); }
-    @media (max-width: 760px) {
-      main { padding: 12px; }
-      .shell { padding: 18px; box-shadow: 6px 6px 0 var(--ink); }
-      .intro { padding-top: 60px; }
-      h1 { font-size: clamp(48px,16vw,72px); }
-      .sessions, .tool { grid-template-columns: 1fr; }
-      .session { min-height: 0; }
-      .tool .action { min-width: 0; }
-      footer { flex-direction: column; align-items: flex-start; }
-    }
-    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="hwm-polish.css">
 </head>
-<body>
-  <main>
-    <div class="shell">
-      <header class="topbar">
-        <div class="brand">HWM AI BUILD LAB</div>
-        <div class="quarter">Q3/2026</div>
-      </header>
-      <section class="intro">
-        <p class="eyebrow">KHÔNG NGHE NỮA, LÀM LUÔN</p>
-        <h1>Chọn buổi để vào việc</h1>
-        <p class="lede">Slide tương tác dùng trực tiếp trên laptop hoặc TV. Không cần tải file, không cần cài thêm gì.</p>
+<body class="hub">
+  <div class="hub-shell">
+    <nav class="hub-nav" aria-label="Điều hướng chính">
+      <a class="hub-brand" href="index.html">HWM AI Build Lab</a>
+      <span class="hub-quarter">Q3/2026</span>
+    </nav>
+
+    <header class="hub-hero">
+      <img src="og.png" alt="HWM AI Build Lab Q3/2026 - Build từ việc thật">
+      <div class="hub-hero-copy">
+        <h1>HWM AI Build Lab</h1>
+        <p>Không nghe nữa, làm luôn. Mở trên laptop hoặc TV, chọn đúng buổi rồi vào việc.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="hub-intro" aria-labelledby="session-heading">
+        <h2 id="session-heading">Chọn đúng buổi</h2>
+        <p>Mỗi buổi xử một khúc khác nhau: lập đội, nối công cụ, chuẩn bị context, rồi bắt tay build. Deck lưu trạng thái ngay trên trình duyệt đang dùng.</p>
       </section>
-      <section class="sessions" aria-label="Danh sách các buổi">
-        <article class="session red">
-          <div class="session-head"><span class="number">01</span><span class="label">Buổi 1</span></div>
-          <h2>Chia đội</h2>
-          <p>Bốc người, chia 3 team và chốt vấn đề muốn xử.</p>
-          <ul><li>Randomizer có âm thanh</li><li>Timer thảo luận</li><li>Lưu team trên máy</li></ul>
-          <a class="action" href="session-01-team-builder.html">Vào chia đội <span aria-hidden="true">→</span></a>
+
+      <section class="session-list" aria-label="Danh sách buổi Build Lab">
+        <article class="session-row">
+          <a class="session-preview" href="session-01-team-builder.html" aria-label="Mở Buổi 1: Chia đội">
+            <img src="assets/preview-session-01.png" alt="Màn hình chia đội ngẫu nhiên của Buổi 1">
+          </a>
+          <div class="session-copy">
+            <span class="session-meta">BUỔI 1 · LẬP ĐỘI</span>
+            <h3>Chia đội</h3>
+            <p>Bốc người vào ba team, chốt tên và chọn vấn đề cả team muốn xử.</p>
+            <ul class="session-points" aria-label="Chức năng">
+              <li>Randomizer có tiếng</li>
+              <li>Timer thảo luận</li>
+              <li>Tự lưu team</li>
+            </ul>
+            <a class="hub-action" href="session-01-team-builder.html">Vào chia đội →</a>
+          </div>
         </article>
-        <article class="session teal">
-          <div class="session-head"><span class="number">02A</span><span class="label">Buổi 2A</span></div>
-          <h2>Setup Codex</h2>
-          <p>Hiểu Skill, MCP, các đường kết nối và cài máy để vibecode HWM.</p>
-          <ul><li>Bản đồ tool HWM</li><li>Checklist setup 25 phút</li><li>Smoke test tại chỗ</li></ul>
-          <a class="action" href="session-02a-codex-setup.html">Vào lắp tay chân <span aria-hidden="true">→</span></a>
+
+        <article class="session-row">
+          <a class="session-preview" href="session-02a-codex-setup.html" aria-label="Mở Buổi 2A: Setup Codex">
+            <img src="assets/preview-session-02a.png" alt="Sơ đồ Codex, Skill và các công cụ HWM trong Buổi 2A">
+          </a>
+          <div class="session-copy">
+            <span class="session-meta">BUỔI 2A · LẮP TAY CHÂN</span>
+            <h3>Setup Codex</h3>
+            <p>Hiểu Codex cần gì, nối đúng công cụ HWM và test tới khi đọc được dữ liệu thật.</p>
+            <ul class="session-points" aria-label="Nội dung">
+              <li>Bản đồ kết nối</li>
+              <li>Checklist cài máy</li>
+              <li>Smoke test</li>
+            </ul>
+            <a class="hub-action" href="session-02a-codex-setup.html">Vào setup →</a>
+          </div>
         </article>
-        <article class="session blue">
-          <div class="session-head"><span class="number">02–03</span><span class="label">Buổi 2 &amp; 3</span></div>
-          <h2>Chốt vai &amp; hồ sơ build</h2>
-          <p>Phân vai, kể workflow và chuẩn bị đủ context để vibecode.</p>
-          <ul><li>Tự lấy team buổi 1</li><li>Timer workshop</li><li>Bộ hồ sơ build</li></ul>
-          <a class="action" href="session-02-build-dossier.html">Vào chuẩn bị build <span aria-hidden="true">→</span></a>
+
+        <article class="session-row">
+          <a class="session-preview" href="session-02-build-dossier.html" aria-label="Mở Buổi 2 và 3: Chốt vai và hồ sơ build">
+            <img src="assets/preview-session-02.png" alt="Ba vai trong team và Bộ hồ sơ build của Buổi 2 và 3">
+          </a>
+          <div class="session-copy">
+            <span class="session-meta">BUỔI 2–3 · CHỐT BÀI</span>
+            <h3>Vai rõ. Context đủ.</h3>
+            <p>Phân vai, kể lại workflow và gom đủ nguyên liệu để Codex lên plan đúng bài.</p>
+            <ul class="session-points" aria-label="Nội dung">
+              <li>Ba vai trong team</li>
+              <li>Workflow hiện tại</li>
+              <li>Bộ hồ sơ build</li>
+            </ul>
+            <a class="hub-action" href="session-02-build-dossier.html">Vào chuẩn bị →</a>
+          </div>
         </article>
-        <article class="session yellow">
-          <div class="session-head"><span class="number">04</span><span class="label">Buổi 4</span></div>
-          <h2>Mở máy &amp; vibecode</h2>
-          <p>Bắt đầu từ hồ sơ đã duyệt, build phần nhỏ nhất và chạy thử ngay.</p>
-          <ul><li>Timer build 30 phút</li><li>Nút Rảnh bấm chơi</li><li>Chốt đường tới bản v0</li></ul>
-          <a class="action" href="session-04-vibecode-kickoff.html">Vào bắt đầu build <span aria-hidden="true">→</span></a>
+
+        <article class="session-row">
+          <a class="session-preview" href="session-04-vibecode-kickoff.html" aria-label="Mở Buổi 4: Vibecode bản đầu tiên">
+            <img src="assets/preview-session-04.png" alt="Timer build và prompt mở máy trong Buổi 4">
+          </a>
+          <div class="session-copy">
+            <span class="session-meta">BUỔI 4 · VÀO VIỆC</span>
+            <h3>Mở máy &amp; vibecode</h3>
+            <p>Bắt đầu từ hồ sơ đã duyệt, làm phần nhỏ nhất chạy được và chốt đường tới bản v0.</p>
+            <ul class="session-points" aria-label="Nội dung">
+              <li>Build sprint 30 phút</li>
+              <li>Rảnh bấm chơi</li>
+              <li>Deadline bản v0</li>
+            </ul>
+            <a class="hub-action" href="session-04-vibecode-kickoff.html">Vào build →</a>
+          </div>
         </article>
       </section>
-      <section class="tool">
-        <div>
-          <p class="tool-kicker">CHECKLIST BUỔI 2A</p>
-          <h2>Setup tới khi chạy</h2>
-          <p>Cài Codex, connector cần thiết và chạy smoke test trước khi bắt đầu build.</p>
+
+      <section class="hub-resources" aria-labelledby="resource-heading">
+        <h2 id="resource-heading">Đồ nghề mang theo</h2>
+        <div class="resource-list">
+          <a class="resource-link" href="session-02a-codex-setup.html#slide-10">
+            <span>
+              <strong>Checklist setup Codex</strong>
+              <span>Cài tới khi đọc được Klaviyo hoặc Google Drive.</span>
+            </span>
+            <span class="resource-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="resource-link" href="templates/build-dossier.md" target="_blank" rel="noreferrer">
+            <span>
+              <strong>Mẫu Bộ hồ sơ build</strong>
+              <span>Workflow, vấn đề, nguyên liệu và cách kiểm thử.</span>
+            </span>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
         </div>
-        <a class="action" href="session-02a-codex-setup.html#slide-10">Mở checklist setup <span aria-hidden="true">→</span></a>
       </section>
-      <section class="tool">
-        <div>
-          <p class="tool-kicker">TÀI LIỆU LÀM VIỆC</p>
-          <h2>Mẫu Bộ hồ sơ build</h2>
-          <p>Điền workflow hiện tại, dữ liệu để build và điều kiện để biết sản phẩm đã xài được.</p>
-        </div>
-        <a class="action" href="templates/build-dossier.md" target="_blank" rel="noreferrer">Mở mẫu hồ sơ <span aria-hidden="true">↗</span></a>
-      </section>
-      <footer><span>Dữ liệu tương tác được lưu trên trình duyệt đang dùng.</span><strong>BUILD TỪ VIỆC THẬT</strong></footer>
-    </div>
-  </main>
+    </main>
+
+    <footer class="hub-footer">
+      <span>Dữ liệu tương tác lưu trên trình duyệt đang dùng.</span>
+      <strong>BUILD TỪ VIỆC THẬT</strong>
+    </footer>
+  </div>
 </body>
 </html>

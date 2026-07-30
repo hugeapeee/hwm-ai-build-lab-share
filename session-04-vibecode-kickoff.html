@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="hwm-polish.css">
     <style>
         /* ===========================================
            THEME TOKENS
@@ -799,7 +800,7 @@
             height: clamp(0.22rem, 0.45vw, 0.38rem);
             z-index: 100;
             background: linear-gradient(90deg, var(--red), var(--yellow), var(--teal));
-            transition: width 0.25s ease;
+            transition: transform 0.25s ease;
         }
 
         .nav-dots {
@@ -1071,7 +1072,8 @@
         }
     </style>
 </head>
-<body>
+<body class="deck">
+    <a class="deck-home" href="index.html" aria-label="Về trang chính">← Home</a>
     <div class="progress-bar" aria-hidden="true"></div>
     <nav class="nav-dots" aria-label="Điều hướng slide"></nav>
 
@@ -1414,7 +1416,7 @@ Không send, publish hoặc sửa dữ liệu live.</pre>
 
             updateUI() {
                 const percent = ((this.currentSlide + 1) / this.slides.length) * 100;
-                document.querySelector('.progress-bar').style.width = `${percent}%`;
+                document.querySelector('.progress-bar').style.transform = `scaleX(${percent / 100})`;
                 if (this.dots) {
                     this.dots.forEach((dot, index) => dot.classList.toggle('active', index === this.currentSlide));
                 }

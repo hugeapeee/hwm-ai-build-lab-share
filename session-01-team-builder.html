@@ -6,7 +6,8 @@
     <title>HWM AI Build Lab - Buổi 1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="hwm-polish.css">
     <style>
         /* ===========================================
            CSS CUSTOM PROPERTIES: HWM OPS SCOREBOARD
@@ -471,7 +472,7 @@
             width: 0%;
             background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--teal));
             z-index: 1000;
-            transition: width 0.25s ease;
+            transition: transform 0.25s ease;
         }
 
         .nav-dots {
@@ -940,7 +941,8 @@
         }
     </style>
 </head>
-<body>
+<body class="deck">
+    <a class="deck-home" href="index.html" aria-label="Về trang chính">← Home</a>
     <div class="progress-bar" id="progressBar"></div>
     <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
 
@@ -1232,7 +1234,7 @@ Mạnh"></textarea>
 
             updateProgress() {
                 const percent = ((this.currentSlide + 1) / this.slides.length) * 100;
-                this.progressBar.style.width = `${percent}%`;
+                this.progressBar.style.transform = `scaleX(${percent / 100})`;
             }
 
             goToSlide(index, updateHash = true) {
