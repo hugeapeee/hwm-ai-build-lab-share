@@ -236,26 +236,22 @@ body.hub a {
 }
 
 .hub-hero {
-  position: relative;
-  min-height: min(72vh, 46rem);
+  display: grid;
   margin-inline: calc(-1 * clamp(1rem, 3vw, 3rem));
-  overflow: hidden;
   border-bottom: var(--polish-border) solid var(--polish-ink);
   background: var(--polish-ink);
 }
 
 .hub-hero img {
   width: 100%;
-  height: 100%;
-  min-height: min(72vh, 46rem);
-  object-fit: cover;
-  object-position: center;
+  height: auto;
+  aspect-ratio: 1731 / 909;
+  object-fit: contain;
   display: block;
+  background: #fffdf5;
 }
 
 .hub-hero-copy {
-  position: absolute;
-  inset: auto 0 0;
   width: 100%;
   padding: clamp(1rem, 2.5vw, 2rem) clamp(1rem, 4vw, 4rem);
   border-top: var(--polish-border) solid var(--polish-ink);
@@ -266,9 +262,9 @@ body.hub a {
 .hub-hero-copy h1 {
   margin: 0;
   font-family: "Bangers", sans-serif;
-  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-size: clamp(2.1rem, 5vw, 4.6rem);
   font-weight: 400;
-  line-height: 0.9;
+  line-height: 0.95;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -281,6 +277,83 @@ body.hub a {
   font-weight: 700;
   line-height: 1.35;
   text-wrap: pretty;
+}
+
+.team-data-band {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.72fr) minmax(22rem, 1.28fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  margin-inline: calc(-1 * clamp(1rem, 3vw, 3rem));
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 3rem);
+  border-bottom: var(--polish-border) solid var(--polish-ink);
+  background: var(--polish-blue);
+  color: #fff;
+}
+
+.team-data-band h2 {
+  max-width: 10ch;
+  margin: 0;
+  font-family: "Bangers", sans-serif;
+  font-size: clamp(2.8rem, 6vw, 5.6rem);
+  font-weight: 400;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.team-data-band p {
+  max-width: 46ch;
+  margin: 0.8rem 0 0;
+  font-size: clamp(0.95rem, 1.5vw, 1.16rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.team-data-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--polish-border);
+  border: var(--polish-border) solid var(--polish-ink);
+  background: var(--polish-ink);
+}
+
+.team-data-summary {
+  min-height: 8.5rem;
+  padding: clamp(0.85rem, 1.7vw, 1.2rem);
+  background: #fff;
+  color: var(--polish-ink);
+}
+
+.team-data-summary span,
+.team-data-summary strong,
+.team-data-summary em {
+  display: block;
+}
+
+.team-data-summary span {
+  font-family: "Courier Prime", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.team-data-summary strong {
+  margin-top: 0.7rem;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.1;
+}
+
+.team-data-summary em {
+  margin-top: 0.45rem;
+  color: var(--polish-blue);
+  font-family: "Courier Prime", monospace;
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.team-data-band .hub-action {
+  background: var(--polish-yellow);
+  color: var(--polish-ink) !important;
 }
 
 .hub-intro {
@@ -507,6 +580,314 @@ body.hub a {
   color: var(--polish-red);
 }
 
+/* Shared team-data controls inside decks */
+body.deck .team-data-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(0.35rem, 0.7vw, 0.6rem);
+  margin-bottom: clamp(0.45rem, 0.9vw, 0.7rem);
+}
+
+body.deck .team-data-toolbar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.64rem, 1vw, 0.8rem);
+  font-weight: 700;
+}
+
+body.deck .team-data-toolbar select {
+  min-height: clamp(2rem, 3.6vw, 2.5rem);
+  padding: 0.35rem 1.8rem 0.35rem 0.5rem;
+  background: #fff;
+  color: var(--polish-ink);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+body.deck .team-data-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: clamp(2rem, 3.6vw, 2.5rem);
+  padding: 0.35rem 0.55rem;
+  border: var(--polish-border) solid var(--polish-ink);
+  background: var(--polish-yellow);
+  box-shadow: 0.16rem 0.16rem 0 var(--polish-ink);
+  color: var(--polish-ink);
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.95vw, 0.76rem);
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+body.deck .review-rotation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.8rem;
+}
+
+body.deck .review-rotation span {
+  padding: 0.3rem 0.45rem;
+  border: var(--polish-border) solid var(--polish-ink);
+  background: var(--polish-yellow);
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.95vw, 0.78rem);
+  font-weight: 700;
+}
+
+/* Team dossier store */
+.team-store-hero {
+  display: grid;
+  grid-template-columns: minmax(20rem, 1.15fr) minmax(18rem, 0.85fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: end;
+  padding: clamp(4rem, 9vw, 8rem) 0 clamp(2rem, 5vw, 4rem);
+  border-bottom: var(--polish-border) solid var(--polish-ink);
+}
+
+.team-store-hero h1 {
+  margin: 1rem 0 0;
+  font-family: "Bangers", sans-serif;
+  font-size: clamp(3.4rem, 8vw, 7.5rem);
+  font-weight: 400;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.team-store-hero p {
+  max-width: 42ch;
+  margin: 0;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.team-store {
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.team-store-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.team-store-tabs,
+.team-store-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.team-tab,
+.data-button {
+  border: var(--polish-border) solid var(--polish-ink);
+  background: #fff;
+  box-shadow: 0.2rem 0.2rem 0 var(--polish-ink);
+  color: var(--polish-ink);
+  cursor: pointer;
+  font-family: "Courier Prime", monospace;
+  font-weight: 700;
+}
+
+.team-tab {
+  min-width: clamp(8.5rem, 14vw, 11rem);
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+}
+
+.team-tab span,
+.team-tab strong,
+.team-tab em {
+  display: block;
+}
+
+.team-tab span,
+.team-tab em {
+  font-size: 0.68rem;
+  font-style: normal;
+}
+
+.team-tab strong {
+  margin-block: 0.28rem;
+  font-family: "Archivo", sans-serif;
+  font-size: 0.95rem;
+}
+
+.team-tab.active {
+  background: var(--polish-yellow);
+  transform: translate(-0.12rem, -0.12rem);
+  box-shadow: 0.34rem 0.34rem 0 var(--polish-ink);
+}
+
+.data-button {
+  min-height: 2.8rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--polish-blue);
+  color: #fff;
+}
+
+.data-button.secondary {
+  background: #fff;
+  color: var(--polish-ink);
+}
+
+.save-status {
+  font-family: "Courier Prime", monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.team-form-shell {
+  border: var(--polish-border) solid var(--polish-ink);
+  background: #fff;
+  box-shadow: var(--polish-shadow) var(--polish-shadow) 0 var(--polish-ink);
+}
+
+.team-form-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.8rem);
+  border-bottom: var(--polish-border) solid var(--polish-ink);
+  background: var(--polish-yellow);
+}
+
+.team-form-kicker {
+  font-family: "Courier Prime", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.team-form-head h2 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1;
+}
+
+.role-summary {
+  max-width: 60ch;
+  margin: 0.55rem 0 0;
+  font-family: "Courier Prime", monospace;
+  font-size: clamp(0.68rem, 1vw, 0.82rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.completion-block {
+  text-align: right;
+}
+
+.completion-block strong,
+.completion-block span {
+  display: block;
+}
+
+.completion-block strong {
+  font-family: "Bangers", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.completion-block span {
+  font-family: "Courier Prime", monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.team-form-basics,
+.team-form-grid {
+  display: grid;
+  gap: var(--polish-border);
+  background: var(--polish-ink);
+}
+
+.team-form-basics {
+  grid-template-columns: 0.8fr 1.2fr;
+}
+
+.team-form-basics .wide {
+  grid-column: 1 / -1;
+}
+
+.team-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: var(--polish-border) solid var(--polish-ink);
+}
+
+.data-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background: #fff;
+}
+
+.data-field.priority {
+  background: #fff7c5;
+}
+
+.data-field > span {
+  font-size: clamp(1rem, 1.7vw, 1.28rem);
+  font-weight: 900;
+}
+
+.data-field small {
+  color: #4d5058;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.data-field input,
+.data-field textarea {
+  width: 100%;
+  border: var(--polish-border) solid var(--polish-ink);
+  background: #fff;
+  color: var(--polish-ink);
+  font: 600 0.95rem/1.45 "Archivo", sans-serif;
+}
+
+.data-field input {
+  min-height: 3rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.data-field textarea {
+  min-height: 11rem;
+  padding: 0.75rem;
+  resize: vertical;
+}
+
+.team-store-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: var(--polish-border) solid var(--polish-ink);
+  background: var(--polish-green);
+  box-shadow: 0.24rem 0.24rem 0 var(--polish-ink);
+}
+
+.team-store-note strong {
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+}
+
+.team-store-note span {
+  max-width: 54ch;
+  line-height: 1.45;
+}
+
 @media (max-width: 760px) {
   .deck-home {
     left: clamp(0.75rem, 3vw, 1rem);
@@ -514,18 +895,23 @@ body.hub a {
     opacity: 0.42;
   }
 
-  .hub-hero,
-  .hub-hero img {
-    min-height: 34rem;
+  .hub-hero-copy h1 {
+    font-size: clamp(2rem, 12vw, 3.4rem);
   }
 
-  .hub-hero img {
-    object-position: 54% center;
+  .team-data-band,
+  .team-store-hero,
+  .team-form-grid,
+  .team-form-basics {
+    grid-template-columns: 1fr;
   }
 
-  .hub-hero-copy {
-    right: 0;
-    left: 0;
+  .team-data-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .team-data-summary {
+    min-height: 0;
   }
 
   .hub-intro {
@@ -549,6 +935,26 @@ body.hub a {
   .hub-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .team-store-toolbar,
+  .team-store-note {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .team-store-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .team-tab {
+    min-width: 0;
+  }
+
+  .team-form-basics .wide {
+    grid-column: auto;
   }
 }
 

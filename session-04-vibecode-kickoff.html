@@ -1207,8 +1207,12 @@
             <h2 class="reveal delay-1">Làm phần nhỏ nhất chạy được</h2>
             <div class="build-layout">
                 <article class="card prompt-card reveal delay-2">
-                    <div style="display:flex; align-items:center; justify-content:space-between; gap:clamp(0.5rem,1vw,0.8rem);">
+                    <div class="team-data-toolbar">
                         <div class="tag blue">Prompt mở máy</div>
+                        <label for="buildTeamSelect">Team
+                            <select id="buildTeamSelect" aria-label="Chọn team để đưa hồ sơ vào prompt"></select>
+                        </label>
+                        <a class="team-data-link" href="team-dossiers.html">Sửa hồ sơ</a>
                         <button class="blue" id="copyPrompt" type="button">Copy prompt</button>
                     </div>
                     <pre class="prompt-box" id="buildPrompt">Tiếp tục từ bộ hồ sơ build và plan đã duyệt.
@@ -1296,6 +1300,7 @@ Không send, publish hoặc sửa dữ liệu live.</pre>
         <div class="mood-card" id="moodCard">Nhào vô!</div>
     </div>
 
+    <script src="hwm-team-data.js"></script>
     <script>
         /* ===========================================
            SLIDE PRESENTATION CONTROLLER
@@ -1625,6 +1630,34 @@ Không send, publish hoặc sửa dữ liệu live.</pre>
         function setupPromptCopy() {
             const button = document.getElementById('copyPrompt');
             const prompt = document.getElementById('buildPrompt');
+            const select = document.getElementById('buildTeamSelect');
+            const activeTeamKey = 'hwm-build-lab-active-team';
+            const basePrompt = prompt.textContent.trim();
+
+            const getActiveIndex = () => {
+                const saved = Number(localStorage.getItem(activeTeamKey));
+                return Number.isInteger(saved) && saved >= 0 && saved < 3 ? saved : 0;
+            };
+
+            function renderPrompt() {
+                if (!window.HWMTeamData) return;
+                const data = window.HWMTeamData.load();
+                const activeIndex = getActiveIndex();
+                select.innerHTML = '';
+                data.teams.forEach((team, index) => {
+                    const option = document.createElement('option');
+                    option.value = String(index);
+                    option.textContent = `${team.name} · ${window.HWMTeamData.completeness(team)}%`;
+                    option.selected = index === activeIndex;
+                    select.appendChild(option);
+                });
+                prompt.textContent = `${basePrompt}\n\n--- HỒ SƠ TEAM ĐANG BUILD ---\n${window.HWMTeamData.contextText(data.teams[activeIndex])}`;
+            }
+
+            select.addEventListener('change', () => {
+                localStorage.setItem(activeTeamKey, select.value);
+                renderPrompt();
+            });
 
             button.addEventListener('click', async () => {
                 try {
@@ -1642,6 +1675,10 @@ Không send, publish hoặc sửa dữ liệu live.</pre>
                     }, 1800);
                 }
             });
+
+            window.addEventListener('hwm-team-data-change', renderPrompt);
+            window.addEventListener('storage', renderPrompt);
+            renderPrompt();
         }
 
         window.addEventListener('DOMContentLoaded', () => {

@@ -23,12 +23,25 @@
     <header class="hub-hero">
       <img src="og.png" alt="HWM AI Build Lab Q3/2026 - Build từ việc thật">
       <div class="hub-hero-copy">
-        <h1>HWM AI Build Lab</h1>
-        <p>Không nghe nữa, làm luôn. Mở trên laptop hoặc TV, chọn đúng buổi rồi vào việc.</p>
+        <h1>Mở đúng buổi. Làm luôn.</h1>
+        <p>Deck tương tác cho từng chặng: chia đội, cài máy, chuẩn bị hồ sơ và vibecode bản v0.</p>
       </div>
     </header>
 
     <main>
+      <section class="team-data-band" aria-labelledby="team-data-heading">
+        <div>
+          <h2 id="team-data-heading">Kho hồ sơ 3 team</h2>
+          <p>Nhập một lần để Buổi 2–3, Buổi 4 và các deck sau tự kéo đúng context.</p>
+          <a class="hub-action" href="team-dossiers.html">Mở kho hồ sơ →</a>
+        </div>
+        <div class="team-data-overview" id="teamDataOverview" aria-label="Tình trạng hồ sơ ba team">
+          <article class="team-data-summary"><span>TEAM 1</span><strong>Team 1</strong><em>0% đủ hồ sơ</em></article>
+          <article class="team-data-summary"><span>TEAM 2</span><strong>Team 2</strong><em>0% đủ hồ sơ</em></article>
+          <article class="team-data-summary"><span>TEAM 3</span><strong>Team 3</strong><em>0% đủ hồ sơ</em></article>
+        </div>
+      </section>
+
       <section class="hub-intro" aria-labelledby="session-heading">
         <h2 id="session-heading">Chọn đúng buổi</h2>
         <p>Mỗi buổi xử một khúc khác nhau: lập đội, nối công cụ, chuẩn bị context, rồi bắt tay build. Deck lưu trạng thái ngay trên trình duyệt đang dùng.</p>
@@ -114,12 +127,12 @@
             </span>
             <span class="resource-arrow" aria-hidden="true">→</span>
           </a>
-          <a class="resource-link" href="templates/build-dossier.md" target="_blank" rel="noreferrer">
+          <a class="resource-link" href="team-dossiers.html">
             <span>
-              <strong>Mẫu Bộ hồ sơ build</strong>
-              <span>Workflow, vấn đề, nguyên liệu và cách kiểm thử.</span>
+              <strong>Kho hồ sơ 3 team</strong>
+              <span>Nhập workflow, vấn đề, nguyên liệu và cách kiểm thử một lần.</span>
             </span>
-            <span class="resource-arrow" aria-hidden="true">↗</span>
+            <span class="resource-arrow" aria-hidden="true">→</span>
           </a>
         </div>
       </section>
@@ -130,5 +143,32 @@
       <strong>BUILD TỪ VIỆC THẬT</strong>
     </footer>
   </div>
+  <script src="hwm-team-data.js"></script>
+  <script>
+    (function () {
+      const overview = document.getElementById('teamDataOverview');
+
+      function escape(value) {
+        return String(value).replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[char]);
+      }
+
+      function renderTeamOverview() {
+        const data = window.HWMTeamData.load();
+        overview.innerHTML = data.teams.map((team, index) => `
+          <article class="team-data-summary">
+            <span>TEAM ${index + 1}</span>
+            <strong>${escape(team.name)}</strong>
+            <em>${window.HWMTeamData.completeness(team)}% đủ hồ sơ</em>
+          </article>
+        `).join('');
+      }
+
+      window.addEventListener('hwm-team-data-change', renderTeamOverview);
+      window.addEventListener('storage', renderTeamOverview);
+      renderTeamOverview();
+    })();
+  </script>
 </body>
 </html>

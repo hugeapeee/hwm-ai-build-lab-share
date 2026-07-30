@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kho hồ sơ 3 team · HWM AI Build Lab</title>
+  <meta name="description" content="Một chỗ nhập và lưu hồ sơ build của ba team HWM AI Build Lab.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="hwm-polish.css">
+</head>
+<body class="hub dossier-page">
+  <div class="hub-shell">
+    <nav class="hub-nav" aria-label="Điều hướng chính">
+      <a class="hub-brand" href="index.html">← HWM AI Build Lab</a>
+      <span class="hub-quarter">KHO HỒ SƠ</span>
+    </nav>
+
+    <header class="team-store-hero">
+      <div>
+        <span class="session-meta">3 TEAM · 1 NGUỒN DỮ LIỆU</span>
+        <h1>Nhập một lần.<br>Slide tự móc.</h1>
+      </div>
+      <p>Tên team, vai trò, workflow, bài muốn xử, dữ liệu để build và cách kiểm thử đều lưu trên trình duyệt này.</p>
+    </header>
+
+    <main class="team-store">
+      <section class="team-store-toolbar" aria-label="Chọn team và thao tác dữ liệu">
+        <div class="team-store-tabs" id="teamTabs" role="tablist" aria-label="Ba team"></div>
+        <div class="team-store-actions">
+          <span class="save-status" id="saveStatus" role="status">Đã sẵn sàng</span>
+          <button class="data-button" id="copyDossier" type="button">Copy hồ sơ</button>
+          <button class="data-button secondary" id="exportDossiers" type="button">Tải JSON</button>
+        </div>
+      </section>
+
+      <section class="team-form-shell" aria-labelledby="activeTeamHeading">
+        <div class="team-form-head">
+          <div>
+            <span class="team-form-kicker">TEAM ĐANG SỬA</span>
+            <h2 id="activeTeamHeading">Team 1</h2>
+            <p class="role-summary" id="roleSummary">Vai trò sẽ tự kéo từ Buổi 2–3.</p>
+          </div>
+          <div class="completion-block">
+            <strong id="completionValue">0%</strong>
+            <span>đủ hồ sơ</span>
+          </div>
+        </div>
+
+        <form id="teamDossierForm" class="team-dossier-form">
+          <div class="team-form-basics">
+            <label class="data-field">
+              <span>Tên team</span>
+              <input name="name" autocomplete="off" placeholder="Team tên gì?">
+            </label>
+            <label class="data-field">
+              <span>Thành viên</span>
+              <input name="members" autocomplete="off" placeholder="An, Bình, Chi">
+            </label>
+            <label class="data-field wide">
+              <span>Bài muốn xử</span>
+              <input name="project" autocomplete="off" placeholder="Một câu: team muốn làm gì cho workflow nào?">
+            </label>
+          </div>
+
+          <div class="team-form-grid">
+            <label class="data-field priority">
+              <span>01 · Workflow hiện tại</span>
+              <small>Ai làm, từng bước, tool nào, nhận gì, trả gì, đưa cho ai.</small>
+              <textarea name="workflow" rows="9" placeholder="Kể từ lúc việc bắt đầu tới lúc bàn giao xong..."></textarea>
+            </label>
+            <label class="data-field">
+              <span>02 · Vấn đề muốn xử</span>
+              <small>Bước nào chậm, lặp lại, thiếu thông tin hoặc dễ sai?</small>
+              <textarea name="problem" rows="9" placeholder="Đánh dấu đúng chỗ đang đau..."></textarea>
+            </label>
+            <label class="data-field">
+              <span>03 · Dữ liệu để build</span>
+              <small>Input thật, output mẫu, link, checklist và luật đang dùng.</small>
+              <textarea name="materials" rows="9" placeholder="Codex cần được đọc hoặc xem những gì?"></textarea>
+            </label>
+            <label class="data-field">
+              <span>04 · Thế nào là xài được?</span>
+              <small>Ba case cần chạy đúng và ai sẽ dùng thử.</small>
+              <textarea name="success" rows="9" placeholder="Case thường, case thiếu, case dễ sai..."></textarea>
+            </label>
+          </div>
+        </form>
+      </section>
+
+      <aside class="team-store-note">
+        <strong>Quan trọng nhất vẫn là workflow hiện tại.</strong>
+        <span>Context càng đủ, Codex càng ít phải đoán và plan càng sát việc thật.</span>
+      </aside>
+    </main>
+
+    <footer class="hub-footer">
+      <span>Dữ liệu tự lưu trên trình duyệt đang dùng.</span>
+      <a href="session-02-build-dossier.html#slide-9">Quay lại Buổi 2–3 →</a>
+    </footer>
+  </div>
+
+  <script src="hwm-team-data.js"></script>
+  <script src="team-dossiers.js"></script>
+</body>
+</html>

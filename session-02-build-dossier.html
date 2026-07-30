@@ -448,6 +448,10 @@
         .review-list li { display: flex; gap: clamp(0.5rem, 1vw, 0.8rem); align-items: flex-start; font-weight: 600; }
         .review-list li::before { content: "?"; flex: 0 0 auto; display: grid; place-items: center; width: clamp(1.4rem, 2.5vw, 2rem); aspect-ratio: 1; border: clamp(0.08rem, 0.18vw, 0.12rem) solid var(--ink); background: var(--red); color: var(--white); font-family: var(--font-heading); font-weight: 900; }
 
+        .planning-prompt {
+            max-height: min(47vh, 420px);
+        }
+
         .prompt-box {
             white-space: pre-wrap;
             font-family: var(--font-mono);
@@ -688,7 +692,7 @@
                         <article class="card check-card" tabindex="0"><div class="box">□ BƯỚC 2</div><h3>Chốt vấn đề</h3><p>Đánh dấu bước đang chậm, lặp lại hoặc dễ sai.</p></article>
                         <article class="card check-card" tabindex="0"><div class="box">□ BƯỚC 3</div><h3>Gom đồ nghề</h3><p>Input thật, output mẫu và 3 test case.</p></article>
                     </div>
-                    <a class="button-link" href="templates/build-dossier.md" target="_blank" rel="noopener">Mở mẫu hồ sơ build</a>
+                    <a class="button-link" href="team-dossiers.html">Mở Kho hồ sơ 3 team</a>
                 </div>
                 <aside class="card timer-card" data-timer="dossier-10m" data-seconds="600">
                     <div class="tag">Đào context</div>
@@ -711,6 +715,7 @@
             <div class="two-col">
                 <article class="card reveal delay-2">
                     <div class="tag red">Team đọc hộ</div>
+                    <div class="review-rotation" id="reviewRotation" aria-label="Vòng đổi hồ sơ giữa ba team"></div>
                     <ul class="review-list">
                         <li>Đọc xong có hiểu workflow chạy thế nào không?</li>
                         <li>Có biết chính xác AI chui vào bước nào không?</li>
@@ -736,7 +741,14 @@
         <div class="slide-content">
             <div class="eyebrow reveal">Chưa code vội</div>
             <h2 class="reveal delay-1">Bắt Codex kể lại trước</h2>
-            <pre class="card prompt-box reveal delay-2">Đọc bộ hồ sơ build dưới đây. Chưa bắt đầu code.
+            <div class="team-data-toolbar reveal delay-2">
+                <label for="planningTeamSelect">Hồ sơ
+                    <select id="planningTeamSelect" aria-label="Chọn team để đưa hồ sơ vào prompt"></select>
+                </label>
+                <a class="team-data-link" href="team-dossiers.html">Sửa hồ sơ</a>
+                <button class="blue" id="copyPlanningPrompt" type="button">Copy prompt + hồ sơ</button>
+            </div>
+            <pre class="card prompt-box planning-prompt reveal delay-3" id="planningPrompt">Đọc bộ hồ sơ build dưới đây. Chưa bắt đầu code.
 
 1. Kể lại workflow hiện tại: ai làm, làm theo những bước nào,
    dùng tool gì, nhận gì và bàn giao gì.
@@ -746,7 +758,7 @@
 5. Lên plan build và nêu 3 case dùng để test.
 
 Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
-            <aside class="card timer-card compact-timer reveal delay-3" data-timer="codex-recap-10m" data-seconds="600">
+            <aside class="card timer-card compact-timer reveal delay-4" data-timer="codex-recap-10m" data-seconds="600">
                 <div class="tag">Codex kể lại</div>
                 <div class="timer-display">10:00</div>
                 <div class="timer-actions">
@@ -781,6 +793,7 @@ Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
         </div>
     </section>
 
+    <script src="hwm-team-data.js"></script>
     <script>
         /* ===========================================
            SLIDE PRESENTATION CONTROLLER
@@ -1004,7 +1017,14 @@ Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
                 };
             }
 
-            save() { localStorage.setItem(this.storageKey, JSON.stringify(this.state)); }
+            save() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+                const hasRealTeamData = this.state.imported
+                    || this.state.teams.some((team) => team.members.length > 0);
+                if (window.HWMTeamData && hasRealTeamData) {
+                    window.HWMTeamData.mergeTeamBasics(this.state.teams);
+                }
+            }
 
             escape(value) {
                 return String(value).replace(/[&<>"']/g, (char) => ({
@@ -1156,11 +1176,72 @@ Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
             });
         }
 
+        function setupSharedTeamData() {
+            if (!window.HWMTeamData) return;
+
+            const activeTeamKey = 'hwm-build-lab-active-team';
+            const select = document.getElementById('planningTeamSelect');
+            const prompt = document.getElementById('planningPrompt');
+            const copyButton = document.getElementById('copyPlanningPrompt');
+            const reviewRotation = document.getElementById('reviewRotation');
+            const basePrompt = prompt.textContent.trim();
+
+            const getActiveIndex = () => {
+                const saved = Number(localStorage.getItem(activeTeamKey));
+                return Number.isInteger(saved) && saved >= 0 && saved < 3 ? saved : 0;
+            };
+
+            function render() {
+                const data = window.HWMTeamData.load();
+                const activeIndex = getActiveIndex();
+                select.innerHTML = '';
+                data.teams.forEach((team, index) => {
+                    const option = document.createElement('option');
+                    option.value = String(index);
+                    option.textContent = `${team.name} · ${window.HWMTeamData.completeness(team)}%`;
+                    option.selected = index === activeIndex;
+                    select.appendChild(option);
+                });
+
+                prompt.textContent = `${basePrompt}\n\n--- HỒ SƠ TEAM ĐANG PHÂN TÍCH ---\n${window.HWMTeamData.contextText(data.teams[activeIndex])}`;
+                reviewRotation.innerHTML = data.teams.map((team, index) => {
+                    const nextTeam = data.teams[(index + 1) % data.teams.length];
+                    return `<span><strong>${escapeHtml(team.name)}</strong> đọc hồ sơ <strong>${escapeHtml(nextTeam.name)}</strong></span>`;
+                }).join('');
+            }
+
+            function escapeHtml(value) {
+                return String(value).replace(/[&<>"']/g, (char) => ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+                })[char]);
+            }
+
+            select.addEventListener('change', () => {
+                localStorage.setItem(activeTeamKey, select.value);
+                render();
+            });
+
+            copyButton.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(prompt.textContent.trim());
+                    copyButton.textContent = 'Đã copy';
+                } catch (error) {
+                    copyButton.textContent = 'Bôi đen rồi copy';
+                }
+                window.setTimeout(() => { copyButton.textContent = 'Copy prompt + hồ sơ'; }, 1600);
+            });
+
+            window.addEventListener('hwm-team-data-change', render);
+            window.addEventListener('storage', render);
+            render();
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             new SlidePresentation();
             new RoleBoard();
             new WorkshopTimers();
             setupChecklist();
+            setupSharedTeamData();
         });
     </script>
 </body>
