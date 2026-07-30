@@ -132,24 +132,33 @@
 
     function mergeTeamBasics(roleTeams) {
         if (!Array.isArray(roleTeams)) return load();
+        return mergeData({ teams: roleTeams });
+    }
+
+    function mergeData(incoming) {
+        if (!Array.isArray(incoming?.teams)) return load();
         const data = load();
-        roleTeams.slice(0, 3).forEach((source, index) => {
+        incoming.teams.slice(0, 3).forEach((source, index) => {
             const team = data.teams[index];
             team.name = clean(source?.name) || team.name;
             team.members = cleanList(source?.members).length
                 ? cleanList(source.members)
                 : team.members;
+            const sourceRoles = source?.roles || source || {};
             team.roles = {
-                driver: Object.prototype.hasOwnProperty.call(source || {}, 'driver')
-                    ? clean(source.driver)
+                driver: Object.prototype.hasOwnProperty.call(sourceRoles, 'driver')
+                    ? clean(sourceRoles.driver)
                     : team.roles.driver,
-                context: Object.prototype.hasOwnProperty.call(source || {}, 'context')
-                    ? clean(source.context)
+                context: Object.prototype.hasOwnProperty.call(sourceRoles, 'context')
+                    ? clean(sourceRoles.context)
                     : team.roles.context,
-                tester: Object.prototype.hasOwnProperty.call(source || {}, 'tester')
-                    ? clean(source.tester)
+                tester: Object.prototype.hasOwnProperty.call(sourceRoles, 'tester')
+                    ? clean(sourceRoles.tester)
                     : team.roles.tester
             };
+            ['project', 'workflow', 'problem', 'materials', 'success'].forEach((field) => {
+                if (clean(source?.[field])) team[field] = clean(source[field]);
+            });
         });
         return save(data);
     }
@@ -193,6 +202,7 @@
         save,
         updateTeam,
         mergeTeamBasics,
+        mergeData,
         completeness,
         contextText,
         cleanList

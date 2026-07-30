@@ -610,7 +610,10 @@
             <h2 class="reveal delay-1">Team nào, đứa nào?</h2>
             <div class="workshop-shell reveal delay-2">
                 <article class="card">
-                    <div class="role-import-status" id="roleImportStatus"></div>
+                    <div class="role-transfer-bar">
+                        <div class="role-import-status" id="roleImportStatus"></div>
+                        <button class="blue" id="transferTeamData" type="button">Đưa vào Kho hồ sơ</button>
+                    </div>
                     <div class="role-team-grid" id="roleTeams" aria-label="Phân vai cho ba team"></div>
                 </article>
                 <aside class="card timer-card" data-timer="roles" data-seconds="480">
@@ -914,8 +917,10 @@ Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
                 this.sessionOneKey = 'hwm-build-lab-session-01';
                 this.container = document.getElementById('roleTeams');
                 this.status = document.getElementById('roleImportStatus');
+                this.transferButton = document.getElementById('transferTeamData');
                 this.state = this.load();
                 this.render();
+                this.transferButton.addEventListener('click', () => this.transferToPublicStore());
             }
 
             defaultState() {
@@ -1024,6 +1029,31 @@ Nếu chưa đủ thông tin, hãy hỏi trước khi lên plan.</pre>
                 if (window.HWMTeamData && hasRealTeamData) {
                     window.HWMTeamData.mergeTeamBasics(this.state.teams);
                 }
+            }
+
+            transferToPublicStore() {
+                this.save();
+                const localData = window.HWMTeamData ? window.HWMTeamData.load() : { teams: [] };
+                const teams = this.state.teams.map((roleTeam, index) => ({
+                    ...(localData.teams?.[index] || {}),
+                    name: roleTeam.name,
+                    members: roleTeam.members,
+                    roles: {
+                        driver: roleTeam.driver,
+                        context: roleTeam.context,
+                        tester: roleTeam.tester
+                    }
+                }));
+                const payload = encodeURIComponent(JSON.stringify({ version: 1, teams }));
+                this.transferButton.textContent = 'Đang mở Kho hồ sơ...';
+                window.open(
+                    `https://hugeapeee.github.io/hwm-ai-build-lab-share/team-dossiers.html#import=${payload}`,
+                    '_blank',
+                    'noopener'
+                );
+                window.setTimeout(() => {
+                    this.transferButton.textContent = 'Đưa vào Kho hồ sơ';
+                }, 1800);
             }
 
             escape(value) {

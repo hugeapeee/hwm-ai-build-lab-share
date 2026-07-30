@@ -639,6 +639,30 @@ body.deck .review-rotation span {
   font-weight: 700;
 }
 
+body.deck .role-transfer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: clamp(0.45rem, 1vw, 0.7rem);
+}
+
+body.deck .role-transfer-bar .role-import-status {
+  margin: 0;
+}
+
+body.deck .role-transfer-bar button {
+  flex: 0 0 auto;
+  border: 2px solid var(--polish-ink);
+  box-shadow: 0.16rem 0.16rem 0 var(--polish-ink);
+  cursor: pointer;
+  font-family: "Courier Prime", monospace;
+  font-size: clamp(0.58rem, 0.95vw, 0.76rem);
+  font-weight: 700;
+  padding: 0.45rem 0.6rem;
+  text-transform: uppercase;
+}
+
 /* Team dossier store */
 .team-store-hero {
   display: grid;
@@ -805,6 +829,7 @@ body.deck .review-rotation span {
 }
 
 .team-form-basics,
+.team-form-roles,
 .team-form-grid {
   display: grid;
   gap: var(--polish-border);
@@ -817,6 +842,23 @@ body.deck .review-rotation span {
 
 .team-form-basics .wide {
   grid-column: 1 / -1;
+}
+
+.team-form-roles {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: var(--polish-border) solid var(--polish-ink);
+}
+
+.team-form-roles .data-field:nth-child(1) {
+  background: #e7f0ff;
+}
+
+.team-form-roles .data-field:nth-child(2) {
+  background: #e4f9ea;
+}
+
+.team-form-roles .data-field:nth-child(3) {
+  background: #ffe7e1;
 }
 
 .team-form-grid {
@@ -902,7 +944,8 @@ body.deck .review-rotation span {
   .team-data-band,
   .team-store-hero,
   .team-form-grid,
-  .team-form-basics {
+  .team-form-basics,
+  .team-form-roles {
     grid-template-columns: 1fr;
   }
 
@@ -955,6 +998,11 @@ body.deck .review-rotation span {
 
   .team-form-basics .wide {
     grid-column: auto;
+  }
+
+  body.deck .role-transfer-bar {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 

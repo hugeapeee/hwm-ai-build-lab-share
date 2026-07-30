@@ -12,6 +12,21 @@
     let activeIndex = 0;
     let data = window.HWMTeamData.load();
     let saveTimer = null;
+    let importedFromLocal = false;
+
+    function importFromHash() {
+        const match = window.location.hash.match(/^#import=(.+)$/);
+        if (!match) return;
+        try {
+            const payload = JSON.parse(decodeURIComponent(match[1]));
+            if (!Array.isArray(payload?.teams) || payload.teams.length !== 3) return;
+            data = window.HWMTeamData.mergeData(payload);
+            importedFromLocal = true;
+            window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+        } catch (error) {
+            saveStatus.textContent = 'Link nhập dữ liệu không hợp lệ';
+        }
+    }
 
     function escape(value) {
         return String(value).replace(/[&<>"']/g, (char) => ({
@@ -46,13 +61,12 @@
         const team = data.teams[activeIndex];
         heading.textContent = team.name;
         completion.textContent = `${window.HWMTeamData.completeness(team)}%`;
-        roleSummary.textContent = [
-            team.roles.driver && `Cầm máy: ${team.roles.driver}`,
-            team.roles.context && `Biết chuyện: ${team.roles.context}`,
-            team.roles.tester && `Kiếm chuyện: ${team.roles.tester}`
-        ].filter(Boolean).join(' · ') || 'Vai trò sẽ tự kéo từ Buổi 2–3.';
+        renderRoleSummary(team);
         form.elements.name.value = team.name;
         form.elements.members.value = team.members.join(', ');
+        form.elements.driver.value = team.roles.driver;
+        form.elements.context.value = team.roles.context;
+        form.elements.tester.value = team.roles.tester;
         form.elements.project.value = team.project;
         form.elements.workflow.value = team.workflow;
         form.elements.problem.value = team.problem;
@@ -60,10 +74,23 @@
         form.elements.success.value = team.success;
     }
 
+    function renderRoleSummary(team) {
+        roleSummary.textContent = [
+            team.roles.driver && `Cầm máy: ${team.roles.driver}`,
+            team.roles.context && `Biết chuyện: ${team.roles.context}`,
+            team.roles.tester && `Kiếm chuyện: ${team.roles.tester}`
+        ].filter(Boolean).join(' · ') || 'Vai trò sẽ tự kéo từ Buổi 2–3.';
+    }
+
     function collectForm() {
         return {
             name: form.elements.name.value,
             members: window.HWMTeamData.cleanList(form.elements.members.value),
+            roles: {
+                driver: form.elements.driver.value,
+                context: form.elements.context.value,
+                tester: form.elements.tester.value
+            },
             project: form.elements.project.value,
             workflow: form.elements.workflow.value,
             problem: form.elements.problem.value,
@@ -83,6 +110,7 @@
         renderTabs();
         heading.textContent = data.teams[activeIndex].name;
         completion.textContent = `${window.HWMTeamData.completeness(data.teams[activeIndex])}%`;
+        renderRoleSummary(data.teams[activeIndex]);
     }
 
     function scheduleSave() {
@@ -94,7 +122,9 @@
     function render() {
         renderTabs();
         fillForm();
-        saveStatus.textContent = data.updatedAt ? 'Đã kéo dữ liệu cũ' : 'Đã sẵn sàng';
+        saveStatus.textContent = importedFromLocal
+            ? 'Đã nhập tên team và vai trò'
+            : (data.updatedAt ? 'Đã kéo dữ liệu cũ' : 'Đã sẵn sàng');
     }
 
     form.addEventListener('input', scheduleSave);
@@ -122,5 +152,6 @@
     });
 
     window.addEventListener('beforeunload', persistNow);
+    importFromHash();
     render();
 })();
