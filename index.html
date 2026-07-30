@@ -70,7 +70,7 @@
       font-weight: 650;
       line-height: 1.35;
     }
-    .sessions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 28px); }
+    .sessions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 28px); }
     .session {
       display: flex;
       min-height: 430px;
@@ -82,12 +82,14 @@
     .session.red { box-shadow: 9px 9px 0 var(--red); }
     .session.blue { box-shadow: 9px 9px 0 var(--blue); }
     .session.teal { box-shadow: 9px 9px 0 var(--teal); }
+    .session.yellow { box-shadow: 9px 9px 0 var(--yellow); }
     .session-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; font-family: "Courier New", monospace; font-weight: 800; text-transform: uppercase; }
     .number { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: clamp(42px, 6vw, 72px); line-height: .8; }
     .label { border: 2px solid var(--ink); padding: 7px 10px; color: white; }
     .red .label { background: var(--red); }
     .blue .label { background: var(--blue); }
     .teal .label { background: var(--teal); }
+    .yellow .label { background: var(--yellow); color: var(--ink); }
     .session h2, .tool h2 { margin-bottom: 12px; font-size: clamp(30px, 4vw, 48px); line-height: 1; }
     .session > p, .tool p { color: var(--muted); font-size: clamp(16px, 1.8vw, 21px); line-height: 1.4; }
     ul { display: grid; gap: 10px; margin: 10px 0 30px; padding: 0; list-style: none; font-size: clamp(15px, 1.5vw, 18px); font-weight: 700; }
@@ -174,12 +176,19 @@
           <ul><li>Tự lấy team buổi 1</li><li>Timer workshop</li><li>Bộ hồ sơ build</li></ul>
           <a class="action" href="session-02-build-dossier.html">Vào chuẩn bị build <span aria-hidden="true">→</span></a>
         </article>
+        <article class="session yellow">
+          <div class="session-head"><span class="number">04</span><span class="label">Buổi 4</span></div>
+          <h2>Mở máy &amp; vibecode</h2>
+          <p>Bắt đầu từ hồ sơ đã duyệt, build phần nhỏ nhất và chạy thử ngay.</p>
+          <ul><li>Timer build 30 phút</li><li>Nút Rảnh bấm chơi</li><li>Chốt đường tới bản v0</li></ul>
+          <a class="action" href="session-04-vibecode-kickoff.html">Vào bắt đầu build <span aria-hidden="true">→</span></a>
+        </article>
       </section>
       <section class="tool">
         <div>
           <p class="tool-kicker">CHECKLIST BUỔI 2A</p>
           <h2>Setup tới khi chạy</h2>
-          <p>Cài Codex, connector, HWM Starter Skills và chạy smoke test trước khi bắt đầu build.</p>
+          <p>Cài Codex, connector cần thiết và chạy smoke test trước khi bắt đầu build.</p>
         </div>
         <a class="action" href="session-02a-codex-setup.html#slide-10">Mở checklist setup <span aria-hidden="true">→</span></a>
       </section>
