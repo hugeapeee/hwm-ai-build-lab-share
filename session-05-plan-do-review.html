@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HWM AI Build Lab - Buổi 5</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hwm-polish.css">
+  <style>
+    :root { --ink:#111; --paper:#fff2b8; --paper-2:#fffdf2; --muted:#665743; --red:#ff3d2e; --teal:#38c7ee; --green:#d8ff32; --yellow:#ffe45f; --blue:#2c6de9; --pink:#ff8fbd; --white:#fffdf2; --font-display:'Bangers',cursive; --font-heading:'Archivo',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'Space Mono',monospace; --title-size:clamp(2.2rem,7vw,6rem); --h2-size:clamp(1.8rem,5vw,4.2rem); --h3-size:clamp(1rem,2.2vw,1.75rem); --body-size:clamp(.82rem,1.45vw,1.18rem); --small-size:clamp(.62rem,.95vw,.84rem); --slide-padding:clamp(1rem,4vw,3.5rem); --content-gap:clamp(.65rem,1.7vw,1.4rem); --ease:cubic-bezier(.16,1,.3,1); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html,body { height:100%; overflow-x:hidden; }
+    html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
+    body { background:var(--ink); color:var(--ink); font-family:var(--font-body); font-size:var(--body-size); }
+    .slide { width:100vw; height:100vh; height:100dvh; overflow:hidden; scroll-snap-align:start; display:flex; position:relative; background:radial-gradient(circle at 12% 18%,rgba(255,230,93,.95) 0 12%,transparent 12.5%),radial-gradient(circle at 86% 76%,rgba(56,199,238,.72) 0 10%,transparent 10.5%),repeating-linear-gradient(-8deg,rgba(255,255,255,.45) 0 clamp(.6rem,1.3vw,1rem),rgba(255,234,166,.72) clamp(.6rem,1.3vw,1rem) clamp(1.2rem,2.6vw,2rem)),var(--paper); }
+    .slide::before { content:""; position:absolute; inset:clamp(.45rem,1vw,.8rem); border:clamp(.11rem,.22vw,.18rem) solid var(--ink); pointer-events:none; }
+    .slide::after { content:attr(data-section); position:absolute; top:clamp(.75rem,1.6vw,1.2rem); right:clamp(1rem,2.5vw,2.5rem); padding:clamp(.25rem,.6vw,.42rem) clamp(.45rem,1vw,.7rem); border:2px solid var(--ink); background:var(--white); font:700 var(--small-size)/1 var(--font-mono); box-shadow:.25rem .25rem 0 var(--ink); text-transform:uppercase; z-index:3; }
+    .slide-content { flex:1; width:min(100%,1180px); max-height:100%; overflow:hidden; margin:0 auto; padding:var(--slide-padding); display:flex; flex-direction:column; justify-content:center; gap:var(--content-gap); z-index:1; }
+    h1,h2,h3 { letter-spacing:0; line-height:.96; }
+    h1,h2 { font-family:var(--font-display); font-weight:400; text-transform:uppercase; text-shadow:.08rem .08rem 0 var(--white),.27rem .27rem 0 var(--ink); }
+    h1 { max-width:12ch; font-size:var(--title-size); }
+    h2 { font-size:var(--h2-size); }
+    h3 { font:900 var(--h3-size)/1.04 var(--font-heading); }
+    p { line-height:1.35; }
+    .title-only { align-items:flex-start; }
+    .title-only p { max-width:38ch; margin-top:clamp(.7rem,2vh,1.2rem); font-size:clamp(1rem,2.1vw,1.6rem); font-weight:700; }
+    .eyebrow,.tag { display:inline-flex; align-self:flex-start; width:fit-content; padding:clamp(.28rem,.72vw,.5rem) clamp(.5rem,1.1vw,.82rem); border:2px solid var(--ink); background:var(--yellow); font:700 var(--small-size)/1.1 var(--font-mono); text-transform:uppercase; box-shadow:.22rem .22rem 0 var(--ink); }
+    .tag { box-shadow:none; }
+    .tag.red { background:var(--red); color:var(--white); } .tag.blue { background:var(--blue); color:var(--white); } .tag.green { background:var(--green); } .tag.teal { background:var(--teal); } .tag.pink { background:var(--pink); }
+    .card { min-width:0; padding:clamp(.72rem,1.7vw,1.3rem); border:clamp(.1rem,.2vw,.16rem) solid var(--ink); background:var(--paper-2); box-shadow:clamp(.26rem,.58vw,.48rem) clamp(.26rem,.58vw,.48rem) 0 var(--ink); }
+    .red-edge { box-shadow:.42rem .42rem 0 var(--red); } .blue-edge { box-shadow:.42rem .42rem 0 var(--blue); } .green-edge { box-shadow:.42rem .42rem 0 #32975f; }
+    .two-col,.three-col { display:grid; gap:clamp(.65rem,1.5vw,1.15rem); }
+    .two-col { grid-template-columns:repeat(2,minmax(0,1fr)); } .three-col { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .meme-note { margin-top:auto; padding-top:clamp(.55rem,1vw,.8rem); border-top:2px solid var(--ink); font:700 var(--small-size)/1.35 var(--font-mono); }
+    .progress-bar { position:fixed; inset:0 auto auto 0; width:100%; height:clamp(.22rem,.45vw,.38rem); z-index:100; background:linear-gradient(90deg,var(--red),var(--yellow),var(--teal)); transform-origin:left; transition:transform .25s ease; }
+    .nav-dots { position:fixed; top:50%; right:clamp(.7rem,1.5vw,1.2rem); transform:translateY(-50%); z-index:100; display:grid; gap:.35rem; }
+    .nav-dot { width:clamp(.72rem,1.4vw,1rem); aspect-ratio:1; padding:0; border:2px solid var(--ink); border-radius:50%; background:var(--white); box-shadow:none; cursor:pointer; } .nav-dot.active { background:var(--red); }
+    .slide-count { position:absolute; right:clamp(1rem,2.5vw,2.5rem); bottom:clamp(.75rem,1.6vw,1.2rem); z-index:3; color:var(--muted); font:var(--small-size)/1 var(--font-mono); }
+    .reveal { opacity:0; transform:translateY(clamp(.8rem,2vw,1.8rem)); transition:opacity .65s var(--ease),transform .65s var(--ease); } .slide.visible .reveal { opacity:1; transform:none; }
+    .delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}.delay-4{transition-delay:.4s}
+    button,select,textarea { border:2px solid var(--ink); color:var(--ink); background:var(--white); font-family:var(--font-body); }
+    button { padding:clamp(.38rem,.8vw,.6rem) clamp(.55rem,1.1vw,.85rem); font:700 var(--small-size)/1.1 var(--font-mono); text-transform:uppercase; box-shadow:.18rem .18rem 0 var(--ink); cursor:pointer; }
+    button.primary { background:var(--red); color:var(--white); } button.blue { background:var(--blue); color:var(--white); } button.secondary { background:var(--yellow); } button:disabled { opacity:.48; cursor:default; }
+    .checkin-layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(15rem,.45fr); gap:clamp(.7rem,1.6vw,1.2rem); align-items:stretch; }
+    .team-check-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(.55rem,1.2vw,.9rem); }
+    .team-check { display:flex; flex-direction:column; gap:clamp(.45rem,.9vw,.7rem); }
+    .team-check h3 { min-height:2em; }
+    .status-options { display:grid; gap:.38rem; }
+    .status-option { width:100%; text-align:left; box-shadow:none; text-transform:none; font-family:var(--font-body); line-height:1.2; }
+    .status-option.active { background:var(--green); transform:translate(-2px,-2px); box-shadow:.18rem .18rem 0 var(--ink); }
+    .team-check textarea { width:100%; min-height:4.5rem; resize:none; padding:.55rem; font-size:clamp(.68rem,1.05vw,.86rem); line-height:1.3; }
+    .timer-card { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:var(--yellow); }
+    .timer-display { font:900 clamp(3rem,8vw,6.2rem)/1 var(--font-heading); }
+    .timer-caption { margin-top:.45rem; font:700 var(--small-size)/1.35 var(--font-mono); text-transform:uppercase; }
+    .timer-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:.45rem; margin-top:.7rem; }
+    .loop-wrap { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr); gap:clamp(.4rem,1vw,.8rem); align-items:stretch; }
+    .loop-card { min-height:clamp(10rem,30vh,16rem); display:flex; flex-direction:column; }
+    .loop-card .step { font:400 clamp(2.2rem,5vw,4rem)/.85 var(--font-display); color:var(--red); }
+    .loop-card p { margin-top:.55rem; }
+    .loop-card strong { margin-top:auto; padding-top:.6rem; font:700 var(--small-size)/1.35 var(--font-mono); }
+    .loop-arrow { align-self:center; font:900 clamp(1.4rem,3vw,2.5rem)/1 var(--font-heading); }
+    .loop-return { padding:.7rem 1rem; border:2px solid var(--ink); background:var(--green); font:900 clamp(.95rem,1.8vw,1.35rem)/1.25 var(--font-heading); text-align:center; }
+    .diagram-shell { width:100%; min-height:0; padding:clamp(.45rem,1vw,.75rem); border:2px solid var(--ink); background:rgba(255,253,242,.96); box-shadow:.42rem .42rem 0 var(--ink); }
+    .diagram-svg { display:block; width:100%; height:auto; max-height:min(52vh,30rem); }
+    .diagram-svg .wire { fill:none; stroke:#665743; stroke-width:4; marker-end:url(#arrow); }
+    .diagram-svg .wire-red { fill:none; stroke:var(--red); stroke-width:5; marker-end:url(#arrow-red); }
+    .diagram-svg .wire-dashed { fill:none; stroke:#8b7e69; stroke-width:3; stroke-dasharray:9 8; marker-end:url(#arrow-soft); }
+    .diagram-svg .node { fill:var(--white); stroke:var(--ink); stroke-width:3; }
+    .diagram-svg .node-accent { fill:var(--green); stroke:var(--ink); stroke-width:3; }
+    .diagram-svg .node-dark { fill:var(--ink); stroke:var(--ink); stroke-width:3; }
+    .diagram-svg .node-blue { fill:#dce8ff; stroke:var(--blue); stroke-width:3; }
+    .diagram-svg .node-red { fill:#ffe1dd; stroke:var(--red); stroke-width:3; }
+    .diagram-svg .label { font:900 25px/1 var(--font-heading); fill:var(--ink); text-anchor:middle; }
+    .diagram-svg .label-sm { font:700 17px/1.2 var(--font-body); fill:var(--ink); text-anchor:middle; }
+    .diagram-svg .label-mono { font:700 14px/1 var(--font-mono); fill:#665743; text-anchor:middle; text-transform:uppercase; }
+    .diagram-svg .label-invert { fill:var(--white); }
+    .diagram-svg .branch-label { font:700 14px/1 var(--font-mono); fill:var(--ink); text-anchor:middle; }
+    .diagram-caption { margin-top:.65rem; padding:.65rem .9rem; border:2px solid var(--ink); background:var(--green); font:800 clamp(.78rem,1.35vw,1rem)/1.3 var(--font-heading); }
+    .trap-card { min-height:clamp(11rem,34vh,18rem); display:flex; flex-direction:column; }
+    .trap-card .emoji { font-size:clamp(2rem,4vw,3.4rem); }
+    .trap-card p { margin-top:.55rem; } .trap-card .meme-note { font-size:clamp(.6rem,.95vw,.8rem); }
+    .plan-layout,.work-layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(15rem,.75fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .flow-list { list-style:none; display:grid; gap:clamp(.45rem,1vh,.8rem); }
+    .flow-list li { display:grid; grid-template-columns:auto 1fr; gap:.65rem; align-items:start; font-weight:700; line-height:1.3; }
+    .flow-list b { display:grid; place-items:center; width:1.8rem; aspect-ratio:1; background:var(--red); color:white; border:2px solid var(--ink); font-family:var(--font-mono); }
+    .prompt-card { display:flex; flex-direction:column; gap:.6rem; }
+    .prompt-box { white-space:pre-wrap; font:clamp(.62rem,1.05vw,.84rem)/1.45 var(--font-mono); }
+    .prompt-toolbar { display:flex; gap:.5rem; align-items:center; justify-content:space-between; }
+    .prompt-toolbar select { max-width:13rem; padding:.42rem; font-weight:700; }
+    .model-stamp { display:grid; gap:.45rem; align-content:center; background:var(--blue)!important; color:white!important; text-align:center; }
+    .model-stamp strong { font:900 clamp(1.45rem,3vw,2.5rem)/1 var(--font-heading); }
+    .model-stamp span { font:700 var(--small-size)/1.4 var(--font-mono); }
+    .command-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:clamp(.45rem,1vw,.75rem); }
+    .command-card { min-height:clamp(9rem,28vh,14rem); display:flex; flex-direction:column; padding:clamp(.6rem,1.25vw,1rem); }
+    .command-card code { width:fit-content; padding:.3rem .45rem; background:var(--ink); color:var(--white); font:700 clamp(.55rem,.85vw,.72rem)/1 var(--font-mono); }
+    .command-card h3 { margin-top:.7rem; font-size:clamp(.9rem,1.6vw,1.25rem); }
+    .command-card p { margin-top:.45rem; font-size:clamp(.68rem,1.1vw,.9rem); }
+    .command-card:nth-child(1){background:var(--yellow)}.command-card:nth-child(3){background:#dce8ff}.command-card:nth-child(4){background:#dfffea}.command-card:nth-child(5){background:#ffe3ee}
+    .office-layout { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .office-questions { list-style:none; display:grid; gap:.5rem; }
+    .office-questions li { padding:.55rem .7rem; border:2px solid var(--ink); background:var(--white); font-weight:700; line-height:1.25; }
+    .office-callout { display:flex; flex-direction:column; justify-content:center; background:var(--green); }
+    .office-callout blockquote { font:900 clamp(1.2rem,2.5vw,2rem)/1.15 var(--font-heading); }
+    .office-callout p { margin-top:.7rem; }
+    .track-card { min-height:clamp(13rem,39vh,20rem); display:flex; flex-direction:column; }
+    .track-card ul,.share-list { list-style:none; display:grid; gap:.55rem; margin-top:.75rem; }
+    .track-card li,.share-list li { display:flex; gap:.55rem; font-weight:700; line-height:1.25; }
+    .track-card li::before,.share-list li::before { content:"•"; color:var(--red); }
+    .track-card .meme-note { margin-top:auto; }
+    .work-timer { min-width:clamp(14rem,25vw,20rem); }
+    .close-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .next-week { background:var(--green); }
+    .next-week strong { display:block; font:900 clamp(1.2rem,2.4vw,1.9rem)/1.05 var(--font-heading); }
+    .next-week p { margin-top:.6rem; }
+    .mood-overlay { position:fixed; inset:0; z-index:220; display:grid; place-items:center; padding:2rem; pointer-events:none; opacity:0; visibility:hidden; }
+    .mood-overlay.show { visibility:visible; animation:pop 1.25s var(--ease) both; }
+    .mood-card { width:min(90vw,58rem); padding:clamp(1.2rem,4vw,3rem); border:3px solid var(--ink); background:var(--yellow); box-shadow:.7rem .7rem 0 var(--ink); font:400 clamp(2.2rem,8vw,6.8rem)/.92 var(--font-display); text-align:center; text-transform:uppercase; transform:rotate(-2deg); }
+    @keyframes pop { 0%{opacity:0;transform:scale(.55) rotate(-5deg)} 18%,72%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.1) rotate(2deg)} }
+    @media(max-width:760px){
+      :root{--h2-size:clamp(1.45rem,7vw,2.2rem);--body-size:clamp(.72rem,2.9vw,.92rem)}
+      .slide-content{padding-left:clamp(1.25rem,5vw,1.8rem);padding-right:clamp(2.7rem,10vw,3.3rem)}
+      .checkin-layout,.plan-layout,.work-layout,.office-layout,.close-grid{grid-template-columns:1fr}
+      .team-check-grid,.three-col{grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}.team-check{padding:.5rem}.team-check h3{font-size:.72rem}.status-option{font-size:.55rem;padding:.3rem}.team-check textarea{min-height:3.2rem;font-size:.56rem}
+      .checkin-layout .timer-card{display:none}.loop-card{min-height:10rem;padding:.55rem}.loop-card p{font-size:.62rem}.loop-card h3{font-size:.78rem}.loop-card strong{font-size:.52rem}.loop-arrow{font-size:1rem}
+      .diagram-shell{padding:.28rem}.diagram-svg{max-height:48vh}.diagram-svg .label{font-size:28px}.diagram-svg .label-sm{font-size:19px}.diagram-svg .label-mono,.diagram-svg .branch-label{font-size:16px}.diagram-caption{font-size:.68rem;padding:.45rem .6rem}
+      .trap-card{min-height:11rem;padding:.55rem}.trap-card p{font-size:.62rem}.trap-card h3{font-size:.8rem}.trap-card .meme-note{display:none}
+      .plan-layout{grid-template-columns:minmax(0,1.3fr) minmax(9rem,.7fr)}.prompt-box{font-size:.54rem}.model-stamp strong{font-size:1rem}
+      .command-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:.25rem}.command-card{min-height:10rem;padding:.38rem}.command-card code{font-size:.42rem}.command-card h3{font-size:.58rem}.command-card p{font-size:.49rem}
+      .office-layout{grid-template-columns:1fr 1fr}.office-questions li{font-size:.58rem;padding:.38rem}.office-callout blockquote{font-size:.9rem}
+      .work-layout{grid-template-columns:1fr}.work-layout .two-col{grid-template-columns:repeat(2,minmax(0,1fr))}.track-card{min-height:12.5rem;padding:.55rem}.track-card li{font-size:.62rem}.work-timer{min-width:0;min-height:9rem}.work-timer .timer-display{font-size:2.6rem}
+      .close-grid{grid-template-columns:minmax(0,1.35fr) minmax(9rem,.65fr)}.share-list li{font-size:.68rem}
+    }
+    @media(max-height:700px){:root{--slide-padding:clamp(.75rem,3vw,2rem);--content-gap:clamp(.4rem,1.2vw,.85rem);--title-size:clamp(1.9rem,6vw,4rem);--h2-size:clamp(1.45rem,4vw,3rem)}.loop-card,.trap-card,.track-card{min-height:0}.command-card{min-height:9rem}}
+    @media(max-height:600px){:root{--slide-padding:clamp(.5rem,2.5vw,1.5rem);--body-size:clamp(.65rem,1.15vw,.9rem)}.nav-dots{display:none}}
+    @media(max-height:500px){:root{--slide-padding:.5rem;--title-size:clamp(1.4rem,4vw,2.5rem);--h2-size:clamp(1.1rem,3vw,1.7rem)}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}html{scroll-behavior:auto}}
+  </style>
+</head>
+<body class="deck">
+  <a class="deck-home" href="index.html" aria-label="Về trang chính">← Home</a>
+  <div class="progress-bar" aria-hidden="true"></div><nav class="nav-dots" aria-label="Điều hướng slide"></nav>
+
+  <section class="slide" data-section="Buổi 5"><div class="slide-content title-only">
+    <div class="eyebrow reveal">HWM AI BUILD LAB Q3/2026</div>
+    <h1 class="reveal delay-1">Buổi 5:<br>Kẹt đâu,<br>gỡ đó</h1>
+    <p class="reveal delay-2">Xem team đang kẹt ở đâu, chọn cách gỡ rồi build tiếp.</p>
+  </div></section>
+
+  <section class="slide" data-section="Check-in"><div class="slide-content">
+    <div class="eyebrow reveal">Nói thật, đừng flex</div><h2 class="reveal delay-1">Team đang tới đâu rồi?</h2>
+    <div class="checkin-layout">
+      <div class="team-check-grid reveal delay-2" id="teamCheckGrid"></div>
+      <aside class="card timer-card reveal delay-3" data-timer="checkin-12m" data-seconds="720"><div class="tag red">3 team khai báo</div><div class="timer-display">12:00</div><div class="timer-caption">Chạy được gì? Kẹt ở đâu?</div><div class="timer-actions"><button class="primary" data-action="start">Chạy</button><button data-action="pause">Dừng</button><button class="secondary" data-action="reset">Lại từ đầu</button></div></aside>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Flywheel"><div class="slide-content">
+    <div class="eyebrow reveal">Làm gì cũng quay ba bước này</div><h2 class="reveal delay-1">Plan → Do → Review, rồi lặp lại</h2>
+    <div class="diagram-shell reveal delay-2">
+      <svg class="diagram-svg" viewBox="0 0 900 450" role="img" aria-label="Flywheel Plan, Do, Review làm bản build tốt dần sau mỗi vòng">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#665743"/></marker>
+          <marker id="arrow-soft" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#8b7e69"/></marker>
+        </defs>
+        <path class="wire" d="M495 65 A160 160 0 0 1 535 115"/><path class="wire" d="M630 160 A160 160 0 0 1 630 290"/><path class="wire" d="M535 335 A160 160 0 0 1 495 385"/><path class="wire" d="M405 385 A160 160 0 0 1 365 335"/><path class="wire" d="M270 290 A160 160 0 0 1 270 160"/><path class="wire" d="M365 115 A160 160 0 0 1 405 65"/>
+        <path class="wire-dashed" d="M450 82 V165"/><path class="wire-dashed" d="M550 145 L510 180"/><path class="wire-dashed" d="M550 305 L510 270"/><path class="wire-dashed" d="M450 368 V285"/><path class="wire-dashed" d="M350 305 L390 270"/><path class="wire-dashed" d="M350 145 L390 180"/>
+        <rect class="node" x="375" y="20" width="150" height="62" rx="6"/><text class="label-mono" x="450" y="42">PLAN</text><text class="label-sm" x="450" y="66">Chốt việc tiếp</text>
+        <rect class="node" x="535" y="105" width="170" height="62" rx="6"/><text class="label-mono" x="620" y="127">PLAN</text><text class="label-sm" x="620" y="151">Chốt xong là gì?</text>
+        <rect class="node" x="535" y="283" width="170" height="62" rx="6"/><text class="label-mono" x="620" y="305">DO</text><text class="label-sm" x="620" y="329">Làm phần nhỏ nhất</text>
+        <rect class="node" x="375" y="368" width="150" height="62" rx="6"/><text class="label-mono" x="450" y="390">DO</text><text class="label-sm" x="450" y="414">Chạy thử</text>
+        <rect class="node" x="195" y="283" width="170" height="62" rx="6"/><text class="label-mono" x="280" y="305">REVIEW</text><text class="label-sm" x="280" y="329">Xem kết quả</text>
+        <rect class="node-accent" x="195" y="105" width="170" height="62" rx="6"/><text class="label-mono" x="280" y="127">REVIEW</text><text class="label-sm" x="280" y="151">Sửa lại plan</text>
+        <rect class="node-dark" x="350" y="175" width="200" height="110" rx="8"/><text class="label label-invert" x="450" y="218">BẢN BUILD</text><text class="label label-invert" x="450" y="250">TỐT DẦN</text><text class="label-mono label-invert" x="450" y="271">sau mỗi vòng</text>
+      </svg>
+    </div>
+    <div class="diagram-caption reveal delay-3">Không cần làm một phát cho xong. Mỗi vòng chỉ cần tốt hơn vòng trước.</div>
+  </div></section>
+
+  <section class="slide" data-section="Ba kiểu toang"><div class="slide-content">
+    <div class="eyebrow reveal">Thiếu một bước là dễ toang</div><h2 class="reveal delay-1">Kẹt nhiều khi không phải do model</h2>
+    <div class="diagram-shell reveal delay-2">
+      <svg class="diagram-svg" viewBox="0 0 900 450" role="img" aria-label="Flowchart cho thấy thiếu Plan, Do hoặc Review sẽ dẫn tới ba kiểu kẹt">
+        <defs>
+          <marker id="arrow-broken" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#665743"/></marker>
+          <marker id="arrow-red" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#ff3d2e"/></marker>
+        </defs>
+        <path class="wire" style="marker-end:url(#arrow-broken)" d="M145 225 H190"/><path class="wire" style="marker-end:url(#arrow-broken)" d="M330 225 H390"/><path class="wire" style="marker-end:url(#arrow-broken)" d="M530 225 H590"/><path class="wire" style="marker-end:url(#arrow-broken)" d="M730 225 H770"/>
+        <path class="wire-red" d="M260 155 V96 H250"/><path class="wire-red" d="M460 295 V354 H450"/><path class="wire-red" d="M660 155 V96 H650"/>
+        <rect class="node" x="20" y="190" width="125" height="70" rx="28"/><text class="label-sm" x="82" y="219">Bài cần</text><text class="label-sm" x="82" y="243">làm</text>
+        <polygon class="node-blue" points="260,155 330,225 260,295 190,225"/><text class="label" x="260" y="219">Có</text><text class="label" x="260" y="247">Plan?</text>
+        <polygon class="node-red" points="460,155 530,225 460,295 390,225"/><text class="label" x="460" y="219">Đã</text><text class="label" x="460" y="247">làm?</text>
+        <polygon class="node-accent" points="660,155 730,225 660,295 590,225"/><text class="label" x="660" y="219">Đã</text><text class="label" x="660" y="247">review?</text>
+        <rect class="node-dark" x="770" y="190" width="120" height="70" rx="28"/><text class="label-sm label-invert" x="830" y="219">Vòng</text><text class="label-sm label-invert" x="830" y="243">tiếp theo</text>
+        <rect class="node-red" x="160" y="28" width="180" height="68" rx="6"/><text class="label-sm" style="font-weight:900" x="250" y="55">Làm sai bài</text><text class="label-sm" x="250" y="80">Đi nhanh nhưng sai đường</text>
+        <rect class="node-red" x="350" y="354" width="200" height="72" rx="6"/><text class="label-sm" style="font-weight:900" x="450" y="378">Chưa có gì chạy</text><text class="label-sm" x="450" y="404">Nói nhiều, hàng chưa có</text>
+        <rect class="node-red" x="560" y="28" width="180" height="68" rx="6"/><text class="label-sm" style="font-weight:900" x="650" y="55">Bug cũ còn đó</text><text class="label-sm" x="650" y="80">Thêm feature vẫn kẹt</text>
+        <text class="branch-label" x="360" y="213">CÓ</text><text class="branch-label" x="560" y="213">CÓ</text><text class="branch-label" x="750" y="213">CÓ</text><text class="branch-label" x="284" y="126">KHÔNG</text><text class="branch-label" x="492" y="332">KHÔNG</text><text class="branch-label" x="692" y="126">KHÔNG</text>
+      </svg>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Cách 1 · Plan mode"><div class="slide-content">
+    <div class="eyebrow reveal">Khi bài còn mơ hồ hoặc phải sửa nhiều file</div><h2 class="reveal delay-1">Cho Codex lên plan trước</h2>
+    <div class="plan-layout">
+      <article class="card prompt-card reveal delay-2"><div class="prompt-toolbar"><div class="tag blue">Prompt mở Plan mode</div><select id="buildTeamSelect" aria-label="Chọn team"></select><button class="blue" id="copyPrompt">Copy</button></div><pre class="prompt-box" id="buildPrompt">Đọc các file trong folder hiện tại và hồ sơ của team. Chưa code.
+
+1. Nói lại hiện trạng và mục tiêu bằng lời dễ hiểu.
+2. Chỗ nào thiếu context thì hỏi, đừng tự đoán.
+3. Đề xuất phần nhỏ nhất nên làm tiếp.
+4. Lên plan từng bước, kèm cách test.
+5. Nói rõ vòng này chưa làm gì.
+
+Chờ team duyệt plan rồi mới implement.</pre><div class="meme-note">Bấm Copy sẽ tự đính kèm toàn bộ hồ sơ của team đang chọn.</div></article>
+      <aside class="card model-stamp reveal delay-3"><div class="tag green">Setting trên máy</div><strong>GPT-5.6-LUNA</strong><span>Reasoning: HIGH</span><p>Plan mode là lúc Codex đọc bài và lên đường đi trước. Team duyệt xong mới cho sửa file.</p></aside>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Cách 2 · gstack"><div class="slide-content">
+    <div class="eyebrow reveal">Không cần nhớ hết. Kẹt kiểu nào gọi đúng lệnh đó.</div><h2 class="reveal delay-1">Mấy lệnh gstack anh hay xài</h2>
+    <div class="diagram-shell reveal delay-2">
+      <svg class="diagram-svg" viewBox="0 0 900 470" role="img" aria-label="Cây chọn lệnh gstack theo tình huống đang gặp">
+        <defs><marker id="arrow-gstack" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#665743"/></marker><marker id="arrow-gstack-red" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#ff3d2e"/></marker></defs>
+        <path class="wire" style="marker-end:url(#arrow-gstack)" d="M450 70 V102"/><path class="wire" style="marker-end:url(#arrow-gstack)" d="M450 198 V230"/><path class="wire" style="marker-end:url(#arrow-gstack)" d="M450 326 V365"/>
+        <path class="wire-red" style="marker-end:url(#arrow-gstack-red)" d="M535 150 H650"/><path class="wire-red" style="marker-end:url(#arrow-gstack-red)" d="M535 278 H650"/>
+        <path class="wire" style="marker-end:url(#arrow-gstack)" d="M565 405 H600"/><path class="wire" style="marker-end:url(#arrow-gstack)" d="M705 405 H740"/>
+        <rect class="node-dark" x="350" y="15" width="200" height="55" rx="28"/><text class="label-sm label-invert" x="450" y="49">Bạn đang kẹt kiểu gì?</text>
+        <polygon class="node-blue" points="450,102 535,150 450,198 365,150"/><text class="label-sm" x="450" y="144">Ý tưởng còn</text><text class="label-sm" x="450" y="168">mơ hồ?</text>
+        <rect class="node-accent" x="650" y="112" width="220" height="76" rx="6"/><text class="label" x="760" y="145">/office-hours</text><text class="label-sm" x="760" y="171">Hỏi cho rõ bài</text>
+        <polygon class="node-red" points="450,230 535,278 450,326 365,278"/><text class="label-sm" x="450" y="272">Có lỗi chưa rõ</text><text class="label-sm" x="450" y="296">nguyên nhân?</text>
+        <rect class="node-accent" x="650" y="240" width="220" height="76" rx="6"/><text class="label" x="760" y="273">/investigate</text><text class="label-sm" x="760" y="299">Tìm đúng nguyên nhân</text>
+        <rect class="node" x="335" y="365" width="230" height="80" rx="6"/><text class="label" x="450" y="399">/qa</text><text class="label-sm" x="450" y="425">Test, sửa rồi test lại</text>
+        <rect class="node" x="600" y="365" width="105" height="80" rx="6"/><text class="label-sm" style="font-weight:900" x="652" y="399">/review</text><text class="label-sm" x="652" y="425">Soi code</text>
+        <rect class="node" x="740" y="365" width="130" height="80" rx="6"/><text class="label-sm" style="font-weight:900" x="805" y="399">/ship</text><text class="label-sm" x="805" y="425">Đẩy hàng</text>
+        <text class="branch-label" x="590" y="138">CÓ</text><text class="branch-label" x="470" y="218">KHÔNG</text><text class="branch-label" x="590" y="266">CÓ</text><text class="branch-label" x="470" y="348">KHÔNG / ĐÃ CÓ BẢN CHẠY</text>
+      </svg>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Zoom · office-hours"><div class="slide-content">
+    <div class="eyebrow reveal">Anh hay dùng lúc ý tưởng còn mơ hồ</div><h2 class="reveal delay-1">/office-hours: hỏi cho ra bài rồi mới code</h2>
+    <div class="diagram-shell reveal delay-2">
+      <svg class="diagram-svg" viewBox="0 0 900 450" role="img" aria-label="Phễu office-hours thu hẹp ý tưởng mơ hồ thành phần nhỏ nhất đáng build">
+        <defs><marker id="arrow-office" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#665743"/></marker><marker id="arrow-office-soft" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#8b7e69"/></marker></defs>
+        <path class="wire" style="marker-end:url(#arrow-office)" d="M110 225 H205"/><path class="wire" style="marker-end:url(#arrow-office)" d="M450 345 V380"/><path class="wire" style="marker-end:url(#arrow-office)" d="M560 410 H670"/><path class="wire-dashed" style="marker-end:url(#arrow-office-soft)" d="M730 380 V45 H675"/>
+        <rect class="node-red" x="15" y="180" width="95" height="90" rx="6"/><text class="label-sm" x="62" y="214">Ý tưởng</text><text class="label-sm" x="62" y="238">còn mơ</text><text class="label-sm" x="62" y="262">hồ</text>
+        <path class="node" d="M205 40 H695 L650 112 H250 Z"/><text class="label" x="450" y="78">1. Ai đang gặp vấn đề?</text>
+        <path class="node" d="M250 118 H650 L610 190 H290 Z"/><text class="label" x="450" y="156">2. Hiện giờ họ xử thế nào?</text>
+        <path class="node" d="M290 196 H610 L570 268 H330 Z"/><text class="label" x="450" y="234">3. Phần nhỏ nhất đáng làm?</text>
+        <path class="node-accent" d="M330 274 H570 L535 345 H365 Z"/><text class="label" x="450" y="312">4. Biết đúng bằng gì?</text>
+        <rect class="node-dark" x="340" y="380" width="220" height="60" rx="6"/><text class="label-sm label-invert" x="450" y="405">Bản chốt ý tưởng</text><text class="label-mono label-invert" x="450" y="428">phần nhỏ nhất đáng build</text>
+        <rect class="node-accent" x="670" y="380" width="200" height="60" rx="6"/><text class="label-sm" x="770" y="405">Team duyệt</text><text class="label-mono" x="770" y="428">rồi mới code</text>
+        <text class="branch-label" x="760" y="206" transform="rotate(-90 760 206)">CHƯA RÕ THÌ HỎI TIẾP</text>
+      </svg>
+    </div>
+    <div class="diagram-caption reveal delay-3">Gõ: “Dùng /office-hours để cùng tôi nghĩ feature tiếp theo. Hỏi kỹ để chốt phần nhỏ nhất đáng làm. Chưa code.”</div>
+  </div></section>
+
+  <section class="slide" data-section="Tiếp tục build"><div class="slide-content">
+    <div class="eyebrow reveal">Chia nhau làm hai đường</div><h2 class="reveal delay-1">Một bên làm tiếp. Một bên test bản cũ.</h2>
+    <div class="work-layout">
+      <div class="two-col reveal delay-2">
+        <article class="card track-card blue-edge"><div class="tag blue">Đứa cầm máy + biết chuyện</div><h3 style="margin-top:.7rem">Làm feature tiếp theo</h3><ul><li>Chọn đúng một feature.</li><li>Dùng Plan mode hoặc /office-hours nếu bài chưa rõ.</li><li>Duyệt plan rồi làm phần nhỏ nhất.</li></ul><div class="meme-note">Thêm một feature thôi. Đừng tiện tay mở scope.</div></article>
+        <article class="card track-card red-edge"><div class="tag red">Đứa kiếm chuyện</div><h3 style="margin-top:.7rem">Test lại bản đang có</h3><ul><li>Chạy luồng cũ bằng input thật.</li><li>Thử case bình thường, case thiếu và case khó.</li><li>Ghi lỗi kèm bằng chứng.</li></ul><div class="meme-note">Test sớm để khỏi nổ sát deadline.</div></article>
+      </div>
+      <aside class="card timer-card work-timer reveal delay-3" data-timer="build-30m" data-seconds="1800"><div class="tag red">Build + Test</div><div class="timer-display">30:00</div><div class="timer-caption">Một bên làm. Một bên test.</div><div class="timer-actions"><button class="primary" data-action="start">Chạy</button><button data-action="pause">Dừng</button><button class="secondary" data-action="reset">Lại từ đầu</button></div><button class="blue" id="moodButton" style="margin-top:.7rem">Rảnh bấm chơi</button></aside>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Chốt buổi"><div class="slide-content">
+    <div class="eyebrow reveal">Tuần sau xem hàng thật</div><h2 class="reveal delay-1">Có gì chạy được thì mở lên</h2>
+    <div class="close-grid">
+      <article class="card reveal delay-2"><div class="tag blue">Mỗi team 3 phút</div><ul class="share-list"><li>Bản hiện tại chạy tới đâu?</li><li>Feature tiếp theo đã chọn là gì?</li><li>Test bản cũ ra lỗi gì?</li><li>Tiếp theo làm gì, ai làm?</li></ul></article>
+      <div class="reveal delay-3" style="display:grid;gap:.7rem"><article class="card next-week"><strong>Tuần sau</strong><p>Mở bản đang chạy, xem kết quả test rồi chốt vòng tiếp theo.</p></article><article class="card timer-card" data-timer="share-3m" data-seconds="180"><div class="timer-display">03:00</div><div class="timer-actions"><button class="primary" data-action="start">Chạy</button><button data-action="pause">Dừng</button><button class="secondary" data-action="reset">Đội tiếp</button></div></article></div>
+    </div>
+  </div></section>
+
+  <div class="mood-overlay" id="moodOverlay"><div class="mood-card" id="moodCard">Quay vòng tiếp!</div></div>
+  <script src="hwm-team-data.js"></script>
+  <script>
+    class Slides{constructor(){this.s=[...document.querySelectorAll('.slide')];this.i=0;this.lock=false;this.touch=0;this.s.forEach((x,i)=>{const c=document.createElement('div');c.className='slide-count';c.textContent=`${String(i+1).padStart(2,'0')} / ${String(this.s.length).padStart(2,'0')}`;x.appendChild(c)});this.dots();this.observe();this.keys();this.restore()}dots(){const n=document.querySelector('.nav-dots');this.s.forEach((_,i)=>{const b=document.createElement('button');b.className='nav-dot';b.setAttribute('aria-label',`Slide ${i+1}`);b.onclick=()=>this.go(i);n.appendChild(b)});this.d=[...n.children]}observe(){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');this.i=this.s.indexOf(e.target);this.ui()}}),{threshold:.62});this.s.forEach(x=>o.observe(x));this.s[0].classList.add('visible')}keys(){document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName))return;if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.go(this.i+1)}if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.i-1)}});document.addEventListener('touchstart',e=>this.touch=e.changedTouches[0].clientY,{passive:true});document.addEventListener('touchend',e=>{const d=this.touch-e.changedTouches[0].clientY;if(Math.abs(d)>55)this.go(this.i+(d>0?1:-1))},{passive:true});document.addEventListener('wheel',e=>{if(this.lock||Math.abs(e.deltaY)<18)return;this.lock=true;this.go(this.i+(e.deltaY>0?1:-1));setTimeout(()=>this.lock=false,650)},{passive:true})}restore(){const m=location.hash.match(/slide-(\d+)/);this.i=m?Math.max(0,Math.min(this.s.length-1,+m[1]-1)):0;setTimeout(()=>this.go(this.i,false),0)}go(i,s=true){this.i=Math.max(0,Math.min(this.s.length-1,i));this.s[this.i].scrollIntoView({behavior:s?'smooth':'auto'});history.replaceState(null,'',`#slide-${this.i+1}`);this.ui()}ui(){document.querySelector('.progress-bar').style.transform=`scaleX(${(this.i+1)/this.s.length})`;this.d?.forEach((x,i)=>x.classList.toggle('active',i===this.i))}}
+    class Timers{constructor(){this.m=new Map();document.querySelectorAll('[data-timer]').forEach(e=>this.setup(e))}setup(e){const id=e.dataset.timer,initial=+e.dataset.seconds,key=`hwm-session-05-timer-${id}`,raw=localStorage.getItem(key),saved=raw===null?NaN:+raw;const t={e,id,initial,key,seconds:Number.isFinite(saved)&&saved>=0?saved:initial,int:null};this.m.set(id,t);e.querySelector('[data-action="start"]').onclick=()=>this.start(id);e.querySelector('[data-action="pause"]').onclick=()=>this.pause(id);e.querySelector('[data-action="reset"]').onclick=()=>this.reset(id);this.render(t)}start(id){const t=this.m.get(id);if(t.int)return;if(t.seconds<=0)t.seconds=t.initial;if(id.includes('build'))mood('Nhào vô quay vòng!');t.int=setInterval(()=>{t.seconds=Math.max(0,t.seconds-1);localStorage.setItem(t.key,t.seconds);this.render(t);if(!t.seconds){this.pause(id);this.finish()}},1000);this.render(t)}pause(id){const t=this.m.get(id);clearInterval(t.int);t.int=null;localStorage.setItem(t.key,t.seconds);this.render(t)}reset(id){const t=this.m.get(id);this.pause(id);t.seconds=t.initial;localStorage.setItem(t.key,t.seconds);this.render(t)}render(t){t.e.querySelector('.timer-display').textContent=`${String(Math.floor(t.seconds/60)).padStart(2,'0')}:${String(t.seconds%60).padStart(2,'0')}`;t.e.querySelector('[data-action="start"]').disabled=!!t.int;t.e.querySelector('[data-action="pause"]').disabled=!t.int}finish(){tones([392,523,659,784])}}
+    function tones(notes){const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=new A;notes.forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type=i%2?'square':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.04,c.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.1+.18);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.1);o.stop(c.currentTime+i*.1+.2)});setTimeout(()=>c.close(),900)}
+    const moodLines=['Plan đâu? Đừng lao vội.','Chạy thử đi rồi nói.','Scope đang phình kìa.','Bug cũ chưa đi đâu nha.','Xong một vòng, làm vòng tiếp.','Chưa rõ bài thì /office-hours.'];function mood(forced){const overlay=document.getElementById('moodOverlay'),card=document.getElementById('moodCard');card.textContent=forced||moodLines[Math.floor(Math.random()*moodLines.length)];overlay.classList.remove('show');void overlay.offsetWidth;overlay.classList.add('show');tones([196,262,330,523]);setTimeout(()=>overlay.classList.remove('show'),1300)}
+    function checkin(){const grid=document.getElementById('teamCheckGrid'),data=window.HWMTeamData.load(),statuses=['Chạy được rồi, còn thô','Đang làm dở','Đang kẹt','Chưa bắt đầu'];grid.innerHTML=data.teams.map((t,i)=>`<article class="card team-check ${i===0?'blue-edge':i===1?'red-edge':'green-edge'}" data-team="${i}"><div class="tag ${i===0?'blue':i===1?'red':'green'}">Team ${i+1}</div><h3>${esc(t.name)}</h3><div class="status-options">${statuses.map((s,j)=>`<button class="status-option" data-status="${j}">${s}</button>`).join('')}</div><textarea placeholder="Đang kẹt chỗ nào?" aria-label="Blocker của ${esc(t.name)}"></textarea></article>`).join('');grid.querySelectorAll('.team-check').forEach(card=>{const i=card.dataset.team,key=`hwm-session-05-checkin-${i}`,saved=JSON.parse(localStorage.getItem(key)||'{}');const buttons=[...card.querySelectorAll('.status-option')],area=card.querySelector('textarea');buttons.forEach((b,j)=>{b.classList.toggle('active',saved.status===j);b.onclick=()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');localStorage.setItem(key,JSON.stringify({status:j,note:area.value}))}});area.value=saved.note||'';area.oninput=()=>{const active=buttons.findIndex(x=>x.classList.contains('active'));localStorage.setItem(key,JSON.stringify({status:active,note:area.value}))}})}
+    function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    function promptSetup(){const select=document.getElementById('buildTeamSelect'),box=document.getElementById('buildPrompt'),button=document.getElementById('copyPrompt'),base=box.textContent.trim(),key='hwm-build-lab-active-team';let fullPrompt=base;function render(){const data=window.HWMTeamData.load(),active=Math.max(0,Math.min(2,+localStorage.getItem(key)||0));select.innerHTML=data.teams.map((t,i)=>`<option value="${i}" ${i===active?'selected':''}>${esc(t.name)}</option>`).join('');fullPrompt=`${base}\n\n--- HỒ SƠ TEAM ---\n${window.HWMTeamData.contextText(data.teams[active])}`}select.onchange=()=>{localStorage.setItem(key,select.value);render()};button.onclick=async()=>{try{await navigator.clipboard.writeText(fullPrompt);button.textContent='Đã copy'}catch{button.textContent='Copy lỗi'}setTimeout(()=>button.textContent='Copy',1500)};render()}
+    addEventListener('DOMContentLoaded',()=>{new Slides;new Timers;checkin();promptSetup();document.getElementById('moodButton').onclick=()=>mood()});
+  </script>
+</body>
+</html>
