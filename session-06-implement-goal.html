@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HWM AI Build Lab - Buổi 6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Bangers&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hwm-polish.css">
+  <style>
+    :root { --ink:#111; --paper:#fff2b8; --paper-2:#fffdf2; --muted:#665743; --red:#ff3d2e; --teal:#38c7ee; --green:#d8ff32; --yellow:#ffe45f; --blue:#2c6de9; --pink:#ff8fbd; --white:#fffdf2; --font-display:'Bangers',cursive; --font-heading:'Archivo',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'Space Mono',monospace; --title-size:clamp(2.2rem,7vw,6rem); --h2-size:clamp(1.8rem,5vw,4.2rem); --h3-size:clamp(1rem,2.2vw,1.75rem); --body-size:clamp(.82rem,1.45vw,1.18rem); --small-size:clamp(.62rem,.95vw,.84rem); --slide-padding:clamp(1rem,4vw,3.5rem); --content-gap:clamp(.65rem,1.7vw,1.4rem); --ease:cubic-bezier(.16,1,.3,1); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html,body { height:100%; overflow-x:hidden; }
+    html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
+    body { background:var(--ink); color:var(--ink); font-family:var(--font-body); font-size:var(--body-size); }
+    .slide { width:100vw; height:100vh; height:100dvh; overflow:hidden; scroll-snap-align:start; display:flex; position:relative; background:radial-gradient(circle at 12% 18%,rgba(255,230,93,.95) 0 12%,transparent 12.5%),radial-gradient(circle at 86% 76%,rgba(56,199,238,.72) 0 10%,transparent 10.5%),repeating-linear-gradient(-8deg,rgba(255,255,255,.45) 0 clamp(.6rem,1.3vw,1rem),rgba(255,234,166,.72) clamp(.6rem,1.3vw,1rem) clamp(1.2rem,2.6vw,2rem)),var(--paper); }
+    .slide::before { content:""; position:absolute; inset:clamp(.45rem,1vw,.8rem); border:clamp(.11rem,.22vw,.18rem) solid var(--ink); pointer-events:none; }
+    .slide::after { content:attr(data-section); position:absolute; top:clamp(.75rem,1.6vw,1.2rem); right:clamp(1rem,2.5vw,2.5rem); padding:clamp(.25rem,.6vw,.42rem) clamp(.45rem,1vw,.7rem); border:2px solid var(--ink); background:var(--white); font:700 var(--small-size)/1 var(--font-mono); box-shadow:.25rem .25rem 0 var(--ink); text-transform:uppercase; z-index:3; }
+    .slide-content { flex:1; width:min(100%,1180px); max-height:100%; overflow:hidden; margin:0 auto; padding:var(--slide-padding); display:flex; flex-direction:column; justify-content:center; gap:var(--content-gap); z-index:1; }
+    h1,h2,h3 { letter-spacing:0; line-height:.96; }
+    h1,h2 { font-family:var(--font-display); font-weight:400; text-transform:uppercase; text-shadow:.08rem .08rem 0 var(--white),.27rem .27rem 0 var(--ink); }
+    h1 { max-width:12ch; font-size:var(--title-size); }
+    h2 { font-size:var(--h2-size); }
+    h3 { font:900 var(--h3-size)/1.04 var(--font-heading); }
+    p { line-height:1.35; }
+    .title-only { align-items:flex-start; }
+    .title-only p { max-width:38ch; margin-top:clamp(.7rem,2vh,1.2rem); font-size:clamp(1rem,2.1vw,1.6rem); font-weight:700; }
+    .eyebrow,.tag { display:inline-flex; align-self:flex-start; width:fit-content; padding:clamp(.28rem,.72vw,.5rem) clamp(.5rem,1.1vw,.82rem); border:2px solid var(--ink); background:var(--yellow); font:700 var(--small-size)/1.1 var(--font-mono); text-transform:uppercase; box-shadow:.22rem .22rem 0 var(--ink); }
+    .tag { box-shadow:none; }
+    .tag.red { background:var(--red); color:var(--white); } .tag.blue { background:var(--blue); color:var(--white); } .tag.green { background:var(--green); } .tag.teal { background:var(--teal); } .tag.pink { background:var(--pink); }
+    .card { min-width:0; padding:clamp(.72rem,1.7vw,1.3rem); border:clamp(.1rem,.2vw,.16rem) solid var(--ink); background:var(--paper-2); box-shadow:clamp(.26rem,.58vw,.48rem) clamp(.26rem,.58vw,.48rem) 0 var(--ink); }
+    .red-edge { box-shadow:.42rem .42rem 0 var(--red); } .blue-edge { box-shadow:.42rem .42rem 0 var(--blue); } .green-edge { box-shadow:.42rem .42rem 0 #32975f; }
+    .two-col,.three-col { display:grid; gap:clamp(.65rem,1.5vw,1.15rem); }
+    .two-col { grid-template-columns:repeat(2,minmax(0,1fr)); } .three-col { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .meme-note { margin-top:auto; padding-top:clamp(.55rem,1vw,.8rem); border-top:2px solid var(--ink); font:700 var(--small-size)/1.35 var(--font-mono); }
+    .progress-bar { position:fixed; inset:0 auto auto 0; width:100%; height:clamp(.22rem,.45vw,.38rem); z-index:100; background:linear-gradient(90deg,var(--red),var(--yellow),var(--teal)); transform-origin:left; transition:transform .25s ease; }
+    .nav-dots { position:fixed; top:50%; right:clamp(.7rem,1.5vw,1.2rem); transform:translateY(-50%); z-index:100; display:grid; gap:.35rem; }
+    .nav-dot { width:clamp(.72rem,1.4vw,1rem); aspect-ratio:1; padding:0; border:2px solid var(--ink); border-radius:50%; background:var(--white); box-shadow:none; cursor:pointer; } .nav-dot.active { background:var(--red); }
+    .slide-count { position:absolute; right:clamp(1rem,2.5vw,2.5rem); bottom:clamp(.75rem,1.6vw,1.2rem); z-index:3; color:var(--muted); font:var(--small-size)/1 var(--font-mono); }
+    .reveal { opacity:0; transform:translateY(clamp(.8rem,2vw,1.8rem)); transition:opacity .65s var(--ease),transform .65s var(--ease); } .slide.visible .reveal { opacity:1; transform:none; }
+    .delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}.delay-4{transition-delay:.4s}
+    button,select,textarea { border:2px solid var(--ink); color:var(--ink); background:var(--white); font-family:var(--font-body); }
+    button { padding:clamp(.38rem,.8vw,.6rem) clamp(.55rem,1.1vw,.85rem); font:700 var(--small-size)/1.1 var(--font-mono); text-transform:uppercase; box-shadow:.18rem .18rem 0 var(--ink); cursor:pointer; }
+    button.primary { background:var(--red); color:var(--white); } button.blue { background:var(--blue); color:var(--white); } button.secondary { background:var(--yellow); } button:disabled { opacity:.48; cursor:default; }
+    .checkin-layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(15rem,.45fr); gap:clamp(.7rem,1.6vw,1.2rem); align-items:stretch; }
+    .team-check-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(.55rem,1.2vw,.9rem); }
+    .team-check { display:flex; flex-direction:column; gap:clamp(.45rem,.9vw,.7rem); }
+    .team-check h3 { min-height:2em; }
+    .status-options { display:grid; gap:.38rem; }
+    .status-option { width:100%; text-align:left; box-shadow:none; text-transform:none; font-family:var(--font-body); line-height:1.2; }
+    .status-option.active { background:var(--green); transform:translate(-2px,-2px); box-shadow:.18rem .18rem 0 var(--ink); }
+    .team-check textarea { width:100%; min-height:4.5rem; resize:none; padding:.55rem; font-size:clamp(.68rem,1.05vw,.86rem); line-height:1.3; }
+    .timer-card { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:var(--yellow); }
+    .timer-display { font:900 clamp(3rem,8vw,6.2rem)/1 var(--font-heading); }
+    .timer-caption { margin-top:.45rem; font:700 var(--small-size)/1.35 var(--font-mono); text-transform:uppercase; }
+    .timer-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:.45rem; margin-top:.7rem; }
+    .loop-wrap { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr); gap:clamp(.4rem,1vw,.8rem); align-items:stretch; }
+    .loop-card { min-height:clamp(10rem,30vh,16rem); display:flex; flex-direction:column; }
+    .loop-card .step { font:400 clamp(2.2rem,5vw,4rem)/.85 var(--font-display); color:var(--red); }
+    .loop-card p { margin-top:.55rem; }
+    .loop-card strong { margin-top:auto; padding-top:.6rem; font:700 var(--small-size)/1.35 var(--font-mono); }
+    .loop-arrow { align-self:center; font:900 clamp(1.4rem,3vw,2.5rem)/1 var(--font-heading); }
+    .loop-return { padding:.7rem 1rem; border:2px solid var(--ink); background:var(--green); font:900 clamp(.95rem,1.8vw,1.35rem)/1.25 var(--font-heading); text-align:center; }
+    .diagram-shell { width:100%; min-height:0; padding:clamp(.45rem,1vw,.75rem); border:2px solid var(--ink); background:rgba(255,253,242,.96); box-shadow:.42rem .42rem 0 var(--ink); }
+    .diagram-svg { display:block; width:100%; height:auto; max-height:min(52vh,30rem); }
+    .diagram-svg .wire { fill:none; stroke:#665743; stroke-width:4; marker-end:url(#arrow); }
+    .diagram-svg .wire-red { fill:none; stroke:var(--red); stroke-width:5; marker-end:url(#arrow-red); }
+    .diagram-svg .wire-dashed { fill:none; stroke:#8b7e69; stroke-width:3; stroke-dasharray:9 8; marker-end:url(#arrow-soft); }
+    .diagram-svg .node { fill:var(--white); stroke:var(--ink); stroke-width:3; }
+    .diagram-svg .node-accent { fill:var(--green); stroke:var(--ink); stroke-width:3; }
+    .diagram-svg .node-dark { fill:var(--ink); stroke:var(--ink); stroke-width:3; }
+    .diagram-svg .node-blue { fill:#dce8ff; stroke:var(--blue); stroke-width:3; }
+    .diagram-svg .node-red { fill:#ffe1dd; stroke:var(--red); stroke-width:3; }
+    .diagram-svg .label { font:900 25px/1 var(--font-heading); fill:var(--ink); text-anchor:middle; }
+    .diagram-svg .label-sm { font:700 17px/1.2 var(--font-body); fill:var(--ink); text-anchor:middle; }
+    .diagram-svg .label-mono { font:700 14px/1 var(--font-mono); fill:#665743; text-anchor:middle; text-transform:uppercase; }
+    .diagram-svg .label-invert { fill:var(--white); }
+    .diagram-svg .branch-label { font:700 14px/1 var(--font-mono); fill:var(--ink); text-anchor:middle; }
+    .diagram-caption { margin-top:.65rem; padding:.65rem .9rem; border:2px solid var(--ink); background:var(--green); font:800 clamp(.78rem,1.35vw,1rem)/1.3 var(--font-heading); }
+    .trap-card { min-height:clamp(11rem,34vh,18rem); display:flex; flex-direction:column; }
+    .trap-card .emoji { font-size:clamp(2rem,4vw,3.4rem); }
+    .trap-card p { margin-top:.55rem; } .trap-card .meme-note { font-size:clamp(.6rem,.95vw,.8rem); }
+    .plan-layout,.work-layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(15rem,.75fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .flow-list { list-style:none; display:grid; gap:clamp(.45rem,1vh,.8rem); }
+    .flow-list li { display:grid; grid-template-columns:auto 1fr; gap:.65rem; align-items:start; font-weight:700; line-height:1.3; }
+    .flow-list b { display:grid; place-items:center; width:1.8rem; aspect-ratio:1; background:var(--red); color:white; border:2px solid var(--ink); font-family:var(--font-mono); }
+    .prompt-card { display:flex; flex-direction:column; gap:.6rem; }
+    .prompt-box { white-space:pre-wrap; font:clamp(.62rem,1.05vw,.84rem)/1.45 var(--font-mono); }
+    .prompt-toolbar { display:flex; gap:.5rem; align-items:center; justify-content:space-between; }
+    .prompt-toolbar select { max-width:13rem; padding:.42rem; font-weight:700; }
+    .model-stamp { display:grid; gap:.45rem; align-content:center; background:var(--blue)!important; color:white!important; text-align:center; }
+    .model-stamp strong { font:900 clamp(1.45rem,3vw,2.5rem)/1 var(--font-heading); }
+    .model-stamp span { font:700 var(--small-size)/1.4 var(--font-mono); }
+    .command-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:clamp(.45rem,1vw,.75rem); }
+    .command-card { min-height:clamp(9rem,28vh,14rem); display:flex; flex-direction:column; padding:clamp(.6rem,1.25vw,1rem); }
+    .command-card code { width:fit-content; padding:.3rem .45rem; background:var(--ink); color:var(--white); font:700 clamp(.55rem,.85vw,.72rem)/1 var(--font-mono); }
+    .command-card h3 { margin-top:.7rem; font-size:clamp(.9rem,1.6vw,1.25rem); }
+    .command-card p { margin-top:.45rem; font-size:clamp(.68rem,1.1vw,.9rem); }
+    .command-card:nth-child(1){background:var(--yellow)}.command-card:nth-child(3){background:#dce8ff}.command-card:nth-child(4){background:#dfffea}.command-card:nth-child(5){background:#ffe3ee}
+    .office-layout { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .office-questions { list-style:none; display:grid; gap:.5rem; }
+    .office-questions li { padding:.55rem .7rem; border:2px solid var(--ink); background:var(--white); font-weight:700; line-height:1.25; }
+    .office-callout { display:flex; flex-direction:column; justify-content:center; background:var(--green); }
+    .office-callout blockquote { font:900 clamp(1.2rem,2.5vw,2rem)/1.15 var(--font-heading); }
+    .office-callout p { margin-top:.7rem; }
+    .track-card { min-height:clamp(13rem,39vh,20rem); display:flex; flex-direction:column; }
+    .track-card ul,.share-list { list-style:none; display:grid; gap:.55rem; margin-top:.75rem; }
+    .track-card li,.share-list li { display:flex; gap:.55rem; font-weight:700; line-height:1.25; }
+    .track-card li::before,.share-list li::before { content:"•"; color:var(--red); }
+    .track-card .meme-note { margin-top:auto; }
+    .work-timer { min-width:clamp(14rem,25vw,20rem); }
+    .close-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .next-week { background:var(--green); }
+    .next-week strong { display:block; font:900 clamp(1.2rem,2.4vw,1.9rem)/1.05 var(--font-heading); }
+    .next-week p { margin-top:.6rem; }
+    .agenda-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(.5rem,1.1vw,.85rem); }
+    .agenda-item { min-height:clamp(8rem,23vh,12rem); display:flex; flex-direction:column; }
+    .agenda-item strong { font:400 clamp(2rem,4vw,3.4rem)/.85 var(--font-display); color:var(--red); }
+    .agenda-item h3 { margin-top:.45rem; }
+    .agenda-item p { margin-top:.45rem; }
+    .agenda-item .meme-note { margin-top:auto; }
+    .scan-layout { display:grid; grid-template-columns:minmax(14rem,.72fr) minmax(0,1.28fr); gap:clamp(.7rem,1.6vw,1.2rem); align-items:stretch; }
+    .plan-sheet { position:relative; display:grid; gap:.7rem; background:var(--white); }
+    .plan-sheet::after { content:"PLAN DÀI THÒONG"; position:absolute; right:-.4rem; top:1rem; padding:.35rem .55rem; background:var(--red); color:var(--white); border:2px solid var(--ink); font:700 var(--small-size)/1 var(--font-mono); transform:rotate(3deg); }
+    .plan-lines { display:grid; gap:.5rem; margin-top:.5rem; }
+    .plan-lines i { display:block; height:.42rem; background:#ded6c4; }
+    .plan-lines i:nth-child(2n) { width:88%; } .plan-lines i:nth-child(3n) { width:68%; }
+    .scan-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(.55rem,1.1vw,.8rem); }
+    .scan-card { min-height:clamp(7rem,18vh,10rem); }
+    .scan-card b { display:block; color:var(--red); font:400 clamp(1.7rem,3vw,2.5rem)/.85 var(--font-display); }
+    .scan-card h3 { margin-top:.3rem; }
+    .scan-card p { margin-top:.35rem; font-size:clamp(.7rem,1.15vw,.95rem); }
+    .handoff-layout { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:clamp(.6rem,1.3vw,1rem); align-items:stretch; }
+    .model-card { min-height:clamp(14rem,42vh,22rem); display:flex; flex-direction:column; justify-content:center; text-align:center; }
+    .model-card .model-name { font:900 clamp(2rem,5vw,4.5rem)/.9 var(--font-heading); }
+    .model-card .effort { margin:.65rem auto 0; width:fit-content; padding:.35rem .55rem; border:2px solid var(--ink); font:700 var(--small-size)/1 var(--font-mono); }
+    .model-card p { margin-top:.8rem; font-weight:700; }
+    .model-card.professor { background:#dce8ff; box-shadow:.42rem .42rem 0 var(--blue); }
+    .model-card.builder { background:var(--green); box-shadow:.42rem .42rem 0 #32975f; }
+    .handoff-arrow { align-self:center; display:grid; place-items:center; width:clamp(3.3rem,7vw,5.4rem); aspect-ratio:1; border:3px solid var(--ink); border-radius:50%; background:var(--yellow); font:900 clamp(1.6rem,4vw,3rem)/1 var(--font-heading); }
+    .implement-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .implement-prompt { min-height:clamp(18rem,52vh,28rem); display:flex; flex-direction:column; }
+    .implement-prompt pre { flex:1; margin-top:.7rem; white-space:pre-wrap; font:clamp(.68rem,1.15vw,.92rem)/1.5 var(--font-mono); }
+    .say-card { display:flex; flex-direction:column; justify-content:center; background:var(--yellow); text-align:center; }
+    .say-card strong { font:400 clamp(2.2rem,5vw,4.6rem)/.92 var(--font-display); }
+    .say-card p { margin-top:.8rem; font-weight:700; }
+    .goal-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .goal-shell { padding:clamp(.6rem,1.3vw,1rem); border:3px solid var(--blue); background:#eef4ff; box-shadow:.42rem .42rem 0 var(--blue); }
+    .goal-shell .diagram-svg { max-height:min(48vh,27rem); }
+    .goal-rule { display:flex; flex-direction:column; justify-content:center; background:var(--green); }
+    .goal-rule strong { font:400 clamp(2rem,4.5vw,4rem)/.92 var(--font-display); }
+    .goal-rule p { margin-top:.8rem; font-weight:700; }
+    .workshop-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr); gap:clamp(.7rem,1.6vw,1.2rem); }
+    .workshop-list { list-style:none; display:grid; gap:clamp(.55rem,1vh,.85rem); }
+    .workshop-list li { display:grid; grid-template-columns:auto 1fr; gap:.7rem; align-items:start; font-weight:700; line-height:1.3; }
+    .workshop-list b { display:grid; place-items:center; width:2rem; aspect-ratio:1; border:2px solid var(--ink); background:var(--red); color:var(--white); font-family:var(--font-mono); }
+    .timeline-shell { padding:clamp(.55rem,1.2vw,.9rem); border:3px solid var(--ink); background:var(--white); box-shadow:.45rem .45rem 0 var(--ink); }
+    .timeline-shell .diagram-svg { max-height:min(48vh,27rem); }
+    .score-strip { display:grid; grid-template-columns:30fr 70fr; border:3px solid var(--ink); background:var(--white); }
+    .score-strip div { padding:clamp(.55rem,1.1vw,.8rem); font:900 clamp(.8rem,1.5vw,1.1rem)/1.2 var(--font-heading); text-align:center; }
+    .score-strip div:first-child { background:#dce8ff; border-right:3px solid var(--ink); }
+    .score-strip div:last-child { background:var(--green); }
+    .finish-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(.65rem,1.4vw,1rem); }
+    .finish-card { min-height:clamp(13rem,38vh,19rem); display:flex; flex-direction:column; }
+    .finish-card .big { font:400 clamp(2.4rem,5vw,4.5rem)/.85 var(--font-display); color:var(--red); }
+    .finish-card p { margin-top:.55rem; }
+    .finish-card .meme-note { margin-top:auto; }
+    .mood-overlay { position:fixed; inset:0; z-index:220; display:grid; place-items:center; padding:2rem; pointer-events:none; opacity:0; visibility:hidden; }
+    .mood-overlay.show { visibility:visible; animation:pop 1.25s var(--ease) both; }
+    .mood-card { width:min(90vw,58rem); padding:clamp(1.2rem,4vw,3rem); border:3px solid var(--ink); background:var(--yellow); box-shadow:.7rem .7rem 0 var(--ink); font:400 clamp(2.2rem,8vw,6.8rem)/.92 var(--font-display); text-align:center; text-transform:uppercase; transform:rotate(-2deg); }
+    @keyframes pop { 0%{opacity:0;transform:scale(.55) rotate(-5deg)} 18%,72%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.1) rotate(2deg)} }
+    @media(max-width:760px){
+      :root{--h2-size:clamp(1.45rem,7vw,2.2rem);--body-size:clamp(.72rem,2.9vw,.92rem)}
+      .slide-content{padding-left:clamp(1.25rem,5vw,1.8rem);padding-right:clamp(2.7rem,10vw,3.3rem)}
+      .checkin-layout,.plan-layout,.work-layout,.office-layout,.close-grid{grid-template-columns:1fr}
+      .agenda-strip{grid-template-columns:repeat(4,minmax(0,1fr));gap:.28rem}.agenda-item{min-height:10rem;padding:.4rem}.agenda-item strong{font-size:1.6rem}.agenda-item h3{font-size:.62rem}.agenda-item p{font-size:.52rem}.agenda-item .meme-note{font-size:.45rem}
+      .scan-layout{grid-template-columns:minmax(8rem,.62fr) minmax(0,1.38fr)}.plan-sheet{padding:.55rem}.plan-sheet::after{font-size:.42rem}.scan-grid{gap:.3rem}.scan-card{min-height:7.6rem;padding:.42rem}.scan-card b{font-size:1.35rem}.scan-card h3{font-size:.64rem}.scan-card p{font-size:.5rem}
+      .handoff-layout{grid-template-columns:minmax(0,1fr) 2.6rem minmax(0,1fr);gap:.35rem}.model-card{min-height:15rem;padding:.55rem}.model-card .model-name{font-size:1.35rem}.model-card p{font-size:.62rem}.handoff-arrow{width:2.5rem;font-size:1.1rem}
+      .implement-layout,.goal-layout,.workshop-layout{grid-template-columns:minmax(0,1.35fr) minmax(9rem,.65fr)}.implement-prompt{min-height:20rem;padding:.55rem}.implement-prompt pre{font-size:.53rem}.say-card strong,.goal-rule strong{font-size:1.45rem}.say-card p,.goal-rule p{font-size:.6rem}
+      .goal-shell{padding:.3rem}.goal-shell .diagram-svg{max-height:45vh}.workshop-list li{font-size:.62rem}.workshop-list b{width:1.45rem}.timeline-shell{padding:.3rem}.timeline-shell .diagram-svg{max-height:46vh}.score-strip div{font-size:.62rem}
+      .finish-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem}.finish-card{min-height:14rem;padding:.55rem}.finish-card .big{font-size:2rem}.finish-card h3{font-size:.72rem}.finish-card p{font-size:.58rem}.finish-card .meme-note{font-size:.48rem}
+      .team-check-grid,.three-col{grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}.team-check{padding:.5rem}.team-check h3{font-size:.72rem}.status-option{font-size:.55rem;padding:.3rem}.team-check textarea{min-height:3.2rem;font-size:.56rem}
+      .checkin-layout .timer-card{display:none}.loop-card{min-height:10rem;padding:.55rem}.loop-card p{font-size:.62rem}.loop-card h3{font-size:.78rem}.loop-card strong{font-size:.52rem}.loop-arrow{font-size:1rem}
+      .diagram-shell{padding:.28rem}.diagram-svg{max-height:48vh}.diagram-svg .label{font-size:28px}.diagram-svg .label-sm{font-size:19px}.diagram-svg .label-mono,.diagram-svg .branch-label{font-size:16px}.diagram-caption{font-size:.68rem;padding:.45rem .6rem}
+      .trap-card{min-height:11rem;padding:.55rem}.trap-card p{font-size:.62rem}.trap-card h3{font-size:.8rem}.trap-card .meme-note{display:none}
+      .plan-layout{grid-template-columns:minmax(0,1.3fr) minmax(9rem,.7fr)}.prompt-box{font-size:.54rem}.model-stamp strong{font-size:1rem}
+      .command-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:.25rem}.command-card{min-height:10rem;padding:.38rem}.command-card code{font-size:.42rem}.command-card h3{font-size:.58rem}.command-card p{font-size:.49rem}
+      .office-layout{grid-template-columns:1fr 1fr}.office-questions li{font-size:.58rem;padding:.38rem}.office-callout blockquote{font-size:.9rem}
+      .work-layout{grid-template-columns:1fr}.work-layout .two-col{grid-template-columns:repeat(2,minmax(0,1fr))}.track-card{min-height:12.5rem;padding:.55rem}.track-card li{font-size:.62rem}.work-timer{min-width:0;min-height:9rem}.work-timer .timer-display{font-size:2.6rem}
+      .close-grid{grid-template-columns:minmax(0,1.35fr) minmax(9rem,.65fr)}.share-list li{font-size:.68rem}
+    }
+    @media(max-height:700px){:root{--slide-padding:clamp(.75rem,3vw,2rem);--content-gap:clamp(.4rem,1.2vw,.85rem);--title-size:clamp(1.9rem,6vw,4rem);--h2-size:clamp(1.45rem,4vw,3rem)}.loop-card,.trap-card,.track-card{min-height:0}.command-card{min-height:9rem}}
+    @media(max-height:600px){:root{--slide-padding:clamp(.5rem,2.5vw,1.5rem);--body-size:clamp(.65rem,1.15vw,.9rem)}.nav-dots{display:none}}
+    @media(max-height:500px){:root{--slide-padding:.5rem;--title-size:clamp(1.4rem,4vw,2.5rem);--h2-size:clamp(1.1rem,3vw,1.7rem)}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}html{scroll-behavior:auto}}
+  </style>
+</head>
+<body class="deck">
+  <a class="deck-home" href="index.html" aria-label="Về trang chính">← Home</a>
+  <div class="progress-bar" aria-hidden="true"></div><nav class="nav-dots" aria-label="Điều hướng slide"></nav>
+
+  <section class="slide" data-section="Buổi 6"><div class="slide-content title-only">
+    <div class="eyebrow reveal">HWM AI BUILD LAB Q3/2026</div>
+    <h1 class="reveal delay-1">Buổi 6:<br>Chốt plan,<br>chạy tới cùng</h1>
+    <p class="reveal delay-2">Đọc plan cho đúng, giao máy cho đúng model và để Codex làm hết vòng.</p>
+  </div></section>
+
+  <section class="slide" data-section="Nội dung"><div class="slide-content">
+    <div class="eyebrow reveal">Một tiếng, bốn việc</div><h2 class="reveal delay-1">Hôm nay làm gì?</h2>
+    <div class="agenda-strip reveal delay-2">
+      <article class="card agenda-item blue-edge"><strong>01</strong><h3>Đọc plan</h3><p>Nắm Codex định làm gì. Không cần thuộc từng dòng.</p><div class="meme-note">Đọc để duyệt, không đọc để thi.</div></article>
+      <article class="card agenda-item red-edge"><strong>02</strong><h3>Đổi model</h3><p>Sol đã nghĩ. Terra Medium vào làm.</p><div class="meme-note">Giáo sư bàn giao cho thợ.</div></article>
+      <article class="card agenda-item green-edge"><strong>03</strong><h3>Bật Goal</h3><p>Plan dài thì gom thành một mục tiêu chạy tới cùng.</p><div class="meme-note">Đỡ hỏi giữa đường.</div></article>
+      <article class="card agenda-item"><strong>04</strong><h3>Nhấn ga</h3><p>Implement, tự test, sửa lỗi rồi báo cáo.</p><div class="meme-note">Chưa xong plan thì chưa nghỉ.</div></article>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Đọc plan"><div class="slide-content">
+    <div class="eyebrow reveal">Plan dài không phải để học thuộc</div><h2 class="reveal delay-1">Đọc qua để nắm bốn ý</h2>
+    <div class="scan-layout">
+      <article class="card plan-sheet reveal delay-2"><div class="tag blue">Autoplan vừa nhả ra</div><h3>Implementation plan</h3><div class="plan-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="meme-note">Có chỗ sai bài thì sửa ngay trước khi giao máy.</div></article>
+      <div class="scan-grid reveal delay-3">
+        <article class="card scan-card"><b>01</b><h3>Đích đến</h3><p>Xong vòng này thì người dùng làm được gì?</p></article>
+        <article class="card scan-card"><b>02</b><h3>Nó sẽ đụng đâu?</h3><p>File, màn hình hoặc dữ liệu nào sẽ được sửa?</p></article>
+        <article class="card scan-card"><b>03</b><h3>Nó test kiểu gì?</h3><p>Có cách kiểm tra kết quả sau từng chặng chưa?</p></article>
+        <article class="card scan-card"><b>04</b><h3>Nó chưa làm gì?</h3><p>Scope nào đang để dành, quyền nào chưa được đụng?</p></article>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Bàn giao model"><div class="slide-content">
+    <div class="eyebrow reveal">Nghĩ kỹ xong rồi thì làm gọn</div><h2 class="reveal delay-1">Giáo sư nghĩ. Thợ vào làm.</h2>
+    <div class="handoff-layout reveal delay-2">
+      <article class="card model-card professor"><div class="tag blue">Lúc chạy autoplan</div><div class="model-name">GPT-5.6<br>SOL</div><div class="effort">EFFORT: HIGH</div><p>Đọc bài, soi rủi ro và vạch đường đi.</p></article>
+      <div class="handoff-arrow" aria-label="Bàn giao plan">→</div>
+      <article class="card model-card builder"><div class="tag green">Lúc implement</div><div class="model-name">GPT-5.6<br>TERRA</div><div class="effort">EFFORT: MEDIUM</div><p>Plan đã rõ rồi. Giờ ưu tiên làm cho xong, không cần overthink lại từ đầu.</p></article>
+    </div>
+    <div class="diagram-caption reveal delay-3">Đổi model trước khi implement. Đừng trả tiền cho giáo sư để làm phần việc của thợ.</div>
+  </div></section>
+
+  <section class="slide" data-section="Implement"><div class="slide-content">
+    <div class="eyebrow reveal">Nói rõ là làm hết plan</div><h2 class="reveal delay-1">Một câu lệnh. Chạy tới cùng.</h2>
+    <div class="implement-layout">
+      <article class="card implement-prompt reveal delay-2"><div class="prompt-toolbar"><div class="tag blue">Prompt implement</div><button class="blue" id="copyImplement">Copy</button></div><pre id="implementPrompt">Implement toàn bộ plan đã duyệt. Làm tuần tự cho tới khi hoàn tất plan.
+
+- Không phân tích lại từ đầu và không mở rộng scope.
+- Sau mỗi bước, tự chạy check hoặc test phù hợp.
+- Nếu gặp lỗi, tự sửa và chạy lại.
+- Chỉ hỏi khi thiếu quyền truy cập hoặc có quyết định làm đổi mục tiêu.
+- Khi xong, tóm tắt: đã làm gì, đã test gì và còn gì chưa xong.
+
+Tiếp tục làm cho tới khi hoàn tất plan.</pre><div class="meme-note">Nếu đang ở đúng task đã tạo plan, không cần dán lại cả cục plan.</div></article>
+      <aside class="card say-card reveal delay-3"><div class="tag red">Nói kiểu HWM</div><strong>“Implement khi nào xong plan thì thôi nha.”</strong><p>Ngắn được. Nhưng nhớ giữ scope và test trong câu lệnh đầy đủ bên trái.</p></aside>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Goal"><div class="slide-content">
+    <div class="eyebrow reveal">Plan dài thì bật cho chắc ăn</div><h2 class="reveal delay-1">Goal giữ Codex trong đúng cuộc chơi</h2>
+    <div class="goal-layout">
+      <div class="goal-shell reveal delay-2">
+        <svg class="diagram-svg" viewBox="0 0 900 470" role="img" aria-label="Goal giữ mục tiêu, plan, tiến độ và điều kiện hoàn thành để Codex làm liên tục tới đích">
+          <defs><marker id="goal-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#665743"/></marker></defs>
+          <path class="wire" style="marker-end:url(#goal-arrow)" d="M205 110 H330"/><path class="wire" style="marker-end:url(#goal-arrow)" d="M570 110 H695"/><path class="wire" style="marker-end:url(#goal-arrow)" d="M785 165 V300"/><path class="wire" style="marker-end:url(#goal-arrow)" d="M640 355 H570"/><path class="wire" style="marker-end:url(#goal-arrow)" d="M330 355 H205"/>
+          <rect class="node-blue" x="25" y="60" width="180" height="100" rx="8"/><text class="label-mono" x="115" y="88">1 · MỤC TIÊU</text><text class="label-sm" x="115" y="118">Hoàn tất plan</text><text class="label-sm" x="115" y="143">đã duyệt</text>
+          <rect class="node" x="330" y="55" width="240" height="110" rx="8"/><text class="label-mono" x="450" y="84">2 · VIỆC PHẢI LÀM</text><text class="label-sm" x="450" y="116">Từng bước trong plan</text><text class="label-sm" x="450" y="143">+ cách test</text>
+          <rect class="node" x="695" y="60" width="180" height="105" rx="8"/><text class="label-mono" x="785" y="88">3 · TIẾN ĐỘ</text><text class="label-sm" x="785" y="118">Xong bước nào</text><text class="label-sm" x="785" y="143">ghi nhận bước đó</text>
+          <rect class="node-accent" x="640" y="300" width="260" height="110" rx="8"/><text class="label-mono" x="770" y="329">4 · VƯỚNG THÌ XỬ</text><text class="label-sm" x="770" y="361">Tự sửa lỗi;</text><text class="label-sm" x="770" y="386">chỉ hỏi khi thật sự cần</text>
+          <rect class="node-dark" x="330" y="295" width="240" height="120" rx="8"/><text class="label-mono label-invert" x="450" y="327">5 · ĐIỀU KIỆN XONG</text><text class="label-sm label-invert" x="450" y="359">Plan hoàn tất</text><text class="label-sm label-invert" x="450" y="385">test đã chạy</text>
+          <rect class="node-red" x="25" y="305" width="180" height="100" rx="8"/><text class="label-mono" x="115" y="334">BÁO CÁO</text><text class="label-sm" x="115" y="364">Đã làm / đã test</text><text class="label-sm" x="115" y="389">/ còn thiếu</text>
+          <rect class="node-accent" x="350" y="195" width="200" height="70" rx="35"/><text class="label" x="450" y="224">GOAL</text><text class="label-sm" x="450" y="250">Giữ đúng đích</text>
+        </svg>
+      </div>
+      <aside class="card goal-rule reveal delay-3"><div class="tag green">Dùng khi nào?</div><strong>Plan dài, nhiều bước, chạy lâu.</strong><p>Goal giúp task bám mục tiêu và tiến độ. Nó không chữa được plan sai, nên team vẫn phải đọc plan trước.</p></aside>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Workshop"><div class="slide-content">
+    <div class="eyebrow reveal">35 phút chạy thật</div><h2 class="reveal delay-1">Đổi model. Bật Goal. Nhấn ga.</h2>
+    <div class="workshop-layout">
+      <article class="card reveal delay-2"><ol class="workshop-list"><li><b>1</b><span>Mở task có plan đã duyệt và đọc nhanh bốn ý chính.</span></li><li><b>2</b><span>Chuyển sang <strong>GPT-5.6 Terra · Medium</strong>.</span></li><li><b>3</b><span>Plan dài thì bật Goal; plan ngắn có thể chạy thẳng.</span></li><li><b>4</b><span>Gửi prompt implement và để Codex làm.</span></li><li><b>5</b><span>Đứa biết chuyện canh scope. Đứa kiếm chuyện chuẩn bị test.</span></li></ol><div class="meme-note">Đừng ngồi nhìn chữ chạy. Tranh thủ chuẩn bị input thật và case test.</div></article>
+      <aside class="card timer-card reveal delay-3" data-timer="implement-35m" data-seconds="2100"><div class="tag red">Implement sprint</div><div class="timer-display">35:00</div><div class="timer-caption">Để máy làm. Người canh bài.</div><div class="timer-actions"><button class="primary" data-action="start">Chạy</button><button data-action="pause">Dừng</button><button class="secondary" data-action="reset">Lại từ đầu</button></div><button class="blue" id="moodButton" style="margin-top:.7rem">Rảnh bấm chơi</button></aside>
+    </div>
+  </div></section>
+
+  <section class="slide" data-section="Roadmap"><div class="slide-content">
+    <div class="eyebrow reveal">Công bố lịch chốt giải</div><h2 class="reveal delay-1">10/9 demo. 24/9 trao giải.</h2>
+    <div class="timeline-shell reveal delay-2">
+      <svg class="diagram-svg" viewBox="0 0 1000 460" role="img" aria-label="Timeline từ Demo Day ngày 10 tháng 9, qua Adoption Sprint và hai buổi check-in optional, tới Adoption Final ngày 24 tháng 9">
+        <defs><marker id="timeline-arrow" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><polygon points="0 0,12 5,0 10" fill="#111"/></marker></defs>
+        <path d="M85 230 H925" fill="none" stroke="#111" stroke-width="8" marker-end="url(#timeline-arrow)"/>
+        <circle cx="125" cy="230" r="31" fill="#2c6de9" stroke="#111" stroke-width="5"/>
+        <circle cx="370" cy="230" r="22" fill="#ffe45f" stroke="#111" stroke-width="5"/>
+        <circle cx="475" cy="230" r="22" fill="#ffe45f" stroke="#111" stroke-width="5"/>
+        <circle cx="710" cy="230" r="26" fill="#ff8fbd" stroke="#111" stroke-width="5"/>
+        <circle cx="910" cy="230" r="35" fill="#d8ff32" stroke="#111" stroke-width="5"/>
+
+        <rect x="20" y="24" width="220" height="145" rx="8" fill="#dce8ff" stroke="#111" stroke-width="4"/>
+        <text class="label-mono" x="130" y="53">10/09 · DEMO DAY</text><text class="label" x="130" y="91">DEMO BẢN V0</text>
+        <text class="label-sm" x="130" y="121">Khả năng ship</text><text class="label-sm" x="130" y="147">30 điểm</text>
+
+        <rect x="265" y="292" width="315" height="142" rx="8" fill="#ffe45f" stroke="#111" stroke-width="4"/>
+        <text class="label-mono" x="423" y="321">15/09 + 17/09 · OPTIONAL</text><text class="label" x="423" y="359">CHECK-IN GIỮA CHẶNG</text>
+        <text class="label-sm" x="423" y="392">Đang kẹt gì?</text><text class="label-sm" x="423" y="418">Gỡ cùng mentor</text>
+
+        <rect x="575" y="24" width="270" height="145" rx="8" fill="#ffe3ee" stroke="#111" stroke-width="4"/>
+        <text class="label-mono" x="710" y="53">23/09 · KHÓA KẾT QUẢ</text><text class="label" x="710" y="91">NỘP BẰNG CHỨNG</text>
+        <text class="label-sm" x="710" y="121">Usage · feedback · time saved</text><text class="label-sm" x="710" y="147">Before / after</text>
+
+        <rect x="815" y="292" width="170" height="142" rx="8" fill="#d8ff32" stroke="#111" stroke-width="4"/>
+        <text class="label-mono" x="900" y="321">24/09 · FINAL</text><text class="label" x="900" y="359">TRAO GIẢI</text>
+        <text class="label-sm" x="900" y="392">70 điểm</text><text class="label-sm" x="900" y="418">Adoption thật</text>
+
+        <text class="label-mono" x="520" y="211">10–24/09 · ADOPTION SPRINT</text>
+      </svg>
+    </div>
+    <div class="score-strip reveal delay-3"><div>DEMO DAY · 30 ĐIỂM<br>Ship được bản v0</div><div>ADOPTION SPRINT · 70 ĐIỂM<br>Đưa vào việc thật · sửa lỗi · theo dõi mức sử dụng</div></div>
+  </div></section>
+
+  <section class="slide" data-section="Chốt buổi"><div class="slide-content">
+    <div class="eyebrow reveal">Trước khi về</div><h2 class="reveal delay-1">Ba team phải có gì?</h2>
+    <div class="finish-grid reveal delay-2">
+      <article class="card finish-card blue-edge"><div class="big">01</div><h3>Plan đã được đọc</h3><p>Biết đích đến, phần sẽ sửa, cách test và phần chưa làm.</p><div class="meme-note">Không duyệt mù.</div></article>
+      <article class="card finish-card red-edge"><div class="big">02</div><h3>Codex đang implement</h3><p>Terra Medium đã nhận plan; Goal được bật nếu bài dài.</p><div class="meme-note">Không overthink vòng hai.</div></article>
+      <article class="card finish-card green-edge"><div class="big">03</div><h3>Biết lúc nào là xong</h3><p>Plan hoàn tất, test đã chạy và còn thiếu gì được nói rõ.</p><div class="meme-note">Xong thật, không phải “chắc xong”.</div></article>
+    </div>
+  </div></section>
+
+  <div class="mood-overlay" id="moodOverlay"><div class="mood-card" id="moodCard">Chưa xong plan thì chưa nghỉ!</div></div>
+  <script>
+    class Slides{constructor(){this.s=[...document.querySelectorAll('.slide')];this.i=0;this.lock=false;this.touch=0;this.s.forEach((x,i)=>{const c=document.createElement('div');c.className='slide-count';c.textContent=`${String(i+1).padStart(2,'0')} / ${String(this.s.length).padStart(2,'0')}`;x.appendChild(c)});this.dots();this.observe();this.keys();this.restore()}dots(){const n=document.querySelector('.nav-dots');this.s.forEach((_,i)=>{const b=document.createElement('button');b.className='nav-dot';b.setAttribute('aria-label',`Slide ${i+1}`);b.onclick=()=>this.go(i);n.appendChild(b)});this.d=[...n.children]}observe(){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');this.i=this.s.indexOf(e.target);this.ui()}}),{threshold:.62});this.s.forEach(x=>o.observe(x));this.s[0].classList.add('visible')}keys(){document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName))return;if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.go(this.i+1)}if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.i-1)}});document.addEventListener('touchstart',e=>this.touch=e.changedTouches[0].clientY,{passive:true});document.addEventListener('touchend',e=>{const d=this.touch-e.changedTouches[0].clientY;if(Math.abs(d)>55)this.go(this.i+(d>0?1:-1))},{passive:true});document.addEventListener('wheel',e=>{if(this.lock||Math.abs(e.deltaY)<18)return;this.lock=true;this.go(this.i+(e.deltaY>0?1:-1));setTimeout(()=>this.lock=false,650)},{passive:true})}restore(){const m=location.hash.match(/slide-(\d+)/);this.i=m?Math.max(0,Math.min(this.s.length-1,+m[1]-1)):0;setTimeout(()=>this.go(this.i,false),0)}go(i,s=true){this.i=Math.max(0,Math.min(this.s.length-1,i));this.s[this.i].scrollIntoView({behavior:s?'smooth':'auto'});history.replaceState(null,'',`#slide-${this.i+1}`);this.ui()}ui(){document.querySelector('.progress-bar').style.transform=`scaleX(${(this.i+1)/this.s.length})`;this.d?.forEach((x,i)=>x.classList.toggle('active',i===this.i))}}
+    class Timers{constructor(){this.m=new Map();document.querySelectorAll('[data-timer]').forEach(e=>this.setup(e))}setup(e){const id=e.dataset.timer,initial=+e.dataset.seconds,key=`hwm-session-06-timer-${id}`,raw=localStorage.getItem(key),saved=raw===null?NaN:+raw;const t={e,id,initial,key,seconds:Number.isFinite(saved)&&saved>=0?saved:initial,int:null};this.m.set(id,t);e.querySelector('[data-action="start"]').onclick=()=>this.start(id);e.querySelector('[data-action="pause"]').onclick=()=>this.pause(id);e.querySelector('[data-action="reset"]').onclick=()=>this.reset(id);this.render(t)}start(id){const t=this.m.get(id);if(t.int)return;if(t.seconds<=0)t.seconds=t.initial;mood('Terra nhận kèo. Chạy tới cùng!');t.int=setInterval(()=>{t.seconds=Math.max(0,t.seconds-1);localStorage.setItem(t.key,t.seconds);this.render(t);if(!t.seconds){this.pause(id);this.finish()}},1000);this.render(t)}pause(id){const t=this.m.get(id);clearInterval(t.int);t.int=null;localStorage.setItem(t.key,t.seconds);this.render(t)}reset(id){const t=this.m.get(id);this.pause(id);t.seconds=t.initial;localStorage.setItem(t.key,t.seconds);this.render(t)}render(t){t.e.querySelector('.timer-display').textContent=`${String(Math.floor(t.seconds/60)).padStart(2,'0')}:${String(t.seconds%60).padStart(2,'0')}`;t.e.querySelector('[data-action="start"]').disabled=!!t.int;t.e.querySelector('[data-action="pause"]').disabled=!t.int}finish(){tones([392,523,659,784])}}
+    function tones(notes){const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=new A;notes.forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type=i%2?'square':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.04,c.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.1+.18);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.1);o.stop(c.currentTime+i*.1+.2)});setTimeout(()=>c.close(),900)}
+    const moodLines=['Goal giữ bài. Team giữ đầu.','Plan đã duyệt rồi, đừng nghĩ lại từ đầu.','Terra đang làm. Đừng chọc máy.','Scope phình là đứa biết chuyện phải la.','Đứa kiếm chuyện chuẩn bị case test đi.','Chưa xong plan thì chưa nghỉ.'];function mood(forced){const overlay=document.getElementById('moodOverlay'),card=document.getElementById('moodCard');card.textContent=forced||moodLines[Math.floor(Math.random()*moodLines.length)];overlay.classList.remove('show');void overlay.offsetWidth;overlay.classList.add('show');tones([196,262,330,523]);setTimeout(()=>overlay.classList.remove('show'),1300)}
+    function copySetup(){const button=document.getElementById('copyImplement'),prompt=document.getElementById('implementPrompt');button.onclick=async()=>{try{await navigator.clipboard.writeText(prompt.textContent.trim());button.textContent='Đã copy';tones([523,659,784])}catch{button.textContent='Copy lỗi'}setTimeout(()=>button.textContent='Copy',1500)}}
+    addEventListener('DOMContentLoaded',()=>{new Slides;new Timers;copySetup();document.getElementById('moodButton').onclick=()=>mood()});
+  </script>
+</body>
+</html>
