@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600">
+<rect width="960" height="600" fill="#151515"/>
+<g fill="#f4efdf" font-family="Arial, sans-serif">
+<text x="62" y="80" font-size="23" font-weight="700" letter-spacing="3">HWM AI BUILD LAB</text>
+<text x="62" y="192" font-size="65" font-weight="800">ADOPTION FINAL</text>
+<text x="62" y="252" font-size="35">Đưa tool vào việc thật.</text>
+</g>
+<g font-family="Arial, sans-serif" font-weight="700">
+<rect x="62" y="310" width="380" height="162" fill="#f6d54a"/>
+<text x="89" y="365" font-size="22" fill="#151515">23/9 · KHÓA HỒ SƠ</text>
+<text x="89" y="427" font-size="33" fill="#151515">Log + bằng chứng</text>
+<path d="M462 390h36m-11-11 11 11-11 11" fill="none" stroke="#f4efdf" stroke-width="4"/>
+<rect x="518" y="310" width="380" height="162" fill="#f4efdf"/>
+<text x="545" y="365" font-size="22" fill="#151515">24/9 · TRÌNH BÀY</text>
+<text x="545" y="427" font-size="33" fill="#151515">7 phút + 3 phút Q&amp;A</text>
+</g>
+<text x="62" y="546" font-family="Arial, sans-serif" font-size="21" fill="#f4efdf">CHUẨN BỊ · THU THẬP · TRÌNH BÀY</text>
+</svg>

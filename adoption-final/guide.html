@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HWM AI Build Lab — Chuẩn bị Adoption Final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>/* ===========================================
+   VIEWPORT FITTING: MANDATORY BASE STYLES
+   Include this ENTIRE file in every presentation.
+   These styles ensure slides fit exactly in the viewport.
+   =========================================== */
+
+/* 1. Lock html/body to viewport */
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+/* 2. Each slide = exact viewport height */
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
+    overflow: hidden; /* CRITICAL: Prevent ANY overflow */
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* 3. Content container with flex for centering */
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden; /* Double-protection against overflow */
+    padding: var(--slide-padding);
+}
+
+/* 4. ALL typography uses clamp() for responsive scaling */
+:root {
+    /* Titles scale from mobile to desktop */
+    --title-size: clamp(1.5rem, 5vw, 4rem);
+    --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+    --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+
+    /* Body text */
+    --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+    --small-size: clamp(0.65rem, 1vw, 0.875rem);
+
+    /* Spacing scales with viewport */
+    --slide-padding: clamp(1rem, 4vw, 4rem);
+    --content-gap: clamp(0.5rem, 2vw, 2rem);
+    --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+
+/* 5. Cards/containers use viewport-relative max sizes */
+.card, .container, .content-box {
+    max-width: min(90vw, 1000px);
+    max-height: min(80vh, 700px);
+}
+
+/* 6. Lists auto-scale with viewport */
+.feature-list, .bullet-list {
+    gap: clamp(0.4rem, 1vh, 1rem);
+}
+
+.feature-list li, .bullet-list li {
+    font-size: var(--body-size);
+    line-height: 1.4;
+}
+
+/* 7. Grids adapt to available space */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* 8. Images constrained to viewport */
+img, .image-container {
+    max-width: 100%;
+    max-height: min(50vh, 400px);
+    object-fit: contain;
+}
+
+/* ===========================================
+   RESPONSIVE BREAKPOINTS
+   Aggressive scaling for smaller viewports
+   =========================================== */
+
+/* Short viewports (< 700px height) */
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1rem, 3vw, 1.75rem);
+    }
+}
+
+/* Very short viewports (< 600px height) */
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+        --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+        --title-size: clamp(1.1rem, 4vw, 2rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+    }
+
+    /* Hide non-essential elements */
+    .nav-dots, .keyboard-hint, .decorative {
+        display: none;
+    }
+}
+
+/* Extremely short (landscape phones, < 500px height) */
+@media (max-height: 500px) {
+    :root {
+        --slide-padding: clamp(0.4rem, 2vw, 1rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+        --body-size: clamp(0.65rem, 1vw, 0.85rem);
+    }
+}
+
+/* Narrow viewports (< 600px width) */
+@media (max-width: 600px) {
+    :root {
+        --title-size: clamp(1.25rem, 7vw, 2.5rem);
+    }
+
+    /* Stack grids vertically */
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===========================================
+   REDUCED MOTION
+   Respect user preferences
+   =========================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+
+/* === HWM PAPER / INK THEME === */
+*{box-sizing:border-box;margin:0;padding:0} :root{--ink:#151410;--paper:#fff8df;--lime:#d8ff32;--cyan:#5bd5ed;--pink:#ffabc7;--yellow:#ffe45f;--body-size:clamp(.86rem,1.5vw,1.3rem);--small-size:clamp(.7rem,1vw,.9rem);--h2-size:clamp(1.8rem,4.2vw,3.8rem);--h3-size:clamp(1.03rem,1.8vw,1.65rem);--slide-padding:clamp(1.3rem,4.6vw,4.5rem);--content-gap:clamp(.8rem,2vh,1.7rem)}
+body{color:var(--ink);font-family:'IBM Plex Sans',sans-serif;background:var(--paper)}
+.slide{background:var(--paper);background-image:radial-gradient(#15141013 1px,transparent 1px);background-size:clamp(.75rem,1.3vw,1.3rem) clamp(.75rem,1.3vw,1.3rem)}
+.slide:before{content:'';position:absolute;inset:clamp(.4rem,1vw,.8rem);border:2px solid var(--ink);pointer-events:none}
+.slide-content{width:min(100%,1340px);margin:auto;gap:var(--content-gap);padding-bottom:clamp(3.7rem,8vh,5rem)}
+.body{display:flex;flex-direction:column;gap:var(--content-gap);min-height:0}
+.eyebrow{font:700 var(--small-size)/1.3 'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+h2{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.045em;font-size:var(--h2-size);line-height:1.08;max-width:24ch}
+h3{font:800 var(--h3-size)/1.16 'Archivo',sans-serif;letter-spacing:-.02em}
+em{font-style:normal;background:var(--lime);padding:0 clamp(.15rem,.5vw,.4rem);box-decoration-break:clone}
+p,li{font-size:var(--body-size);line-height:1.38}small,.note{font-size:var(--small-size);line-height:1.4}.note{max-width:100ch;color:#514d40}
+.cover{background:#151410;color:var(--paper)}.cover:before{border-color:var(--paper)}.cover h2{font-size:clamp(2.8rem,7.5vw,7rem);max-width:15ch}.cover em{color:var(--ink)}.lead{font-size:clamp(1.1rem,2.2vw,1.85rem);max-width:40ch}.stamp{align-self:flex-start;border:2px solid var(--paper);padding:clamp(.6rem,1.4vw,1rem);font:700 var(--small-size)/1.4 'Space Mono',monospace}
+.card{max-width:none;max-height:none;min-width:0;background:#fffdf4;border:2px solid var(--ink);box-shadow:clamp(.18rem,.35vw,.35rem) clamp(.18rem,.35vw,.35rem) 0 var(--ink);padding:clamp(.8rem,1.8vw,1.6rem);display:flex;flex-direction:column;gap:clamp(.5rem,1.2vh,1rem)}
+.two,.three,.four{display:grid;gap:clamp(.65rem,1.4vw,1.3rem)}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.lime{background:var(--lime)!important}.cyan{background:var(--cyan)!important}.pink{background:var(--pink)!important}.yellow{background:var(--yellow)!important}
+.callout,.return{padding:clamp(.7rem,1.5vw,1.2rem);border:2px solid var(--ink);font-size:var(--body-size);line-height:1.4;background:#fffdf4}.return{background:var(--lime);text-align:center;font-weight:700}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:clamp(.4rem,1vw,.9rem);align-items:stretch}.arrow{align-self:center;font-size:clamp(1.5rem,3vw,2.8rem);font-weight:900}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.65rem,1.7vw,1.5rem);border-top:clamp(.18rem,.4vw,.35rem) solid var(--ink);padding-top:clamp(.9rem,2vh,1.5rem)}.timeline article{position:relative;display:flex;flex-direction:column;gap:clamp(.6rem,1.4vh,1.1rem)}.timeline b{font:800 clamp(1.25rem,2.6vw,2.3rem)/1 'Archivo',sans-serif;background:var(--yellow);align-self:start;padding:clamp(.35rem,.7vw,.6rem)}
+.scorebar{display:flex;border:2px solid var(--ink)}.scorebar div{text-align:center;padding:clamp(.3rem,1vh,.65rem);font:900 clamp(1.8rem,3.7vw,3rem)/1 'Archivo',sans-serif;border-right:2px solid var(--ink)}.scorebar div:last-child{border:0}.equation{display:flex;align-items:center;justify-content:center;gap:clamp(.5rem,2vw,2rem);font-size:clamp(1rem,2.3vw,2rem)}.equation b{font:900 clamp(1.6rem,3.4vw,3rem)/1 'Archivo',sans-serif}
+.formula{display:flex;align-items:center;justify-content:space-around;gap:clamp(.4rem,1vw,1rem);padding:clamp(.8rem,2vw,1.8rem);background:#fffdf4;border:2px solid var(--ink);font-size:clamp(1.5rem,3vw,2.5rem)}.formula span{display:flex;flex-direction:column;text-align:center;gap:clamp(.3rem,.7vh,.6rem)}.formula b{font:900 clamp(2rem,4.5vw,4rem)/1 'Archivo',sans-serif}.formula small{max-width:16ch}
+.compare{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:clamp(.4rem,1.2vw,1rem)}.compare article{border:2px solid var(--ink);padding:clamp(.8rem,1.8vw,1.4rem);background:#fffdf4;display:flex;flex-direction:column;gap:clamp(.4rem,1vh,.8rem)}.compare article>span{font:700 var(--small-size)/1.3 'Space Mono',monospace}.compare strong{font:900 clamp(1.4rem,3.5vw,3rem)/1 'Archivo',sans-serif}.checklist{padding-left:clamp(1.1rem,2vw,1.8rem);display:grid;gap:clamp(.4rem,1vh,.7rem)}
+.packet{display:grid;grid-template-columns:.8fr 2fr;gap:clamp(.8rem,2vw,2rem);align-items:center}.folder{border:3px solid var(--ink);background:var(--yellow);padding:clamp(1.4rem,3vw,2.5rem);font:900 clamp(1.3rem,2.5vw,2.2rem)/1.2 'Archivo',sans-serif;box-shadow:clamp(.3rem,.7vw,.6rem) clamp(.3rem,.7vw,.6rem) 0 var(--ink)}.folder small{display:block;margin-top:clamp(.5rem,1vw,1rem);font-family:'Space Mono',monospace}.packet-items{display:grid;gap:clamp(.65rem,1.5vh,1rem);border-left:3px solid var(--ink);padding-left:clamp(.9rem,2vw,1.7rem)}.packet-items p{display:grid;gap:clamp(.15rem,.5vh,.35rem)}
+.agenda{display:grid;gap:clamp(.35rem,.7vh,.6rem)}.agenda>div{display:grid;grid-template-columns:clamp(6.5rem,14vw,11rem) 1fr;gap:clamp(.6rem,1vw,1rem);border-bottom:1px solid #15141050;padding:clamp(.4rem,.9vh,.7rem) 0;font-size:var(--body-size);line-height:1.3}.agenda b{font-family:'Space Mono',monospace;font-size:clamp(.78rem,1.3vw,1.15rem)}
+.decisions{display:grid;gap:clamp(.4rem,1vh,.7rem)}.decisions div{border:2px solid var(--ink);display:grid;grid-template-columns:clamp(8rem,20vw,17rem) 1fr;gap:clamp(.5rem,1vw,1rem);padding:clamp(.55rem,1.2vh,.9rem) clamp(.7rem,1.2vw,1.2rem);font-size:var(--body-size);line-height:1.25}.decisions b{font-family:'Archivo',sans-serif;font-size:clamp(.87rem,1.7vw,1.45rem)}
+.downloads{display:flex;flex-wrap:wrap;gap:clamp(.5rem,1vw,1rem)}.action{display:inline-flex;border:2px solid var(--ink);padding:clamp(.5rem,1vw,.85rem);background:var(--yellow);color:var(--ink);font:700 var(--small-size)/1.25 'Space Mono',monospace;text-decoration:none}.action.dark{background:var(--ink);color:var(--paper)}
+.page{position:absolute;bottom:clamp(1rem,2vh,1.8rem);left:var(--slide-padding);font:700 var(--small-size)/1 'Space Mono',monospace}.controls{position:fixed;bottom:clamp(.6rem,1.3vh,1rem);right:clamp(.8rem,1.5vw,1.5rem);z-index:20;display:flex;align-items:center;gap:clamp(.3rem,.6vw,.6rem);padding:clamp(.3rem,.6vw,.5rem);background:var(--paper);border:2px solid var(--ink)}.controls button{font:800 clamp(.8rem,1.1vw,1rem)/1 'Archivo',sans-serif;padding:clamp(.5rem,.8vw,.7rem);border:1px solid var(--ink);background:var(--yellow);cursor:pointer}.controls output{font:700 var(--small-size)/1 'Space Mono',monospace;min-width:5ch;text-align:center;color:var(--ink)}.controls button:disabled{opacity:.35;cursor:default}
+.progress-bar{position:fixed;inset:0 auto auto 0;background:var(--lime);height:clamp(.2rem,.4vh,.35rem);z-index:30;width:100%;transform-origin:left;transition:transform .2s}.nav-dots{position:fixed;right:clamp(.65rem,1.3vw,1.2rem);top:50%;transform:translateY(-50%);display:grid;gap:clamp(.28rem,.6vh,.5rem);z-index:20}.nav-dots button{width:clamp(.4rem,.65vw,.7rem);height:clamp(.4rem,.65vw,.7rem);padding:0;border:1px solid var(--ink);border-radius:50%;background:var(--paper);cursor:pointer}.nav-dots button[aria-current=true]{background:#e2432e}
+.reveal{opacity:1}.js .reveal{opacity:0;transform:translateY(clamp(.4rem,1vw,1rem));transition:opacity .35s,transform .35s}.js .visible .reveal{opacity:1;transform:none}.reveal:nth-child(2){transition-delay:.05s}.reveal:nth-child(3){transition-delay:.1s}
+/* === RESPONSIVE CONTENT, NOT CROPPED TEXT === */
+@media(max-height:700px){:root{--content-gap:clamp(.6rem,1.4vh,1rem);--h2-size:clamp(1.5rem,3.5vw,2.6rem);--body-size:clamp(.83rem,1.4vw,1.12rem)}.slide-content{padding-top:clamp(1rem,3vh,2rem)}.card{padding:clamp(.65rem,1.4vw,1rem)}}
+@media(max-width:650px){:root{--slide-padding:clamp(1.25rem,5.5vw,2rem);--h2-size:clamp(1.65rem,7.3vw,2.5rem);--body-size:clamp(.84rem,3.65vw,1.1rem);--h3-size:clamp(.98rem,4.25vw,1.3rem);--small-size:clamp(.67rem,2.8vw,.84rem);--content-gap:clamp(.75rem,1.7vh,1.2rem)}.three,.two{grid-template-columns:1fr}.four{grid-template-columns:repeat(2,minmax(0,1fr))}.flow{grid-template-columns:1fr;gap:clamp(.35rem,.8vh,.6rem)}.flow .arrow{display:none}.timeline{grid-template-columns:1fr 1fr;border-top:none;padding-top:0}.timeline article{border-top:2px solid var(--ink);padding-top:clamp(.5rem,1vh,.8rem)}.timeline b{font-size:clamp(1.2rem,5vw,1.6rem)}.card{padding:clamp(.7rem,3vw,1rem)}.packet{grid-template-columns:1fr}.folder{padding:clamp(.65rem,2.5vw,1rem)}.packet-items{gap:clamp(.5rem,1.3vh,.9rem)}.compare{grid-template-columns:1fr auto 1fr;gap:clamp(.3rem,1vw,.5rem)}.compare article:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;align-items:center}.compare article:last-child p{grid-column:2;grid-row:1/3}.compare>.arrow:nth-child(4){display:none}.compare strong{font-size:clamp(1.45rem,6vw,2rem)}.nav-dots{display:none}.decisions div{grid-template-columns:1fr;gap:clamp(.15rem,.5vh,.4rem)}.equation{gap:clamp(.35rem,1.5vw,.6rem);font-size:clamp(.8rem,3.3vw,1rem)}.equation b{font-size:clamp(1.2rem,5vw,1.8rem)}.cover h2{font-size:clamp(2.6rem,12vw,4rem)}}
+@media(max-height:600px){:root{--slide-padding:clamp(1rem,3vw,2rem);--h2-size:clamp(1.3rem,3vw,2.2rem);--body-size:clamp(.75rem,1.25vw,1rem);--h3-size:clamp(.95rem,1.6vw,1.25rem);--small-size:clamp(.6rem,.95vw,.78rem);--content-gap:clamp(.4rem,1vh,.7rem)}.card{padding:clamp(.5rem,1vw,.8rem)}.slide-content{padding-bottom:clamp(3rem,8vh,4rem)}.timeline article{gap:clamp(.4rem,1vh,.6rem)}}
+@media(max-height:500px){:root{--h2-size:clamp(1.2rem,2.5vw,1.8rem);--body-size:clamp(.68rem,1.15vw,.9rem);--small-size:clamp(.58rem,.85vw,.73rem);--content-gap:clamp(.3rem,.8vh,.5rem)}.eyebrow{font-size:var(--small-size)}.cover h2{font-size:clamp(2rem,6vw,4rem)}.formula{padding:clamp(.45rem,1vw,.75rem)}.formula b{font-size:clamp(1.6rem,3vw,2.5rem)}.scorebar div{font-size:clamp(1.3rem,2.5vw,2rem)}.agenda>div{padding:clamp(.2rem,.5vh,.35rem) 0}.decisions div{padding:clamp(.25rem,.7vh,.45rem) clamp(.5rem,1vw,.8rem)}}
+@media print{html,body{height:auto;overflow:visible;scroll-snap-type:none}.slide{height:190mm;width:277mm;break-after:page;page-break-after:always}.controls,.nav-dots,.progress-bar{display:none}.js .reveal{opacity:1;transform:none}.slide-content{padding:12mm}.page{bottom:6mm}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body><div class="progress-bar" aria-hidden="true"></div><nav class="nav-dots" aria-label="Đi đến trang"></nav><main><!-- === ADOPTION FINAL · 24/09/2026 === -->
+<section class="slide cover" id="slide-1" aria-label="ADOPTION FINAL · 24/09/2026">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / ADOPTION FINAL · 24/09/2026</div>
+<h2 class="reveal">Đưa tool vào<br><em>việc thật.</em></h2><div class="body reveal"><p class="lead">Từ hôm nay đến ngày cuối: dùng, đo, sửa và chứng minh điều gì đáng giữ lại.</p><div class="stamp">23/9 khóa hồ sơ → 24/9 trình bày</div></div></div>
+<span class="page">01</span><aside class="speaker-notes" hidden>Bộ hướng dẫn mới cụ thể hóa 70 điểm Adoption. Tỷ trọng Demo 30 / Adoption 70 đã được chốt từ Buổi 6.</aside></section><!-- === 01 / MỐC CẦN NHỚ === -->
+<section class="slide " id="slide-2" aria-label="01 / MỐC CẦN NHỚ">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 01 / MỐC CẦN NHỚ</div>
+<h2 class="reveal">Ghi bằng chứng từ bây giờ.</h2><div class="body reveal">
+<div class="timeline">
+<article><b>10–23/9</b><h3>Dùng &amp; ghi log</h3><p>Làm việc thật. Ghi cả lần thành công, lỗi và case bỏ qua tool.</p></article>
+<article><b>15 + 17/9</b><h3>Gỡ kẹt</h3><p>Check-in optional với mentor. Mang một blocker cụ thể.</p></article>
+<article><b>23/9</b><h3>Khóa hồ sơ</h3><p>Nộp báo cáo, log, feedback và bằng chứng trước/sau.</p></article>
+<article><b>24/9</b><h3>Adoption Final</h3><p>7 phút trình bày + 3 phút hỏi đáp cho mỗi team.</p></article>
+</div><p class="note">Giờ khóa trong ngày 23/9 và nơi nộp chung: Hiếu thông báo riêng.</p></div></div>
+<span class="page">02</span><aside class="speaker-notes" hidden></aside></section><!-- === 02 / THANG ĐIỂM === -->
+<section class="slide " id="slide-3" aria-label="02 / THANG ĐIỂM">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 02 / THANG ĐIỂM</div>
+<h2 class="reveal">70 điểm nằm ở đâu?</h2><div class="body reveal">
+<div class="scorebar"><div style="flex:25" class="lime">25</div><div style="flex:15" class="cyan">15</div><div style="flex:20" class="pink">20</div><div style="flex:10" class="yellow">10</div></div>
+<div class="four">
+<article class="card lime"><h3>25 · Dùng thật</h3><p>Tool được dùng trong những case phù hợp.</p></article><article class="card cyan"><h3>15 · Dùng lại</h3><p>Người dùng quay lại và chủ động tự chạy.</p></article><article class="card pink"><h3>20 · Hiệu quả</h3><p>Có đối chiếu về thời gian, lỗi hoặc rework.</p></article><article class="card yellow"><h3>10 · Duy trì</h3><p>Có owner, bàn giao và cách xử lý khi lỗi.</p></article>
+</div><div class="equation"><span>Demo <b>30</b></span><span>+</span><span>Adoption <b>70</b></span><span>=</span><span>Tổng <b>100</b></span></div></div></div>
+<span class="page">03</span><aside class="speaker-notes" hidden>Bảng 25–15–20–10 là cách chia mới cho đợt Adoption này. Các mức chấm chi tiết nằm trong rubric tải ở slide cuối.</aside></section><!-- === 03 / BẮT ĐẦU NGAY === -->
+<section class="slide " id="slide-4" aria-label="03 / BẮT ĐẦU NGAY">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 03 / BẮT ĐẦU NGAY</div>
+<h2 class="reveal">Một vòng lặp cho mỗi case.</h2><div class="body reveal">
+<div class="flow">
+<article class="card cyan"><h3>01 · Chọn việc</h3><p>Ai dùng? Case nào phù hợp? Chỉ số nào cần cải thiện?</p></article><span class="arrow">→</span><article class="card yellow"><h3>02 · Dùng tool</h3><p>Người dùng chạy trong công việc thật và kiểm tra output.</p></article><span class="arrow">→</span><article class="card lime"><h3>03 · Ghi &amp; sửa</h3><p>Lưu bằng chứng, hỏi feedback, sửa điểm gây thêm việc.</p></article>
+</div><div class="return">↶ Dùng lại ở case tiếp theo để biết bản sửa có giúp thật không.</div></div></div>
+<span class="page">04</span><aside class="speaker-notes" hidden></aside></section><!-- === 04 / LOG SỬ DỤNG === -->
+<section class="slide " id="slide-5" aria-label="04 / LOG SỬ DỤNG">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 04 / LOG SỬ DỤNG</div>
+<h2 class="reveal">Mỗi dòng là một case.</h2><div class="body reveal">
+<div class="two">
+<article class="card "><h3>Ghi đủ để truy lại</h3><p>Ngày · team/tool · case ID · người dùng · đủ điều kiện không · có dùng tool không.</p></article><article class="card "><h3>Ghi đủ để hiểu kết quả</h3><p>Output/link · cần nhắc hay hỗ trợ · thời gian · lỗi · lý do bỏ qua tool.</p></article>
+</div><div class="callout"><b>Ghi cả case phù hợp nhưng không dùng tool.</b><br>Đếm case thật; chạy thử và chạy lại cùng case không tăng số case đã dùng.</div>
+<p class="note">Dùng case ID ẩn danh. Che thông tin client không cần thiết trước khi đưa vào hồ sơ.</p></div></div>
+<span class="page">05</span><aside class="speaker-notes" hidden></aside></section><!-- === 05 / 25 ĐIỂM DÙNG THẬT === -->
+<section class="slide " id="slide-6" aria-label="05 / 25 ĐIỂM DÙNG THẬT">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 05 / 25 ĐIỂM DÙNG THẬT</div>
+<h2 class="reveal">Đếm trên đúng cơ hội.</h2><div class="body reveal">
+<div class="formula"><span><b>U</b><small>Case thật đã dùng tool</small></span><span>÷</span><span><b>N</b><small>Tất cả case đủ điều kiện</small></span><span>=</span><span><b>U/N</b><small>Tỷ lệ dùng</small></span></div>
+<div class="two">
+<article class="card lime"><h3>Ví dụ minh họa</h3><p>8 case phù hợp, dùng tool ở 6 case → 6/8 = 75%. Ghi vì sao 2 case còn lại không dùng.</p></article><article class="card cyan"><h3>Workflow ít xuất hiện</h3><p>2/2 case vẫn là dữ liệu có ích. Ghi N nhỏ; không suy rộng. N = 0 → chưa có cơ hội, không tính 0%.</p></article>
+</div><p class="note">Chốt “case phù hợp” trước khi đếm. U/N là bối cảnh chấm, không tự động quy thành điểm.</p></div></div>
+<span class="page">06</span><aside class="speaker-notes" hidden></aside></section><!-- === 06 / 15 ĐIỂM DÙNG LẠI === -->
+<section class="slide " id="slide-7" aria-label="06 / 15 ĐIỂM DÙNG LẠI">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 06 / 15 ĐIỂM DÙNG LẠI</div>
+<h2 class="reveal">Ai chủ động quay lại?</h2><div class="body reveal">
+<div class="two">
+<article class="card cyan"><h3>Bằng chứng cần có</h3><p>Một người dùng, ít nhất hai thời điểm khi có việc phù hợp; ghi họ tự chạy hay cần hỗ trợ.</p></article><article class="card yellow"><h3>Hỏi đúng người</h3><p>“Lần gần nhất dùng vào việc gì? Còn vướng bước nào? Sau 24/9 bạn có tiếp tục dùng không?”</p></article>
+</div><div class="callout">Đính kèm ngày, case và lời phản hồi thật. Tool cá nhân: ghi rõ owner cũng là user.</div>
+<p class="note">Chưa có cơ hội dùng lại trong kỳ → báo rõ. Không tự biến một lần demo thành bằng chứng adoption.</p></div></div>
+<span class="page">07</span><aside class="speaker-notes" hidden></aside></section><!-- === 07 / 20 ĐIỂM HIỆU QUẢ === -->
+<section class="slide " id="slide-8" aria-label="07 / 20 ĐIỂM HIỆU QUẢ">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 07 / 20 ĐIỂM HIỆU QUẢ</div>
+<h2 class="reveal">So trước / sau cho công bằng.</h2><div class="body reveal">
+<div class="compare"><article><span>TRƯỚC</span><strong>30 phút</strong><p>Case tương đương<br>theo quy trình cũ</p></article><span class="arrow">→</span><article><span>SAU</span><strong>18 phút</strong><p>12 phút xử lý<br>+ 6 phút review / sửa</p></article><span class="arrow">=</span><article class="lime"><span>CHÊNH LỆCH</span><strong>12 phút</strong><p>Tiết kiệm trên case này<br>Ví dụ minh họa</p></article></div>
+<ul class="checklist"><li>Ghi số mẫu và cách chọn case tương đương; phân biệt đo thực tế với ước lượng.</li><li>Tính cả case thất bại và fallback. Công build/bảo trì ghi riêng.</li><li>Tool QC có thể chứng minh lỗi thật hoặc rework giảm, thay cho thời gian.</li></ul></div></div>
+<span class="page">08</span><aside class="speaker-notes" hidden></aside></section><!-- === 08 / BẰNG CHỨNG THEO TEAM === -->
+<section class="slide " id="slide-9" aria-label="08 / BẰNG CHỨNG THEO TEAM">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 08 / BẰNG CHỨNG THEO TEAM</div>
+<h2 class="reveal">Chọn chỉ số đúng việc.</h2><div class="body reveal"><div class="three"><article class="card cyan"><h3>WinX · Campaign</h3><p>Case campaign trước/sau; thời gian xử lý + review; số vòng sửa; output được người dùng chấp nhận.</p></article><article class="card pink"><h3>KPMG · QC</h3><p>Case QC; lỗi thật được xác nhận; cảnh báo sai; lỗi bị bỏ sót khi đối chiếu; thời gian kiểm tra.</p></article><article class="card lime"><h3>Linh Tinh · Flow</h3><p>Case flow trước/sau; bước lặp được giảm; thời gian setup + QA; lỗi hoặc rework sau khi dùng.</p></article></div><p class="note">Đây là gợi ý thu thập, chưa phải kết quả của các team. Chọn chỉ số phù hợp với phạm vi tool thực tế.</p></div></div>
+<span class="page">09</span><aside class="speaker-notes" hidden></aside></section><!-- === 09 / 10 ĐIỂM DUY TRÌ === -->
+<section class="slide " id="slide-10" aria-label="09 / 10 ĐIỂM DUY TRÌ">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 09 / 10 ĐIỂM DUY TRÌ</div>
+<h2 class="reveal">Tool sống tiếp nhờ ai?</h2><div class="body reveal">
+<div class="four">
+<article class="card lime"><h3>Owner nhận việc</h3><p>Ai chịu trách nhiệm khi workflow thay đổi hoặc tool hỏng?</p></article><article class="card cyan"><h3>Người dùng mở được</h3><p>Link, quyền truy cập và hướng dẫn ngắn đã được thử.</p></article><article class="card pink"><h3>Lỗi có đường xử lý</h3><p>Lỗi đã biết, bước người duyệt và cách quay về quy trình cũ.</p></article><article class="card yellow"><h3>Có việc tiếp theo</h3><p>Một việc cụ thể, một người chịu trách nhiệm, một deadline.</p></article>
+</div><div class="callout">Thử bàn giao cho người dùng và thử fallback trước ngày Final.</div></div></div>
+<span class="page">10</span><aside class="speaker-notes" hidden></aside></section><!-- === 10 / HỒ SƠ NỘP 23/9 === -->
+<section class="slide " id="slide-11" aria-label="10 / HỒ SƠ NỘP 23/9">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 10 / HỒ SƠ NỘP 23/9</div>
+<h2 class="reveal">Một bộ hồ sơ, mở là hiểu.</h2><div class="body reveal">
+<div class="packet"><div class="folder">TEAM / TOOL<br><small>Hồ sơ Adoption</small></div><div class="packet-items">
+<p><b>01 · Báo cáo ngắn</b><span>Workflow, U/N, hiệu quả, giới hạn, quyết định đề xuất.</span></p>
+<p><b>02 · Log &amp; output</b><span>Case thật, case bỏ qua, link hoặc ảnh đối chiếu.</span></p>
+<p><b>03 · Feedback</b><span>Người dùng, ngày phản hồi, điểm tốt và điểm vướng.</span></p>
+<p><b>04 · Bàn giao &amp; trình bày</b><span>Owner, hướng dẫn, fallback; slide và video dự phòng.</span></p>
+</div></div><p class="note">Kiểm tra BGK mở được link. Thiếu mục nào, ghi “chưa đo / chưa có” và lý do.</p></div></div>
+<span class="page">11</span><aside class="speaker-notes" hidden></aside></section><!-- === 11 / TRÌNH BÀY 24/9 === -->
+<section class="slide " id="slide-12" aria-label="11 / TRÌNH BÀY 24/9">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 11 / TRÌNH BÀY 24/9</div>
+<h2 class="reveal">7 phút kể bằng bằng chứng.</h2><div class="body reveal">
+<div class="agenda">
+<div><b>0:00–0:45</b><span>Workflow, người dùng, phạm vi case phù hợp</span></div>
+<div><b>0:45–2:15</b><span>U/N, ai quay lại, mở log chứng minh</span></div>
+<div><b>2:15–4:15</b><span>Case trước/sau, chỉ số, cách đo và giới hạn</span></div>
+<div><b>4:15–5:15</b><span>Feedback thật và một lỗi / bài học đã sửa</span></div>
+<div><b>5:15–6:15</b><span>Người dùng tự chạy đoạn ngắn hoặc video dự phòng</span></div>
+<div><b>6:15–7:00</b><span>Quyết định đề xuất, owner, việc tiếp theo, deadline</span></div>
+</div><p class="note">Sau đó: 3 phút BGK hỏi đáp. Mang sẵn link đúng case, tránh tìm file giữa buổi.</p></div></div>
+<span class="page">12</span><aside class="speaker-notes" hidden></aside></section><!-- === 12 / CÁCH BGK CHẤM === -->
+<section class="slide " id="slide-13" aria-label="12 / CÁCH BGK CHẤM">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 12 / CÁCH BGK CHẤM</div>
+<h2 class="reveal">Điểm phải truy được về hồ sơ.</h2><div class="body reveal">
+<div class="flow"><article class="card cyan"><h3>Chấm độc lập</h3><p>Hiếu, Emma, Điệp: mỗi người một phiếu cho mỗi team.</p></article><span class="arrow">→</span><article class="card yellow"><h3>Đối chiếu chỗ thiếu</h3><p>Chọn “Chưa đủ bằng chứng” nếu chưa thể đánh giá; chưa chốt tổng.</p></article><span class="arrow">→</span><article class="card lime"><h3>Chốt sau khi đủ</h3><p>Lấy trung bình 3 tổng Adoption /70; cộng Demo đã quy /30.</p></article>
+</div><p class="note">Chọn mức cao nhất đáp ứng đủ mô tả. Phiếu trùng cần xác định bản có hiệu lực.</p></div></div>
+<span class="page">13</span><aside class="speaker-notes" hidden></aside></section><!-- === 13 / SAU KHI CHẤM === -->
+<section class="slide " id="slide-14" aria-label="13 / SAU KHI CHẤM">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 13 / SAU KHI CHẤM</div>
+<h2 class="reveal">Chốt đường đi cho từng tool.</h2><div class="body reveal">
+<div class="decisions">
+<div class="lime"><b>ADOPT</b><span>Đưa vào dùng thường xuyên; chốt owner.</span></div>
+<div class="yellow"><b>REVISE</b><span>Sửa một điểm cụ thể rồi đánh giá lại.</span></div>
+<div class="cyan"><b>KEEP TESTING</b><span>Chưa đủ dữ liệu; chốt case và mốc thử tiếp.</span></div>
+<div class="pink"><b>DEPRECATE</b><span>Ngừng dùng bản hiện tại, có cách thay thế.</span></div>
+<div><b>KILL</b><span>Dừng đầu tư; ghi rõ lý do và bài học.</span></div>
+</div><p class="note">BGK và owner chốt quyết định vận hành. Thứ hạng không tự động cho phép rollout.</p></div></div>
+<span class="page">14</span><aside class="speaker-notes" hidden></aside></section><!-- === 14 / BẮT ĐẦU HÔM NAY === -->
+<section class="slide " id="slide-15" aria-label="14 / BẮT ĐẦU HÔM NAY">
+<div class="slide-content"><div class="eyebrow reveal">HWM AI BUILD LAB / 14 / BẮT ĐẦU HÔM NAY</div>
+<h2 class="reveal">Chọn case đầu tiên.<br><em>Ghi lại ngay.</em></h2><div class="body reveal">
+<div class="two"><article class="card lime"><h3>Trước khi kết thúc hôm nay</h3><p>Chốt người dùng, case phù hợp và chỉ số chính. Mở log; hẹn một lần dùng thật.</p></article><article class="card cyan"><h3>Trước khi nộp ngày 23/9</h3><p>Điền báo cáo, kiểm tra link bằng chứng và diễn tập đúng 7 phút.</p></article></div>
+<div class="downloads"><a class="action" download="usage-log-template.csv" href="data:text/csv;base64,TmfDoHksVGVhbSAtIFRvb2wsQ2FzZSBJRCDhuqluIGRhbmgsTmfGsOG7nWkgZMO5bmcsQ2FzZSDEkeG7pyDEkWnhu4F1IGtp4buHbiAoQ8OzL0tow7RuZyksxJDDoyBkw7luZyB0b29sIChDw7MvS2jDtG5nKSxU4buxIGTDuW5nIGhheSBj4bqnbiBuaOG6r2MvaOG7lyB0cuG7oyxMw70gZG8ga2jDtG5nIGTDuW5nLE91dHB1dCBob+G6t2MgYuG6sW5nIGNo4bupbmcsVGjhu51pIGdpYW4gY8WpIChwaMO6dCksVGjhu51pIGdpYW4gbeG7m2kgZ+G7k20gcmV2aWV3LXPhu61hIChwaMO6dCksxJBvIHRo4buxYyB04bq/IGhheSDGsOG7m2MgbMaw4bujbmcsTOG7l2kgdGjhuq10IMSRxrDhu6NjIHjDoWMgbmjhuq1uLEZhbHNlIHBvc2l0aXZlIGhv4bq3YyBs4buXaSB0b29sLFRoYXkgxJHhu5VpIHNhdSBmZWVkYmFjayxHaGkgY2jDugo=">Mẫu log CSV ↓</a><a class="action" download="team-report-template.md" href="data:text/markdown;base64,IyBbVMOqbiB0ZWFtXSDigJQgQsOhbyBjw6FvIEFkb3B0aW9uIEZpbmFsIDI0LzkvMjAyNgoKVGVhbSAvIHRvb2w6IFdpblggLSBDYW1wYWlnbiB8IEtQTUcgLSBRQyB8IExpbmggVGluaCAtIEZsb3cKT3duZXI6Ck5nxrDhu51pIGTDuW5nIG3hu6VjIHRpw6p1OgpL4buzIGLDoW8gY8OhbzogMTDigJMyMy85LzIwMjYKTGluayB0b29sIC8gcGhpw6puIGLhuqNuOgpMaW5rIGxvZyB2w6AgYuG6sW5nIGNo4bupbmcgKEJHSyBjw7MgcXV54buBbiB4ZW0pOgoKIyMgMS4gV29ya2Zsb3cgdsOgIHBo4bqhbSB2aSDEkW8KCi0gVmnhu4djIGPhu6UgdGjhu4MgdG9vbCBo4buXIHRy4bujOgotIEtoaSBuw6BvIG3hu5l0IGNhc2UgxJHhu6cgxJFp4buBdSBraeG7h24gZMO5bmcgdG9vbD8gQ2jhu5F0IHBo4bqhbSB2aSB0csaw4bubYyBraGkgxJHhur9tOgotIENo4buJIHPhu5EgY2jDrW5oOiB0aOG7nWkgZ2lhbiAvIGzhu5dpIC8gcmV3b3JrIChjaOG7jW4gY2jhu4kgc+G7kSBwaMO5IGjhu6NwKToKLSBCYXNlbGluZSBs4bqleSB04burIMSRw6J1LCBuZ8OgeSBuw6BvPyDEkG8gdGjhu7FjIHThur8gaGF5IMaw4bubYyBsxrDhu6NuZz8KCiMjIDIuIETDuW5nIHRo4bqtdAoKLSBOID0gdOG7lW5nIHPhu5EgY2FzZSDEkeG7pyDEkWnhu4F1IGtp4buHbiB0cm9uZyBr4buzOgotIFUgPSBz4buRIGNhc2UgdGjhuq10IMSRw6MgZMO5bmcgdG9vbCAoa2jDtG5nIMSR4bq/bSBsxrDhu6N0IGNo4bqheSB0aOG7rSBob+G6t2MgY2jhuqF5IGzhuqFpIGPDuW5nIGNhc2UpOgotIFUvTiA9IHThu7cgbOG7hyBkw7luZyB0csOqbiBjxqEgaOG7mWkgcGjDuSBo4bujcDoKLSBO4bq/dSBOPTA6IGdoaSBjaMawYSBjw7MgY8ahIGjhu5lpLCBraMO0bmcgdMOtbmggMCUuCi0gQWkgZMO5bmcsIG5nw6B5IG7DoG8sIOG7nyBixrDhu5tjIG7DoG8/Ci0gQWkgcXVheSBs4bqhaSBs4bqnbiBoYWk/IE7hur91IGNoxrBhIGPDsyBjxqEgaOG7mWkgcXVheSBs4bqhaSwgZ2hpIHLDtS4KLSBCYW8gbmhpw6p1IGNhc2UgY+G6p24gbmjhuq9jIC8gYnVpbGRlciBjaOG6oXkgaOG7mT8gVsOsIHNhbz8KLSBDw6FjIGNhc2UgYuG7jyBxdWEgdG9vbCB2w6Agbmd1ecOqbiBuaMOibjoKCiMjIDMuIEhp4buHdSBxdeG6owoKLSBT4buRIG3huqt1IHRyxrDhu5tjIC8gc2F1OyBjw6FjaCBjaOG7jW4gY2FzZSB0xrDGoW5nIMSRxrDGoW5nOgotIFRo4budaSBnaWFuIGPFqSAvIHRo4budaSBnaWFuIG3hu5tpIChwaMO6dCBt4buXaSBjYXNlKToKLSBUaOG7nWkgZ2lhbiBt4bubaSDEkcOjIGfhu5NtIG5o4bqtcCBsaeG7h3UsIGNo4budLCByZXZpZXcsIHPhu61hIGzhu5dpIHbDoCBmYWxsYmFjayBjaMawYT8KLSBIb+G6t2M6IGzhu5dpIHRo4bqtdCDEkcaw4bujYyB4w6FjIG5o4bqtbiAvIGZhbHNlIHBvc2l0aXZlIC8gcmV3b3JrIHRyxrDhu5tjIHbDoCBzYXU6Ci0gQ2FzZSBj4bqjaSB0aGnhu4duIHThu5F0IG5o4bqldCArIGLhurFuZyBjaOG7qW5nOgotIENhc2UgdGjhuqV0IGLhuqFpIGhv4bq3YyBjaMawYSBj4bqjaSB0aGnhu4duICsgYuG6sW5nIGNo4bupbmc6Ci0gQ8O0bmcgYnVpbGQsIHPhu61hIHbDoCBi4bqjbyB0csOsIHRyb25nIGvhu7MgKGdoaSByacOqbmcsIGtow7RuZyBs4bqrbiB24bubaSB0aOG7nWkgZ2lhbiB24bqtbiBow6BuaCk6Ci0gxJBp4buBdSBjaMawYSDEkW8gxJHGsOG7o2MgLyBnaeG7m2kgaOG6oW4ga+G6v3QgbHXhuq1uOgoKIyMgNC4gVGnhur9uZyBuw7NpIG5nxrDhu51pIGTDuW5nCgpQaOG7j25nIHbhuqVuIMOtdCBuaOG6pXQgbeG7mXQgbmfGsOG7nWkgZMO5bmcgdGjhuq10OyB0b29sIGPDoSBuaMOibiB0aMOsIHThu7EgZ2hpIHLDtSB2YWkgdHLDsiBvd25lciBjxaluZyBsw6AgdXNlci4KCi0gVMOqbiAvIHZhaSB0csOyLCBuZ8OgeSBwaOG6o24gaOG7k2k6Ci0gR+G6p24gbmjhuqV0IGTDuW5nIHRvb2wgdsOgbyB2aeG7h2MgZ8OsPyBMaW5rIGNhc2U6Ci0gQ8OzIGNo4bunIMSR4buZbmcgZMO5bmcgbOG6oWkga2jDtG5nPyBDw7JuIHbGsOG7m25nIGLGsOG7m2MgbsOgbz8KLSBTYXUgMjQvOSBjw7MgdGnhur9wIHThu6VjIGTDuW5nIGtow7RuZz8gVsOsIHNhbz8KLSBUcsOtY2ggw70ga2nhur9uIHbDoCBsaW5rIG5ndeG7k247IGtow7RuZyB04buxIHZp4bq/dCB0aGF5IGZlZWRiYWNrIG5nxrDhu51pIGTDuW5nLgoKIyMgNS4gQsOgbiBnaWFvIHbDoCBxdXnhur90IMSR4buLbmggxJHhu4EgeHXhuqV0CgotIE93bmVyIMSRw6Mgbmjhuq1uIHRyw6FjaCBuaGnhu4dtOgotIE5nxrDhu51pIGTDuW5nIG3hu58gxJHGsOG7o2MgdG9vbCB04burIMSRw6J1PyBIxrDhu5tuZyBk4bqrbiBuZ+G6r246Ci0gTOG7l2kgxJHDoyBiaeG6v3QgLyBnaeG7m2kgaOG6oW46Ci0gVmnhu4djIG7DoG8gY+G6p24gbmfGsOG7nWkgZHV54buHdD8gVG9vbCBs4buXaSB0aMOsIHF1YXkgbOG6oWkgY8OhY2ggY8WpIHRo4bq/IG7DoG8/Ci0gxJDDoyB0aOG7rSBiw6BuIGdpYW8gLyBmYWxsYmFjayBraGkgbsOgbz8gS+G6v3QgcXXhuqM6Ci0gxJDhu4EgeHXhuqV0OiBBZG9wdCAvIFJldmlzZSAvIEtlZXAgdGVzdGluZyAvIERlcHJlY2F0ZSAvIEtpbGwKLSBN4buZdCB2aeG7h2MgdGnhur9wIHRoZW86Ci0gTmfGsOG7nWkgY2jhu4t1IHRyw6FjaCBuaGnhu4dtOgotIERlYWRsaW5lOgoKIyMgNi4gRMOgbiBiw6BpIHRyw6xuaCBiw6B5IDcgcGjDunQgKyAzIHBow7p0IGjhu49pIMSRw6FwCgoxLiAwOjAw4oCTMDo0NSDigJQgV29ya2Zsb3csIG5nxrDhu51pIGTDuW5nLCBwaOG6oW0gdmkgY2FzZSBwaMO5IGjhu6NwLgoyLiAwOjQ14oCTMjoxNSDigJQgTiwgVSwgVS9OLCBuZ8aw4budaSBxdWF5IGzhuqFpIHbDoCBsb2cgYuG6sW5nIGNo4bupbmcuCjMuIDI6MTXigJM0OjE1IOKAlCBN4buZdCBjYXNlIHRyxrDhu5tjL3NhdSwgY2jhu4kgc+G7kSwgY8OhY2ggxJFvIHbDoCBnaeG7m2kgaOG6oW4uCjQuIDQ6MTXigJM1OjE1IOKAlCBGZWVkYmFjayBuZ8aw4budaSBkw7luZyArIG3hu5l0IGzhu5dpIGhv4bq3YyBiw6BpIGjhu41jIMSRw6Mgc+G7rWEuCjUuIDU6MTXigJM2OjE1IOKAlCBOZ8aw4budaSBkw7luZyB04buxIGNo4bqheSBt4buZdCDEkW/huqFuIG5n4bqvbiBob+G6t2MgdmlkZW8gZOG7sSBwaMOybmcuCjYuIDY6MTXigJM3OjAwIOKAlCBRdXnhur90IMSR4buLbmggxJHhu4EgeHXhuqV0ICsgb3duZXIgKyBuZXh0IGFjdGlvbiArIGRlYWRsaW5lLgoKIyMgQ2hlY2tsaXN0IG7hu5lwIDIzLzkKCi0gWyBdIELDoW8gY8OhbyBuw6B5IMSRw6MgxJFp4buBbjsgdGhp4bq/dSBk4buvIGxp4buHdSBnaGkgcsO1IGNoxrBhIMSRby4KLSBbIF0gTG9nIGPDsyBj4bqjIGNhc2UgcGjDuSBo4bujcCBraMO0bmcgZMO5bmcgdG9vbC4KLSBbIF0gQ8OzIG91dHB1dCAvIOG6o25oIC8gdmlkZW8gdsOgIGLhurFuZyBjaOG7qW5nIHRyxrDhu5tjL3NhdS4KLSBbIF0gQ8OzIHBo4bqjbiBo4buTaSBj4bunYSBuZ8aw4budaSBkw7luZyB0aOG6rXQuCi0gWyBdIEPDsyBoxrDhu5tuZyBk4bqrbiwgb3duZXIsIGLGsOG7m2MgZHV54buHdCB2w6AgZmFsbGJhY2suCi0gWyBdIEJHSyBt4bufIMSRxrDhu6NjIGxpbms7IHRow7RuZyB0aW4gY2xpZW50IGtow7RuZyBj4bqnbiB0aGnhur90IMSRw6MgY2hlLgotIFsgXSBDw7MgYuG6o24gdHLDrG5oIGLDoHkgbmfhuq9uIHbDoCB2aWRlbyBk4buxIHBow7JuZy4KCkdp4budIGtow7NhIGPhu6UgdGjhu4MgdHJvbmcgbmfDoHkgMjMvOSB2w6AgbsahaSBu4buZcCBkbyBIaeG6v3UgdGjDtG5nIGLDoW87IHTDoGkgbGnhu4d1IG7DoHkgY2jGsGEg4bqlbiDEkeG7i25oLgo=">Mẫu báo cáo ↓</a><a class="action" download="rubric.md" href="data:text/markdown;base64,IyBC4bqjbmcgY2jhuqVtIEFkb3B0aW9uIOKAlCA3MCDEkWnhu4NtCgpCR0s6IEhp4bq/dSwgRW1tYSwgxJBp4buHcC4gS+G7syBi4bqxbmcgY2jhu6luZzogMTDigJMyMy85LzIwMjYuIEZpbmFsOiAyNC85LzIwMjYuCgpbRm9ybSBjaOG6pW1dKGh0dHBzOi8vZG9jcy5nb29nbGUuY29tL2Zvcm1zL2QvZS8xRkFJcFFMU2RWZW04czFQa0R2OGc2TGIzWXlHR1VxcjFzUlJCcmI4REQtX0NldnlEOXotcWtHdy92aWV3Zm9ybSkgwrcgW0No4buJbmggc+G7rWEgLyBSZXNwb25zZXNdKGh0dHBzOi8vZG9jcy5nb29nbGUuY29tL2Zvcm1zL2QvMXpoYTExQm1rTFRPSGNxQlUyVmFBRTBibHFRYzh6ZEFiTi0zb1hUR2hMSmMvZWRpdCkKCkNo4buNbiBt4bupYyBjYW8gbmjhuqV0IG3DoCBi4bqxbmcgY2jhu6luZyDEkcOhcCDhu6luZyDEkeG6p3kgxJHhu6cuIE3hu5dpIHRpw6p1IGNow60gY8OzIGzhu7FhIGNo4buNbiAqKkNoxrBhIMSR4bunIGLhurFuZyBjaOG7qW5nIOKAlCBjaMawYSBjaOG7kXQgxJFp4buDbSoqLiBLaGkgY2jhu41uIG3hu6VjIG7DoHksIG7DqnUgcGjhuqduIGPDsm4gdGhp4bq/dSB2w6AgZ2nhu68gdHLhu5FuZyB04buVbmcgY2jDrW5oIHRo4bupYyDEkeG6v24ga2hpIEJHSyDEkeG7kWkgY2hp4bq/dS4gVGhp4bq/dSBk4buvIGxp4buHdSBraMO0bmcgxJHhu5NuZyBuZ2jEqWEgMDsgMCBkw7luZyBraGkgY8OzIGThu68gbGnhu4d1IHjDoWMgbmjhuq1uIGvhur90IHF14bqjIOG7nyBt4bupYyAwLgoKQ8OhYyBt4bupYyBsw6AgY8SDbiBj4bupIGNo4bqlbSwga2jDtG5nIHBo4bqjaSB5w6p1IGPhuqd1IHBo4bqjaSBjw7Mgbmhp4buBdSB1c2VyIGhv4bq3YyBuaGnhu4F1IGzGsOG7o3QgY2jhuqF5IG5oxrAgbmhhdSBnaeG7r2EgbeG7jWkgdG9vbC4gS2jDtG5nIHTDrW5oIGzGsOG7o3QgdGVzdC9yZXJ1biBjw7luZyBt4buZdCBjYXNlIHRow6BuaCBjYXNlIGTDuW5nIHRo4bqtdCBt4bubaS4gTuG6v3UgTj0wIGhv4bq3YyBjaMawYSBjw7MgY8ahIGjhu5lpIGTDuW5nIGzhuqFpLCBnaGkgcsO1LiBN4bqrdSBuaOG7jyB0aMOsIG7DqnUgZ2nhu5tpIGjhuqFuLCBraMO0bmcgc3V5IHLhu5luZy4KCiMjIDEuIETDuW5nIHRyb25nIHZp4buHYyB0aOG6rXQg4oCUIDI1IMSRaeG7g20KCkPEg24gY+G7qTogbG9nLCBz4buRIGNhc2UgxJHhu6cgxJFp4buBdSBraeG7h24gTiwgc+G7kSBjYXNlIMSRw6MgZMO5bmcgVSwgdOG7tyBs4buHIFUvTiwgb3V0cHV0IHbDoCB4w6FjIG5o4bqtbiBuZ8aw4budaSBkw7luZy4KCnwgxJBp4buDbSB8IE3hu6ljIHwKfC0tLTp8LS0tfAp8IDAgfCBDw7MgY8ahIGjhu5lpIGTDuW5nIG5oxrBuZyBjaMawYSBkw7luZyB0cm9uZyBjYXNlIHRo4bqtdCB8CnwgNSB8IEPDsyAxIGNhc2UgdGjhuq10OyBjaMawYSBjaOG7qW5nIG1pbmggZMO5bmcgdGnhur9wIHwKfCAxMCB8IEPDsyBuaGnhu4F1IGNhc2UgdGjhuq10IG5oxrBuZyBkw7luZyBy4budaSBy4bqhYyB8CnwgMTUgfCDEkMOjIHbDoG8gd29ya2Zsb3cg4bufIG3hu5l0IHBo4bqnbiBjYXNlIHBow7kgaOG7o3A7IGPDsyBVL04gfAp8IDIwIHwgRMO5bmcg4bufIHBo4bqnbiBs4bubbiBjYXNlIHBow7kgaOG7o3A7IGPDsyBsb2cgdsOgIG91dHB1dCB8CnwgMjUgfCBEw7luZyDhu5VuIMSR4buLbmgg4bufIHBo4bqnbiBs4bubbiBjYXNlIHBow7kgaOG7o3A7IG5nxrDhu51pIGTDuW5nIHjDoWMgbmjhuq1uIHwKCiMjIDIuIETDuW5nIGzhuqFpIHbDoCB04buxIGNo4bunIOKAlCAxNSDEkWnhu4NtCgpDxINuIGPhu6k6IGFpIHF1YXkgbOG6oWksIG5nw6B5IG7DoG8sIHTDoWMgduG7pSBuw6BvLCBjw7MgY+G6p24gbmjhuq9jIGhv4bq3YyBidWlsZGVyIGNo4bqheSBo4buZLiBYw6l0IG5nxrDhu51pIGTDuW5nIG3hu6VjIHRpw6p1OyB0b29sIGPDoSBuaMOibiBraMO0bmcgYuG6r3QgYnXhu5ljIG5oaeG7gXUgbmfGsOG7nWkgZMO5bmcuCgp8IMSQaeG7g20gfCBN4bupYyB8CnwtLS06fC0tLXwKfCAwIHwgQ8OzIGPGoSBo4buZaSBuaMawbmcga2jDtG5nIHF1YXkgbOG6oWk7IGNoxrBhIGjDrG5oIHRow6BuaCBjw6FjaCBkw7luZyB8CnwgMyB8IEPDsyBkw7luZyBs4bqhaSBuaMawbmcgYnVpbGRlciBwaOG6o2kgY2jhuqF5IGjhu5kgfAp8IDYgfCBDw7MgZMO5bmcgbOG6oWkgbmjGsG5nIHBo4bqjaSBuaOG6r2MgaG/hurdjIGjhu5cgdHLhu6Mgbmhp4buBdSB8CnwgOSB8IE5nxrDhu51pIGTDuW5nIHThu7EgY2jhuqF5IMSRxrDhu6NjOyDEkcO0aSBsw7pjIGPhuqduIG5o4bqvYyBob+G6t2MgaOG7lyB0cuG7oyB8CnwgMTIgfCBDaOG7pyDEkeG7mW5nIHF1YXkgbOG6oWkg4bufIG5oaeG7gXUgdGjhu51pIMSRaeG7g207IMOtdCBo4buXIHRy4bujIHwKfCAxNSB8IFThu7EgY2jhu6cgdsOgIGTDuW5nIMSR4buBdSBraGkgY8OzIHZp4buHYzsgbmfGsOG7nWkgZMO5bmcgeMOhYyBuaOG6rW4gc+G6vSB0aeG6v3AgdOG7pWMgfAoKIyMgMy4gSGnhu4d1IHF14bqjIGPDsyBi4bqxbmcgY2jhu6luZyDigJQgMjAgxJFp4buDbQoKQ8SDbiBj4bupOiBjYXNlIHRyxrDhu5tjL3NhdSB0xrDGoW5nIMSRxrDGoW5nLCBz4buRIG3huqt1LCB0aOG7nWkgZ2lhbiBj4bqjIGtp4buDbSB0cmEvc+G7rWEgbOG7l2ksIGhv4bq3YyBs4buXaSB0aOG6rXQgxJHGsOG7o2MgeMOhYyBuaOG6rW4gxJHDoyBi4bqvdC9naeG6o20sIGhv4bq3YyBnaeG6o20gcmV3b3JrLiBDaOG7jW4gY2jhu4kgc+G7kSBwaMO5IGjhu6NwOyBraMO0bmcgYnXhu5ljIG3hu41pIHRvb2wgcGjhuqNpIHRp4bq/dCBraeG7h20gdGjhu51pIGdpYW4uIEtow7RuZyBjb2kgxrDhu5tjIGzGsOG7o25nIGzDoCBz4buRIMSRby4KCnwgxJBp4buDbSB8IE3hu6ljIHwKfC0tLTp8LS0tfAp8IDAgfCBE4buvIGxp4buHdSBjaG8gdGjhuqV5IGNoxrBhIGPhuqNpIHRoaeG7h24gaG/hurdjIGzDoG0gdmnhu4djIHThu4cgaMahbiB8CnwgNCB8IE3hu5tpIGPDsyBj4bqjbSBuaOG6rW4gaG/hurdjIMaw4bubYyBsxrDhu6NuZzsgY2jGsGEgY8OzIMSR4buRaSBjaGnhur91IHwKfCA4IHwgQ8OzIDEgY2FzZSB0csaw4bubYy9zYXUgY2hvIHRo4bqleSBj4bqjaSB0aGnhu4duIHwKfCAxMiB8IEPDsyBuaGnhu4F1IGNhc2UgdMawxqFuZyDEkcawxqFuZywgbsOqdSBz4buRIG3huqt1IHbDoCBjw6FjaCDEkW8gfAp8IDE2IHwgQ+G6o2kgdGhp4buHbiBs4bq3cCBs4bqhaTsgxJHDoyB0w61uaCBjw7RuZyBraeG7g20gdHJhL3Phu61hIHbDoCBjYXNlIHRo4bqldCBi4bqhaSB8CnwgMjAgfCBD4bqjaSB0aGnhu4duIGzhurdwIGzhuqFpLCBjw7MgbmfGsOG7nWkgZMO5bmcgeMOhYyBuaOG6rW4sIG7DqnUgcsO1IGdp4bubaSBo4bqhbiB8CgojIyA0LiBCw6BuIGdpYW8gdsOgIGR1eSB0csOsIOKAlCAxMCDEkWnhu4NtCgpDxINuIGPhu6k6IG93bmVyIG5o4bqtbiB0csOhY2ggbmhp4buHbSwgbmfGsOG7nWkgZMO5bmcgbeG7nyDEkcaw4bujYyB0b29sLCBoxrDhu5tuZyBk4bqrbiwgbOG7l2kgxJHDoyBiaeG6v3QsIGLGsOG7m2MgbmfGsOG7nWkgZHV54buHdCwgZmFsbGJhY2sgdsOgIHZp4buHYyB0aeG6v3AgdGhlbyBjw7MgZGVhZGxpbmUuCgp8IMSQaeG7g20gfCBN4bupYyB8CnwtLS06fC0tLXwKfCAwIHwgQ2jGsGEgY8OzIG93bmVyIGhv4bq3YyBjw6FjaCB24bqtbiBow6BuaCB0aeG6v3AgfAp8IDIgfCBDw7Mgb3duZXIgbmjhuq1uIHRyw6FjaCBuaGnhu4dtLCBiw6BuIGdpYW8gY8OybiB0aGnhur91IHwKfCA0IHwgT3duZXIgdsOgIG5nxrDhu51pIGTDuW5nIMSRw6MgY8OzIHF1eeG7gW4gdHJ1eSBj4bqtcCwgY8OzIGjGsOG7m25nIGThuqtuIHwKfCA2IHwgQ8OzIHRow6ptIGzhu5dpIMSRw6MgYmnhur90LCBixrDhu5tjIGR1eeG7h3QgdsOgIGPDoWNoIHF1YXkgduG7gSBxdXkgdHLDrG5oIGPFqSB8CnwgOCB8IE5nxrDhu51pIGTDuW5nIMSRw6MgdGjhu60gYsOgbiBnaWFvOyBjw7MgbmV4dCBhY3Rpb24gdsOgIGRlYWRsaW5lIHwKfCAxMCB8IELDoG4gZ2lhbyDEkcOjIHRo4butLCBmYWxsYmFjayDEkcOjIGtp4buDbSB0cmEsIG93bmVyIGNhbSBr4bq/dCBkdXkgdHLDrCB8CgojIyBU4buVbmcgaOG7o3AgdsOgIHjhu60gbMO9IHRoaeG6v3UgYuG6sW5nIGNo4bupbmcKCjEuIEJhIEJHSyBjaOG6pW0gxJHhu5ljIGzhuq1wLCBt4buZdCBwaGnhur91L3RlYW0vbmfGsOG7nWk7IHBoaeG6v3UgbeG7m2kgdGhheSBwaGnhur91IGPFqSBwaOG6o2kgxJHGsOG7o2MgeMOhYyDEkeG7i25oIHLDtS4KMi4gTeG7l2kgcGhp4bq/dSBjw7MgNCDEkWnhu4NtOyB04buVbmcgdOG7kWkgxJFhIDcwLiBM4bqleSBwaOG6p24gc+G7kSDEkeG6p3UgbeG7l2kgbOG7sWEgY2jhu41uIGtoaSB04buVbmcgaOG7o3AuIEZvcm0ga2jDtG5nIHThu7EgY+G7mW5nIMSRaeG7g20uCjMuIEPDsyBt4bulYyDigJxDaMawYSDEkeG7pyBi4bqxbmcgY2jhu6luZ+KAnSB0aMOsIGtow7RuZyB04buxIHF1eSAwIGhv4bq3YyBi4buPIHF1YSBt4bulYyDEkcOzIMSR4buDIGzhuqV5IHRydW5nIGLDrG5oLgo0LiDEkOG7kWkgY2hp4bq/dSBwaOG6p24gdGhp4bq/dSB24bubaSB0ZWFtOyBu4bq/dSBo4bq/dCB0aOG7nWkgZ2lhbiB24bqrbiBjaMawYSDEkeG7pywgxJHDoW5oIGThuqV1IGvhur90IHF14bqjIHThuqFtIHRo4budaS9jaMawYSBjaOG7kXQsIGtow7RuZyB44bq/cCBuaMawIGvhur90IHF14bqjIMSRw6MgxJHhu6cgYuG6sW5nIGNo4bupbmcuCjUuIFNhdSBraGkgxJHhu6cgYmEgcGhp4bq/dSBo4bujcCBs4buHOiBBZG9wdGlvbiA9IHRydW5nIGLDrG5oIGJhIHThu5VuZyB0csOqbiA3MC4gQ2h1bmcgY3Xhu5ljID0gRGVtbyDEkcOjIHF1eSB24buBIDMwICsgQWRvcHRpb24uCjYuIEFkb3B0IC8gUmV2aXNlIC8gS2VlcCB0ZXN0aW5nIC8gRGVwcmVjYXRlIC8gS2lsbCBsw6AgcXV54bq/dCDEkeG7i25oIHbhuq1uIGjDoG5oIHJpw6puZzsgQkdLIHbDoCBvd25lciBjaOG7kXQsIGtow7RuZyB04buxIHN1eSByYSB04burIHRo4bupIGjhuqFuZy4KCkZvcm0gecOqdSBj4bqndSDEkcSDbmcgbmjhuq1wIEdvb2dsZSB2w6AgZ2hpIG5o4bqtbiBlbWFpbCB0aGVvIGPDoGkgxJHhurd0IGhp4buHbiB04bqhaSBj4bunYSB0w6BpIGtob+G6o247IGtow7RuZyBnaeG7m2kgaOG6oW4gbeG7mXQgcGjhuqNuIGjhu5NpOyBr4bq/dCBxdeG6oyB04buVbmcgaOG7o3Aga2jDtG5nIGhp4buDbiB0aOG7iyBjaG8gbmfGsOG7nWkgdHLhuqMgbOG7nWkuCg==">Bảng chấm chi tiết ↓</a><a class="action dark" href="https://docs.google.com/forms/d/e/1FAIpQLSdVem8s1PkDv8g6Lb3YyGGUqr1sRRBrb8DD-_CevyD9z-qkGw/viewform" target="_blank" rel="noopener">Form BGK ↗</a></div></div></div>
+<span class="page">15</span><aside class="speaker-notes" hidden>Các file mẫu được nhúng trong HTML; bấm để tải. Đường dẫn Google Form là bản đã tạo, yêu cầu đăng nhập Google và ghi nhận email.</aside></section></main><nav class="controls" aria-label="Điều khiển slide"><button id="prev" aria-label="Trang trước">←</button><output id="counter" aria-live="polite">1/15</output><button id="next" aria-label="Trang sau">→</button></nav><script>
+/* === SLIDE PRESENTATION CONTROLLER === */
+class SlidePresentation {
+ constructor(){
+  document.documentElement.classList.add('js');
+  this.slides=[...document.querySelectorAll('.slide')];this.current=0;this.lastWheel=0;
+  this.dots=document.querySelector('.nav-dots');
+  this.slides.forEach((slide,i)=>{const b=document.createElement('button');b.setAttribute('aria-label',`Trang ${i+1}`);b.addEventListener('click',()=>this.go(i));this.dots.append(b)});
+  this.observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){e.target.classList.add('visible');this.current=this.slides.indexOf(e.target);this.update()}}},{threshold:.55});this.slides.forEach(s=>this.observer.observe(s));
+  document.querySelector('#prev').onclick=()=>this.go(this.current-1);document.querySelector('#next').onclick=()=>this.go(this.current+1);
+  document.addEventListener('keydown',e=>{if(e.target.closest('a,button,input,textarea,select'))return;if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.go(this.current+1)}if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.current-1)}if(e.key==='Home'){e.preventDefault();this.go(0)}if(e.key==='End'){e.preventDefault();this.go(this.slides.length-1)}});
+  document.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<10)return;e.preventDefault();if(Date.now()-this.lastWheel<600)return;this.lastWheel=Date.now();this.go(this.current+(e.deltaY>0?1:-1))},{passive:false});
+  let start=null;document.addEventListener('touchstart',e=>{start=e.touches[0].clientY},{passive:true});document.addEventListener('touchend',e=>{if(start===null)return;const delta=start-e.changedTouches[0].clientY;if(Math.abs(delta)>50)this.go(this.current+(delta>0?1:-1));start=null},{passive:true});
+  window.addEventListener('hashchange',()=>this.fromHash());
+  // Keep the selected slide when a phone rotates or the browser is resized.
+  window.addEventListener('resize',()=>{const n=Number(location.hash.replace('#slide-',''));const target=Number.isInteger(n)&&n>=1&&n<=this.slides.length?n-1:this.current;requestAnimationFrame(()=>{this.current=target;this.slides[target].scrollIntoView({behavior:'instant',block:'start'});this.update()})});
+  this.fromHash();this.update();
+ }
+ fromHash(){const n=Number(location.hash.replace('#slide-',''));if(Number.isInteger(n)&&n>=1&&n<=this.slides.length)this.go(n-1,false)}
+ go(i,write=true){this.current=Math.max(0,Math.min(this.slides.length-1,i));this.slides[this.current].scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});if(write)history.replaceState(null,'',`#slide-${this.current+1}`);this.update()}
+ update(){document.querySelector('#counter').textContent=`${this.current+1}/${this.slides.length}`;document.querySelector('#prev').disabled=this.current===0;document.querySelector('#next').disabled=this.current===this.slides.length-1;document.querySelector('.progress-bar').style.transform=`scaleX(${(this.current+1)/this.slides.length})`;[...this.dots.children].forEach((d,i)=>d.setAttribute('aria-current',i===this.current?'true':'false'))}
+}
+new SlidePresentation();
+</script></body></html>
