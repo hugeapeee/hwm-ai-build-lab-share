@@ -11,3 +11,5 @@ Mở guide.html bằng trình duyệt; dùng phím mũi tên hoặc nút trướ
 Khóa hồ sơ ngày 23/9; trình bày và chấm ngày 24/9. Giờ khóa và thư mục nộp chung do Hiếu thông báo.
 
 Form BGK: https://docs.google.com/forms/d/e/1FAIpQLSdVem8s1PkDv8g6Lb3YyGGUqr1sRRBrb8DD-_CevyD9z-qkGw/viewform
+
+Video chia sẻ ngày 17/9 (mặc định 2×): https://hugeapeee.github.io/hwm-ai-build-lab-share/adoption-final/video.html
