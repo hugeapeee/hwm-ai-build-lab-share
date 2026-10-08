@@ -188,6 +188,15 @@ article p{margin-top:clamp(10px,1.5vh,18px)}article{padding:clamp(12px,1.5vw,24p
 .reasons{display:grid;gap:clamp(20px,4vh,40px)}.reasons p{border-left:clamp(4px,.5vw,7px) solid var(--pink);padding-left:clamp(14px,2vw,26px)}
 .writing-hint{padding:clamp(12px,1.5vw,22px);border:2px solid;background:var(--pink)}
 @media(max-height:500px){#slide-6 .body-content{gap:clamp(7px,1.5vh,11px)}#slide-6 li+li{margin-top:clamp(7px,1.5vh,11px)}}
+/* === TEAM PROPOSES PRIZES; ONLY THE FIRST-POST HINT REMAINS === */
+.award-blank{height:clamp(20px,4vh,42px);border-bottom:2px dashed var(--ink);margin-top:clamp(10px,1.5vh,18px)}
+@media(min-width:601px){#slide-5 .tiles article.award{grid-column:1 / -1;grid-row:3}}
+@media(max-height:500px){#slide-5 .body-content{gap:clamp(6px,1.5vh,10px)}#slide-5 .tiles{gap:clamp(5px,1vh,9px)}#slide-5 h2{font-size:clamp(24px,3vw,30px)}#slide-5 article{padding:clamp(5px,.7vw,8px)}#slide-5 article p{margin-top:clamp(4px,.7vh,6px)}.award-blank{height:clamp(10px,2vh,18px);margin-top:clamp(5px,1vh,8px)}}
+
+#slide-5 .body-content{gap:clamp(12px,2vh,20px)}
+#slide-5 .tiles{gap:clamp(10px,1.5vh,18px)}
+#slide-5 .award{display:flex;align-items:center;gap:clamp(14px,2vw,25px)}
+#slide-5 .award-blank{flex:1;height:clamp(15px,2vh,22px);margin-top:0}
 </style></head><body><div class="progress-bar"></div><nav class="nav-dots" aria-label="Chọn slide"></nav><main><!-- === SLIDE 1: HWM / Q4 === -->
 <section class="slide cover" id="slide-1" aria-label="Slide 1: HWM / Q4"><div class="slide-content"><p class="kicker reveal">HWM / Q4</p><div class="reveal body-content"><h1 class="lab-title">Có chuyện<br><em>kể.</em></h1><p class="lead">Kể chuyện. Chia sẻ.</p><div class="cover-topics"><p>Chuyện nghề.</p><p>Chuyện đi làm.</p><p>Chuyện Đồng Nai City</p></div></div></div></section>
 <!-- === SLIDE 2: VÌ SAO? === -->
@@ -195,11 +204,11 @@ article p{margin-top:clamp(10px,1.5vh,18px)}article{padding:clamp(12px,1.5vw,24p
 <!-- === SLIDE 3: LINH CHIA SẺ === -->
 <section class="slide dark" id="slide-3" aria-label="Slide 3: LINH CHIA SẺ"><div class="slide-content"><p class="kicker reveal">LINH CHIA SẺ</p><div class="reveal body-content"><div class="stat"><strong>&gt;20</strong><span>CV ĐEM VỀ</span></div></div></div></section>
 <!-- === SLIDE 4: MÌNH CÓ GÌ ĐỂ KỂ? === -->
-<section class="slide " id="slide-4" aria-label="Slide 4: MÌNH CÓ GÌ ĐỂ KỂ?"><div class="slide-content"><p class="kicker reveal">MÌNH CÓ GÌ ĐỂ KỂ?</p><div class="reveal body-content"><h2>Chọn một chuyện<br><em>mình đã trải qua.</em></h2><div class="topics"><article><h3>Công ty cũ</h3><p>Hồi đó đi làm</p></article><article><h3>Đổi góc nhìn</h3><p>Trước đây và bây giờ.</p></article><article><h3>Ở HWM</h3><p>Học được gì. Làm gì.</p></article></div></div></div></section>
+<section class="slide " id="slide-4" aria-label="Slide 4: MÌNH CÓ GÌ ĐỂ KỂ?"><div class="slide-content"><p class="kicker reveal">MÌNH CÓ GÌ ĐỂ KỂ?</p><div class="reveal body-content"><h2>Chọn một chuyện<br><em>mình đã trải qua.</em></h2><div class="topics"><article><h3>Công ty cũ</h3><p>Hồi đó đi làm</p></article><article><h3>Đổi góc nhìn</h3><p>Trước đây và bây giờ.</p></article><article><h3>Ở HWM</h3><p>Học gì. Làm gì. Giúp ai.</p></article></div></div></div></section>
 <!-- === SLIDE 5: CÁCH THAM GIA === -->
-<section class="slide " id="slide-5" aria-label="Slide 5: CÁCH THAM GIA"><div class="slide-content"><p class="kicker reveal">CÁCH THAM GIA</p><div class="reveal body-content"><h2>Happy Hour<br><em>xuyên suốt Q4.</em></h2><div class="tiles"><article><h3>Viết cá nhân</h3><p>Chuyện và giọng riêng.</p></article><article><h3>Threads là chính</h3><p>Content ngắn → dễ làm → nhanh có kết quả → hứng viết tiếp</p></article><article><h3>Nick ẩn danh</h3><p>Thoải mái chia sẻ.</p></article></div></div></div></section>
+<section class="slide " id="slide-5" aria-label="Slide 5: CÁCH THAM GIA"><div class="slide-content"><p class="kicker reveal">CÁCH THAM GIA</p><div class="reveal body-content"><h2>Happy Hour <em>xuyên suốt Q4.</em></h2><div class="tiles"><article><h3>Viết cá nhân</h3><p>Chuyện và giọng riêng.</p></article><article><h3>Threads là chính</h3><p>Content ngắn → dễ làm → nhanh có kết quả → hứng viết tiếp</p></article><article><h3>Nick ẩn danh</h3><p>Thoải mái chia sẻ.</p></article><article class="award"><h3>Giải thưởng</h3><div class="award-blank" aria-label="Để trống cho team đề xuất"></div></article></div></div></div></section>
 <!-- === SLIDE 6: 25 PHÚT / VIẾT === -->
-<section class="slide " id="slide-6" aria-label="Slide 6: 25 PHÚT / VIẾT"><div class="slide-content"><p class="kicker reveal">25 PHÚT / VIẾT</p><div class="reveal body-content"><h2>Một chuyện thật.</h2><p class="writing-hint">Gợi ý: lịch sử công việc,<br>thành tích cá nhân.</p><ol><li>Chuyện gì đã xảy ra?</li><li>Mình làm gì? Kết quả thế nào?</li><li>Người đọc nhận được gì?</li></ol></div></div></section>
+<section class="slide " id="slide-6" aria-label="Slide 6: 25 PHÚT / VIẾT"><div class="slide-content"><p class="kicker reveal">25 PHÚT / VIẾT</p><div class="reveal body-content"><p class="writing-hint">Gợi ý: lịch sử công việc,<br>thành tích cá nhân.</p></div></div></section>
 <!-- === SLIDE 7: 15 PHÚT / ĐĂNG === -->
 <section class="slide cover" id="slide-7" aria-label="Slide 7: 15 PHÚT / ĐĂNG"><div class="slide-content"><p class="kicker reveal">15 PHÚT / ĐĂNG</p><div class="reveal body-content"><div class="loop"><b>Nick + avatar</b><i>→</i><b>Đăng bài</b><i>→</i><b>Gửi link</b></div></div></div></section></main><nav class="controls" aria-label="Điều khiển trình chiếu"><button id="prev" aria-label="Slide trước">←</button><output aria-live="polite">1 / 7</output><button id="next" aria-label="Slide tiếp theo">→</button><button id="full" aria-label="Toàn màn hình">⛶</button></nav><script>
 /* === PRESENTATION CONTROLLER: KEYS, WHEEL, SWIPE, HASH, FULLSCREEN === */
